@@ -38,8 +38,13 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-	initTables(db)
-	addModels(db)
+
+	// CHECK FOR FIRST TIME SETUP
+	dbPersist := flag.Bool("persist", true, "Recreate database tables and add mock-up objects")
+	if !(*dbPersist) {
+		initTables(db)
+		addModels(db)
+	}
 
 	// INJECT TO APPLICATION
 	app := Application{
@@ -77,7 +82,10 @@ func (app *Application) Routes() *mux.Router {
 	// TODO
 
 	// HOTEL API
-	// TODO
+	router.HandleFunc("/api/hotel/getHotels", app.GetHotels).Methods("GET")
+	router.HandleFunc("/api/hotel/{id}/getProfile", app.GetHotelProfile).Methods("GET")
+	router.HandleFunc("/api/hotel/{id}/updateProfile", app.UpdateHotelProfile).Methods("POST")
+	router.HandleFunc("/api/hotel/addHotel", app.CreateHotel).Methods("POST")
 
 	// RENT-A-CAR API
 	// TODO
