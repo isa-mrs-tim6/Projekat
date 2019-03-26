@@ -28,7 +28,7 @@ func (db *Store) GetHotelProfile(id uint) (models.HotelProfile, error) {
 }
 
 func (db *Store) CreateHotel(hotel *models.Hotel) error {
-	if err := db.Create(hotel).Error; err != nil {
+	if err := db.Create(&hotel).Error; err != nil {
 		return err
 	}
 	return nil
@@ -41,7 +41,7 @@ func (db *Store) UpdateHotel(id uint, newProfile models.HotelProfile) error {
 	}
 	retVal.HotelProfile = newProfile
 
-	if err := db.Save(retVal).Error; err != nil {
+	if err := db.Save(&retVal).Error; err != nil {
 		return err
 	}
 	return nil
