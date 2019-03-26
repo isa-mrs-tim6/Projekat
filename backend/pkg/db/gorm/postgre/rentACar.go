@@ -45,7 +45,7 @@ func (db *Store) FindVehicles(id uint, params models.FindVehicleParams) ([]model
 	var retVal []models.Vehicle
 	var company models.RentACarCompany
 
-	if err := db.First(&company, id).Error; err != nil {
+	if err := db.Set("gorm:auto_preload", true).First(&company, id).Error; err != nil {
 		return nil, err
 	}
 
