@@ -23,6 +23,8 @@ func main() {
 	// SETUP DB CONNECTION DETAILS
 	username := flag.String("username", "postgres", "Database username")
 	password := flag.String("password", "admin", "Database password")
+	dbPersist := flag.Bool("persist", true, "Recreate database tables and add mock-up objects")
+	flag.Parse()
 
 	// SETUP LOGGING
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -40,7 +42,6 @@ func main() {
 	defer db.Close()
 
 	// CHECK FOR FIRST TIME SETUP
-	dbPersist := flag.Bool("persist", true, "Recreate database tables and add mock-up objects")
 	if !(*dbPersist) {
 		initTables(db)
 		addModels(db)
