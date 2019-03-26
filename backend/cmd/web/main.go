@@ -16,7 +16,7 @@ const (
 	host    = "localhost"
 	port    = 5432
 	dbname  = "postgres"
-	address = ":8000"
+	address = ":8080"
 )
 
 func main() {
