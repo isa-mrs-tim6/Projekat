@@ -227,11 +227,14 @@ func addModels(db *gorm.DB) {
 
 	// CREATING HOTELS
 	hotel := models.Hotel{
-		Name:        "H1_NAME",
-		Description: "H1_DESC",
-		Address: models.Address{
-			Address:    "H1_ADDRESS",
-			Coordinate: models.Coordinate{Latitude: 33.123214, Longitude: -5.21352}},
+		HotelProfile: models.HotelProfile{
+			Name:        "H1_NAME",
+			Description: "H1_DESC",
+			Address: models.Address{
+				Address:    "H1_ADDRESS",
+				Coordinate: models.Coordinate{Latitude: 33.123214, Longitude: -5.21352},
+			},
+		},
 		Admins: []*models.HotelAdmin{
 			&hotelAdmin,
 			&hotelAdmin2,
@@ -250,11 +253,13 @@ func addModels(db *gorm.DB) {
 		},
 	}
 	hotel2 := models.Hotel{
-		Name:        "H2_NAME",
-		Description: "H2_DESC",
-		Address: models.Address{
-			Address:    "H2_ADDRESS",
-			Coordinate: models.Coordinate{Latitude: -12.342, Longitude: 4.3242}},
+		HotelProfile: models.HotelProfile{
+			Name:        "H2_NAME",
+			Description: "H2_DESC",
+			Address: models.Address{
+				Address:    "H2_ADDRESS",
+				Coordinate: models.Coordinate{Latitude: -12.342, Longitude: 4.3242}},
+		},
 		Admins: []*models.HotelAdmin{
 			&hotelAdmin3,
 		},

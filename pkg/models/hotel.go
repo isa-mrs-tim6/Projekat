@@ -18,11 +18,15 @@ type Feature struct {
 	HotelID     uint
 }
 
-type Hotel struct {
-	gorm.Model
+type HotelProfile struct {
 	Name string
 	Address
-	Description  string
+	Description string
+}
+
+type Hotel struct {
+	gorm.Model
+	HotelProfile
 	Rooms        []Room             `gorm:"foreignkey:HotelID"`
 	Features     []Feature          `gorm:"foreignkey:HotelID"`
 	Admins       []*HotelAdmin      `gorm:"foreignkey:HotelID"`
