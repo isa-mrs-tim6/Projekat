@@ -27,7 +27,7 @@ func initTables(db *gorm.DB) {
 		&models.RentACarAdmin{}, &models.RentACarCompany{}, &models.Location{}, &models.Vehicle{},
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
-		&models.HotelReservation{}, &models.FlightReservation{})
+		&models.HotelReservation{}, &models.FlightReservation{}, "user_reservations", "vehicle_reservations")
 	fmt.Printf("DATABASE: Finished dropping, time taken: %f seconds\n", time.Since(timeDroppingTables).Seconds())
 
 	fmt.Println("DATABASE: Auto migrating schema")
@@ -281,11 +281,12 @@ func addModels(db *gorm.DB) {
 
 	// CREATING RENT-A-CAR COMPANIES
 	rentACarCompany := models.RentACarCompany{
-		Name:  "RAC1_NAME",
-		Promo: "RAC1_PROMO",
-		Address: models.Address{
-			Address:    "RAC1_ADDRESS",
-			Coordinate: models.Coordinate{Latitude: 41, Longitude: 32}},
+		RentACarCompanyProfile: models.RentACarCompanyProfile{
+			Name:  "RAC1_NAME",
+			Promo: "RAC1_PROMO",
+			Address: models.Address{
+				Address:    "RAC1_ADDRESS",
+				Coordinate: models.Coordinate{Latitude: 41, Longitude: 32}}},
 		Admins: []*models.RentACarAdmin{
 			&rentACarAdmin,
 			&rentACarAdmin2,
@@ -299,17 +300,18 @@ func addModels(db *gorm.DB) {
 				Coordinate: models.Coordinate{Latitude: -21.124, Longitude: 512.24}}},
 		},
 		Vehicles: []models.Vehicle{
-			{Name: "RAC1_V1", Capacity: 4, PricePerDay: 45},
-			{Name: "RAC1_V2", Capacity: 5, PricePerDay: 65},
-			{Name: "RAC1_V3", Capacity: 6, PricePerDay: 75},
+			{Name: "RAC1_V1", Capacity: 4, Type: "A", PricePerDay: 45, Discount: false},
+			{Name: "RAC1_V2", Capacity: 5, Type: "B", PricePerDay: 65, Discount: true},
+			{Name: "RAC1_V3", Capacity: 6, Type: "A", PricePerDay: 75, Discount: false},
 		},
 	}
 	rentACarCompany2 := models.RentACarCompany{
-		Name:  "RAC2_NAME",
-		Promo: "RAC2_PROMO",
-		Address: models.Address{
-			Address:    "RAC2_ADDRESS",
-			Coordinate: models.Coordinate{Latitude: 41, Longitude: 32}},
+		RentACarCompanyProfile: models.RentACarCompanyProfile{
+			Name:  "RAC2_NAME",
+			Promo: "RAC2_PROMO",
+			Address: models.Address{
+				Address:    "RAC2_ADDRESS",
+				Coordinate: models.Coordinate{Latitude: 41, Longitude: 32}}},
 		Admins: []*models.RentACarAdmin{
 			&rentACarAdmin3,
 		},
@@ -322,9 +324,9 @@ func addModels(db *gorm.DB) {
 				Coordinate: models.Coordinate{Latitude: -21.124, Longitude: 512.24}}},
 		},
 		Vehicles: []models.Vehicle{
-			{Name: "RAC2_V1", Capacity: 4, PricePerDay: 45},
-			{Name: "RAC2_V2", Capacity: 5, PricePerDay: 65},
-			{Name: "RAC2_V3", Capacity: 6, PricePerDay: 75},
+			{Name: "RAC2_V1", Capacity: 4, Type: "B", PricePerDay: 45, Discount: false},
+			{Name: "RAC2_V2", Capacity: 5, Type: "A", PricePerDay: 65, Discount: false},
+			{Name: "RAC2_V3", Capacity: 6, Type: "A", PricePerDay: 75, Discount: true},
 		},
 	}
 	db.Create(&rentACarCompany)
@@ -392,14 +394,13 @@ func addModels(db *gorm.DB) {
 		ReservationRentACar: models.RentACarReservation{
 			Price:    70,
 			Location: rentACarCompany.Locations[0].Address.Address,
-			Vehicles: []models.Vehicle{
-				rentACarCompany.Vehicles[0],
+			Vehicles: []*models.Vehicle{
+				&rentACarCompany.Vehicles[0],
 			},
 			Occupation: models.Occupation{
 				Beginning: time.Date(2019, 4, 2, 0, 0, 0, 0, time.Local),
 				End:       time.Date(2019, 4, 3, 0, 0, 0, 0, time.Local),
 			},
-			RentACarCompanyID: rentACarCompany.ID,
 		},
 	}
 	reservation2 := models.Reservation{
@@ -424,7 +425,6 @@ func addModels(db *gorm.DB) {
 				Beginning: time.Date(2019, 5, 3, 0, 0, 0, 0, time.Local),
 				End:       time.Date(2019, 5, 6, 0, 0, 0, 0, time.Local),
 			},
-			HotelID: hotel2.ID,
 		},
 	}
 	reservation3 := models.Reservation{
@@ -441,19 +441,43 @@ func addModels(db *gorm.DB) {
 		ReservationRentACar: models.RentACarReservation{
 			Price:    70,
 			Location: rentACarCompany2.Locations[0].Address.Address,
-			Vehicles: []models.Vehicle{
-				rentACarCompany2.Vehicles[0],
+			Vehicles: []*models.Vehicle{
+				&rentACarCompany2.Vehicles[0],
 			},
 			Occupation: models.Occupation{
 				Beginning: time.Date(2019, 4, 2, 0, 0, 0, 0, time.Local),
 				End:       time.Date(2019, 4, 3, 0, 0, 0, 0, time.Local),
 			},
-			RentACarCompanyID: rentACarCompany2.ID,
+		},
+	}
+
+	reservation4 := models.Reservation{
+		Holders: []*models.User{
+			&user4,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price: 250,
+			Seats: []models.Seat{
+				airline2.Flights[0].Airplane.Seats[1],
+			},
+			FlightID: airline2.Flights[1].ID,
+		},
+		ReservationRentACar: models.RentACarReservation{
+			Price:    70,
+			Location: rentACarCompany2.Locations[0].Address.Address,
+			Vehicles: []*models.Vehicle{
+				&rentACarCompany2.Vehicles[0],
+			},
+			Occupation: models.Occupation{
+				Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
+				End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
+			},
 		},
 	}
 	db.Create(&reservation)
 	db.Create(&reservation2)
 	db.Create(&reservation3)
+	db.Create(&reservation4)
 
 	fmt.Printf("DATABASE: Finished adding models, time taken: %f seconds\n", time.Since(timeStart).Seconds())
 }
