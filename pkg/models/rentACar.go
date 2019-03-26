@@ -1,28 +1,14 @@
 package models
 
-import (
-	"github.com/jinzhu/gorm"
-	"time"
-)
+import "github.com/jinzhu/gorm"
 
 type Vehicle struct {
 	gorm.Model
 	Name              string
 	Capacity          uint
-	Type              string
 	PricePerDay       float64
 	RentACarCompanyID uint
-	Reservations      []*RentACarReservation `gorm:"many2many:vehicle_reservations;"`
-	Discount          bool
-}
-
-type FindVehicleParams struct {
-	Capacity  uint
-	Type      string
-	PriceLow  float64
-	PriceHigh float64
-	StartDate time.Time
-	EndDate   time.Time
+	ReservationID     uint
 }
 
 type Location struct {
@@ -31,16 +17,13 @@ type Location struct {
 	RentACarCompanyID uint
 }
 
-type RentACarCompanyProfile struct {
-	Name string
-	Address
-	Promo string
-}
-
 type RentACarCompany struct {
 	gorm.Model
-	RentACarCompanyProfile
-	Vehicles  []Vehicle        `gorm:"foreignkey:RentACarCompanyID"`
-	Locations []Location       `gorm:"foreignkey:RentACarCompanyID"`
-	Admins    []*RentACarAdmin `gorm:"foreignkey:RentACarCompanyID"`
+	Name string
+	Address
+	Promo        string
+	Vehicles     []Vehicle        `gorm:"foreignkey:RentACarCompanyID"`
+	Locations    []Location       `gorm:"foreignkey:RentACarCompanyID"`
+	Admins       []*RentACarAdmin `gorm:"foreignkey:RentACarCompanyID"`
+	Reservations []Reservation    `gorm:"foreignkey:RentACarCompanyID"`
 }

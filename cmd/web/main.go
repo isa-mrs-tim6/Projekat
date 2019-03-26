@@ -74,10 +74,6 @@ func (app *Application) Routes() *mux.Router {
 	// TODO
 
 	// RENT-A-CAR ADMIN API
-	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", app.GetRentACarCompanies).Methods("GET")
-	router.HandleFunc("/api/rentACarCompany/{id}/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
-	router.HandleFunc("/api/rentACarCompany/{id}/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST")
-	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST")
 	// TODO
 
 	// RESERVATION API
