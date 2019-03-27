@@ -46,11 +46,15 @@ type Flight struct {
 	Reservations               []FlightReservation `gorm:"foreignkey:FlightID"`
 }
 
-type Airline struct {
-	gorm.Model
+type AirlineProfile struct{
 	Name string
 	Address
 	Promo     string
+}
+
+type Airline struct {
+	gorm.Model
+	AirlineProfile
 	Flights   []Flight        `gorm:"foreignkey:AirlineID"`
 	Airplanes []Airplane      `gorm:"foreignkey:AirlineID"`
 	Admins    []*AirlineAdmin `gorm:"foreignkey:AirlineID"`

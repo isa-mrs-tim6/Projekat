@@ -12,10 +12,16 @@ type UserInfo struct {
 	Surname string
 }
 
-type User struct {
-	gorm.Model
+type Profile struct {
 	Credentials
 	UserInfo
+	Address string
+	Phone string
+}
+
+type User struct {
+	gorm.Model
+	Profile
 	Reservations []*Reservation `gorm:"many2many:user_reservations;"`
 }
 

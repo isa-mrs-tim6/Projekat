@@ -106,11 +106,13 @@ func addModels(db *gorm.DB) {
 
 	// CREATING AIRLINES
 	airline := models.Airline{
-		Name:  "A1_NAME",
-		Promo: "A1_PROMO",
-		Address: models.Address{
-			Address:    "A1_ADDRESS 1",
-			Coordinate: models.Coordinate{Latitude: 123, Longitude: 432}},
+		AirlineProfile: models.AirlineProfile{
+			Name:  "A1_NAME",
+			Promo: "A1_PROMO",
+			Address: models.Address{
+				Address:    "A1_ADDRESS 1",
+				Coordinate: models.Coordinate{Latitude: 123, Longitude: 432}},
+		},
 		Admins: []*models.AirlineAdmin{
 			&airlineAdmin,
 			&airlineAdmin2,
@@ -169,11 +171,13 @@ func addModels(db *gorm.DB) {
 	airline.Flights[1].Airplane.Seats[2].QuickReserve = true
 
 	airline2 := models.Airline{
-		Name:  "A2_NAME",
-		Promo: "A2_PROMO",
-		Address: models.Address{
-			Address:    "A2_ADDRESS 1",
-			Coordinate: models.Coordinate{Latitude: 123, Longitude: 432}},
+		AirlineProfile: models.AirlineProfile{
+			Name:  "A2_NAME",
+			Promo: "A2_PROMO",
+			Address: models.Address{
+				Address:    "A2_ADDRESS 1",
+				Coordinate: models.Coordinate{Latitude: 123, Longitude: 432}},
+		},
 		Admins: []*models.AirlineAdmin{
 			&airlineAdmin3,
 		},
@@ -334,20 +338,36 @@ func addModels(db *gorm.DB) {
 
 	// CREATING USERS
 	user := models.User{
-		Credentials: models.Credentials{Email: "USER1@email.com", Password: "USER1"},
-		UserInfo:    models.UserInfo{Name: "USER1_IME", Surname: "USER1_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "USER1@email.com", Password: "USER1"},
+			UserInfo:    models.UserInfo{Name: "USER1_IME", Surname: "USER1_PREZIME"},
+			Address: "USER1_ADDRESS",
+			Phone: "USER1_PHONE",
+		},
 	}
 	user2 := models.User{
-		Credentials: models.Credentials{Email: "USER2@email.com", Password: "USER2"},
-		UserInfo:    models.UserInfo{Name: "USER2_IME", Surname: "USER2_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "USER2@email.com", Password: "USER2"},
+			UserInfo:    models.UserInfo{Name: "USER2_IME", Surname: "USER2_PREZIME"},
+			Address: "USER2_ADDRESS",
+			Phone: "USER2_ADDRESS",
+		},
 	}
 	user3 := models.User{
-		Credentials: models.Credentials{Email: "USER3@email.com", Password: "USER3"},
-		UserInfo:    models.UserInfo{Name: "USER3_IME", Surname: "USER3_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "USER3@email.com", Password: "USER3"},
+			UserInfo:    models.UserInfo{Name: "USER3_IME", Surname: "USER3_PREZIME"},
+			Address: "USER3_ADDRESS",
+			Phone: "USER3_ADDRESS",
+		},
 	}
 	user4 := models.User{
-		Credentials: models.Credentials{Email: "USER4@email.com", Password: "USER4"},
-		UserInfo:    models.UserInfo{Name: "USER4_IME", Surname: "USER4_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "USER4@email.com", Password: "USER4"},
+			UserInfo:    models.UserInfo{Name: "USER4_IME", Surname: "USER4_PREZIME"},
+			Address: "USER4_ADDRESS",
+			Phone: "USER4_ADDRESS",
+		},
 	}
 	db.Create(&user)
 	db.Create(&user2)
