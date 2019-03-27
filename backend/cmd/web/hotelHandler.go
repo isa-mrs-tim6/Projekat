@@ -9,6 +9,11 @@ import (
 )
 
 func (app *Application) GetHotels(w http.ResponseWriter, r *http.Request) {
+	app.setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
+
 	hotels, err := app.Store.GetHotels()
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive hotel profile")
@@ -25,11 +30,15 @@ func (app *Application) GetHotels(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) CreateHotel(w http.ResponseWriter, r *http.Request) {
+	app.setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 	var hotel models.Hotel
 
 	err := json.NewDecoder(r.Body).Decode(&hotel.HotelProfile)
 	if err != nil {
-		app.ErrorLog.Println("Could not decode JSON")
+		app.ErrorLog.Println("Co	uld not decode JSON")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -44,6 +53,10 @@ func (app *Application) CreateHotel(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) GetHotelProfile(w http.ResponseWriter, r *http.Request) {
+	app.setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 	vars := mux.Vars(r)
 
 	id, err := strconv.ParseUint(vars["id"], 10, 32)
@@ -69,6 +82,10 @@ func (app *Application) GetHotelProfile(w http.ResponseWriter, r *http.Request) 
 }
 
 func (app *Application) UpdateHotelProfile(w http.ResponseWriter, r *http.Request) {
+	app.setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 	vars := mux.Vars(r)
 	var hotelProfile models.HotelProfile
 

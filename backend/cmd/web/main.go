@@ -16,7 +16,7 @@ const (
 	host    = "localhost"
 	port    = 5432
 	dbname  = "postgres"
-	address = ":8080"
+	address = ":8000"
 )
 
 func main() {
@@ -96,7 +96,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/hotel/getHotels", app.GetHotels).Methods("GET")
 	router.HandleFunc("/api/hotel/{id}/getProfile", app.GetHotelProfile).Methods("GET")
 	router.HandleFunc("/api/hotel/{id}/updateProfile", app.UpdateHotelProfile).Methods("POST")
-	router.HandleFunc("/api/hotel/addHotel", app.CreateHotel).Methods("POST")
+	router.HandleFunc("/api/hotel/addHotel", app.CreateHotel).Methods("POST", "OPTIONS")
 
 	// RENT-A-CAR API
 	// TODO
@@ -118,4 +118,10 @@ func (app *Application) RunServer() {
 	app.InfoLog.Printf("Starting server on %s", address)
 	err := server.ListenAndServe()
 	app.ErrorLog.Fatal(err)
+}
+
+func (app *Application) setupResponse(w *http.ResponseWriter, req *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
