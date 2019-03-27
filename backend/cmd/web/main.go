@@ -65,7 +65,7 @@ func (app *Application) Routes() *mux.Router {
 	// TODO
 	router.HandleFunc("/api/user/getUsers", app.GetUser).Methods("GET")
 	router.HandleFunc("/api/user/{id}/getProfile", app.GetUserProfile).Methods("GET")
-	router.HandleFunc("/api/user/{id}/updateProfile", app.UpdateUserProfile).Methods("POST")
+	router.HandleFunc("/api/user/{id}/updateProfile", app.UpdateUserProfile).Methods("POST", "OPTIONS")
 
 	// SYSTEM ADMIN API
 	// TODO
