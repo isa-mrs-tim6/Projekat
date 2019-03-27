@@ -68,11 +68,8 @@
                     'Longitude': parseFloat(this.Longitude),
                     'Description': this.Description,
                 };
-                console.log(newHotel);
                 this.clear();
-                axios.post('http://localhost:8000/api/hotel/addHotel', {
-                    newHotel
-                })
+                axios.post('http://localhost:8000/api/hotel/addHotel', newHotel)
                     .then(res =>
                         axios.get('http://localhost:8000/api/hotel/getHotels')
                         .then(res => this.hotels = res.data)
