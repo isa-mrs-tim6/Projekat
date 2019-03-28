@@ -3,7 +3,7 @@ package models
 import "github.com/jinzhu/gorm"
 
 type Credentials struct {
-	Email    string `gorm: "type:varchar(100); unique_index"`
+	Email    string `gorm:"type:varchar(100); unique_index"`
 	Password string
 }
 
@@ -16,27 +16,30 @@ type Profile struct {
 	Credentials
 	UserInfo
 	Address string
-	Phone string
+	Phone   string
 }
 
 type User struct {
 	gorm.Model
 	Profile
-	Reservations []*Reservation `gorm:"many2many:user_reservations;"`
+	RegistrationComplete bool
+	Reservations         []*Reservation `gorm:"many2many:user_reservations;"`
 }
 
 type AirlineAdmin struct {
 	gorm.Model
 	Credentials
 	UserInfo
-	AirlineID uint
+	RegistrationComplete bool
+	AirlineID            uint
 }
 
 type HotelAdmin struct {
 	gorm.Model
 	Credentials
 	UserInfo
-	HotelID uint
+	RegistrationComplete bool
+	HotelID              uint
 }
 
 type RentACarAdmin struct {
@@ -50,4 +53,5 @@ type SystemAdmin struct {
 	gorm.Model
 	Credentials
 	UserInfo
+	RegistrationComplete bool
 }

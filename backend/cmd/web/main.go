@@ -25,11 +25,18 @@ func main() {
 	username := flag.String("username", "postgres", "Database username")
 	password := flag.String("password", "admin", "Database password")
 	dbPersist := flag.Bool("persist", true, "Recreate database tables and add mock-up objects")
+	emailDomain := flag.String("email", "", "Email domain")
+	emailPassword := flag.String("emailPassword", "", "Email password")
 	flag.Parse()
 
 	// SETUP LOGGING
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+
+	// CHECK IF INFO IS GIVEN
+	if *emailDomain == "" || *emailPassword == "" {
+		log.Fatal("Email domain and password not given")
+	}
 
 	// SETUP DATABASE
 	dbInfo := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -49,9 +56,11 @@ func main() {
 
 	// INJECT TO APPLICATION
 	app := Application{
-		ErrorLog: errorLog,
-		InfoLog:  infoLog,
-		Store:    &postgre.Store{db},
+		ErrorLog:      errorLog,
+		InfoLog:       infoLog,
+		Store:         &postgre.Store{db},
+		EmailAddress:  *emailDomain,
+		EmailPassword: *emailPassword,
 	}
 
 	// RUN SERVER
@@ -68,7 +77,8 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/user/{id}/updateProfile", app.UpdateUserProfile).Methods("POST", "OPTIONS")
 
 	// SYSTEM ADMIN API
-	// TODO
+	router.HandleFunc("/api/systemAdmin/register", app.RegisterSystemAdmin).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/systemAdmin/completeRegistration/q={email}", app.CompleteRegistrationSysAdmin).Methods("GET")
 
 	// AIRLINE ADMIN API
 	// TODO
