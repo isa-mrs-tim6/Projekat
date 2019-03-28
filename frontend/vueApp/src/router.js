@@ -3,6 +3,7 @@ import Router from 'vue-router'
 //import Home from './views/Home.vue'
 import SystemAdmin from "./views/SystemAdmin";
 import HotelAdmin from "./views/HotelAdmin";
+import RacAdmin from "./views/RacAdmin";
 
 Vue.use(Router)
 
@@ -20,6 +21,10 @@ export default new Router({
     {
       path: '/hotelAdmin/:id',
       component: HotelAdmin
+    },
+    {
+      path: '/racAdmin/:id',
+      component: RacAdmin
     }
   ]
 })
