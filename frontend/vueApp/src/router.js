@@ -18,7 +18,7 @@ export default new Router({
       component: SystemAdmin
     },
     {
-      path: '/hotelAdmin',
+      path: '/hotelAdmin/:id',
       component: HotelAdmin
     }
   ]
