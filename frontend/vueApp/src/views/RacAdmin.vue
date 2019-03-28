@@ -2,7 +2,6 @@
     <div>
         <RacAdminNavbar></RacAdminNavbar>
         <form>
-            <h1> Rent-a-car company <span id="routeID">{{ $route.params.id }}</span> </h1>
             <v-text-field
                     v-model="racProfile.Name"
                     label="Name"
@@ -49,8 +48,7 @@
             }
         },
         mounted() {
-            var hotelID = document.getElementById("routeID").innerHTML;
-            axios.get('http://localhost:8000/api/rentACarCompany/'+hotelID+'/getProfile')
+            axios.get('http://localhost:8000/api/rentACarCompany/'+this.$route.params.id+'/getProfile')
                 .then(res => {
                         this.racProfile = res.data;
                         this.backupRACProfile = JSON.parse(JSON.stringify(this.racProfile))
@@ -61,8 +59,7 @@
         methods: {
             update(e) {
                 e.preventDefault();
-                var hotelID = document.getElementById("routeID").innerHTML;
-                axios.post('http://localhost:8000/api/rentACarCompany/'+hotelID+'/updateProfile', this.racProfile)
+                axios.post('http://localhost:8000/api/rentACarCompany/'+this.$route.params.id+'/updateProfile', this.racProfile)
                     .then(res => this.backupRACProfile = JSON.parse(JSON.stringify(this.racProfile)))
                     .catch(err => console.log(err));
             },

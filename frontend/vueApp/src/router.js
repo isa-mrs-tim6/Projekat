@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import SystemAdmin from "./views/SystemAdmin";
 import HotelAdmin from "./views/HotelAdmin";
 import RacAdmin from "./views/RacAdmin";
+import VehiclesSearch from "./views/VehiclesSearch";
 
 Vue.use(Router)
 
@@ -25,6 +26,10 @@ export default new Router({
     {
       path: '/racAdmin/:id',
       component: RacAdmin
+    },
+    {
+      path: '/vehiclesSearch/:id',
+      component: VehiclesSearch
     }
   ]
 })

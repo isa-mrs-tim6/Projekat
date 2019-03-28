@@ -17,6 +17,7 @@ type Vehicle struct {
 }
 
 type FindVehicleParams struct {
+	Name      string
 	Capacity  uint
 	Type      string
 	PriceLow  float64
