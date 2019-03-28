@@ -9,7 +9,6 @@ import (
 )
 
 func (app *Application) GetRentACarCompanies(w http.ResponseWriter, r *http.Request) {
-	app.setupResponse(&w, r)
 	racCompanies, err := app.Store.GetRentACarCompanies()
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive rent-a-car companies")
@@ -19,14 +18,13 @@ func (app *Application) GetRentACarCompanies(w http.ResponseWriter, r *http.Requ
 
 	err = json.NewEncoder(w).Encode(racCompanies)
 	if err != nil {
-		app.ErrorLog.Printf("Cannot encode hotels into JSON object")
+		app.ErrorLog.Printf("Cannot encode rent-a-car companies into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
 
 func (app *Application) GetRentACarCompanyProfile(w http.ResponseWriter, r *http.Request) {
-	app.setupResponse(&w, r)
 	vars := mux.Vars(r)
 
 	id, err := strconv.ParseUint(vars["id"], 10, 32)
@@ -45,7 +43,7 @@ func (app *Application) GetRentACarCompanyProfile(w http.ResponseWriter, r *http
 
 	err = json.NewEncoder(w).Encode(racCompanyProfile)
 	if err != nil {
-		app.ErrorLog.Printf("Cannot encode hotel profile into JSON object")
+		app.ErrorLog.Printf("Cannot encode rent-a-car company profile into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

@@ -49,6 +49,10 @@ func (app *Application) GetAirlineProfiles(w http.ResponseWriter, r *http.Reques
 }
 
 func (app *Application) UpdateAirlineProfile(w http.ResponseWriter, r *http.Request) {
+	app.setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 	vars := mux.Vars(r)
 	var airlineProfile models.AirlineProfile
 

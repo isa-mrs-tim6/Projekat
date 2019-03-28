@@ -7,6 +7,7 @@ import (
 	"github.com/isa-mrs-tim6/Projekat/pkg/db/gorm/postgre"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -37,9 +38,8 @@ func main() {
 	db, err := gorm.Open("postgres", dbInfo)
 	if err != nil {
 		log.Fatal("Could not establish connection to the database")
-		panic(err)
 	}
-	defer db.Close()
+	defer Close(db)
 
 	// CHECK FOR FIRST TIME SETUP
 	if !(*dbPersist) {
@@ -74,7 +74,7 @@ func (app *Application) Routes() *mux.Router {
 	// TODO
 	router.HandleFunc("/api/airline/getAirline", app.GetAirline).Methods("GET")
 	router.HandleFunc("/api/airline/{id}/getProfile", app.GetAirlineProfiles).Methods("GET")
-	router.HandleFunc("/api/airline/{id}/updateProfile", app.UpdateAirlineProfile).Methods("POST")
+	router.HandleFunc("/api/airline/{id}/updateProfile", app.UpdateAirlineProfile).Methods("POST", "OPTIONS")
 
 	// HOTEL ADMIN API
 	// TODO
@@ -124,4 +124,11 @@ func (app *Application) setupResponse(w *http.ResponseWriter, req *http.Request)
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+}
+
+func Close(c io.Closer) {
+	err := c.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
