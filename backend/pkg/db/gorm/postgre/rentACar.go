@@ -1,6 +1,7 @@
 package postgre
 
 import (
+	"errors"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"strings"
 )
@@ -34,6 +35,12 @@ func (db *Store) UpdateRentACarCompanyProfile(id uint, newProfile models.RentACa
 		return err
 	}
 	retVal.RentACarCompanyProfile = newProfile
+
+	if newProfile.Promo == "" ||
+		newProfile.Name == "" ||
+		newProfile.Address.Address == "" {
+		return errors.New("empty parameters")
+	}
 
 	if err := db.Save(&retVal).Error; err != nil {
 		return err
