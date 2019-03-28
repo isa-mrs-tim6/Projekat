@@ -82,8 +82,8 @@ func (app *Application) Routes() *mux.Router {
 	// RENT-A-CAR ADMIN API
 	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", app.GetRentACarCompanies).Methods("GET")
 	router.HandleFunc("/api/rentACarCompany/{id}/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
-	router.HandleFunc("/api/rentACarCompany/{id}/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST")
-	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST")
+	router.HandleFunc("/api/rentACarCompany/{id}/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
 	// TODO
 
 	// RESERVATION API
@@ -95,7 +95,7 @@ func (app *Application) Routes() *mux.Router {
 	// HOTEL API
 	router.HandleFunc("/api/hotel/getHotels", app.GetHotels).Methods("GET")
 	router.HandleFunc("/api/hotel/{id}/getProfile", app.GetHotelProfile).Methods("GET")
-	router.HandleFunc("/api/hotel/{id}/updateProfile", app.UpdateHotelProfile).Methods("POST")
+	router.HandleFunc("/api/hotel/{id}/updateProfile", app.UpdateHotelProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/addHotel", app.CreateHotel).Methods("POST", "OPTIONS")
 
 	// RENT-A-CAR API

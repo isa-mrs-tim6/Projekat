@@ -9,7 +9,7 @@ import (
 )
 
 func (app *Application) GetRentACarCompanies(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	app.setupResponse(&w, r)
 	racCompanies, err := app.Store.GetRentACarCompanies()
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive rent-a-car companies")
@@ -26,7 +26,7 @@ func (app *Application) GetRentACarCompanies(w http.ResponseWriter, r *http.Requ
 }
 
 func (app *Application) GetRentACarCompanyProfile(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	app.setupResponse(&w, r)
 	vars := mux.Vars(r)
 
 	id, err := strconv.ParseUint(vars["id"], 10, 32)
@@ -52,7 +52,10 @@ func (app *Application) GetRentACarCompanyProfile(w http.ResponseWriter, r *http
 }
 
 func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	app.setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 	vars := mux.Vars(r)
 	var racCompanyProfile models.RentACarCompanyProfile
 
@@ -78,7 +81,10 @@ func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *h
 }
 
 func (app *Application) FindVehicles(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	app.setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 	vars := mux.Vars(r)
 	var params models.FindVehicleParams
 	var vehicles []models.Vehicle

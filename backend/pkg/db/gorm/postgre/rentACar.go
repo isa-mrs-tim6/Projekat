@@ -1,6 +1,7 @@
 package postgre
 
 import (
+	"errors"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"strings"
 )
@@ -35,6 +36,12 @@ func (db *Store) UpdateRentACarCompanyProfile(id uint, newProfile models.RentACa
 	}
 	retVal.RentACarCompanyProfile = newProfile
 
+	if newProfile.Promo == "" ||
+		newProfile.Name == "" ||
+		newProfile.Address.Address == "" {
+		return errors.New("empty parameters")
+	}
+
 	if err := db.Save(&retVal).Error; err != nil {
 		return err
 	}
@@ -50,9 +57,11 @@ func (db *Store) FindVehicles(id uint, params models.FindVehicleParams) ([]model
 	}
 
 	for _, v := range company.Vehicles {
-		if strings.Contains(v.Type, params.Type) &&
+		if strings.Contains(strings.ToLower(v.Name), strings.ToLower(params.Name)) &&
+			strings.Contains(strings.ToLower(v.Type), strings.ToLower(params.Type)) &&
 			v.Capacity >= params.Capacity &&
-			v.PricePerDay > params.PriceLow && v.PricePerDay < params.PriceHigh {
+			v.PricePerDay > params.PriceLow && v.PricePerDay < params.PriceHigh &&
+			!v.Discount {
 			retVal = append(retVal, v)
 		}
 	}
