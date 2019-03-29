@@ -50,10 +50,6 @@ func (app *Application) GetRentACarCompanyProfile(w http.ResponseWriter, r *http
 }
 
 func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *http.Request) {
-	app.setupResponse(&w, r)
-	if (*r).Method == "OPTIONS" {
-		return
-	}
 	vars := mux.Vars(r)
 	var racCompanyProfile models.RentACarCompanyProfile
 
@@ -79,10 +75,6 @@ func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *h
 }
 
 func (app *Application) FindVehicles(w http.ResponseWriter, r *http.Request) {
-	app.setupResponse(&w, r)
-	if (*r).Method == "OPTIONS" {
-		return
-	}
 	vars := mux.Vars(r)
 	var params models.FindVehicleParams
 	var vehicles []models.Vehicle

@@ -7,8 +7,10 @@ import (
 )
 
 type Application struct {
-	ErrorLog *log.Logger
-	InfoLog  *log.Logger
-	Router   *mux.Router
-	Store    *postgre.Store
+	ErrorLog      *log.Logger
+	InfoLog       *log.Logger
+	Router        *mux.Router
+	Store         *postgre.Store
+	EmailAddress  string
+	EmailPassword string
 }

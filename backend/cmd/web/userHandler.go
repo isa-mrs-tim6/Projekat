@@ -9,10 +9,6 @@ import (
 )
 
 func (app *Application) GetUser(w http.ResponseWriter, r *http.Request) {
-	app.setupResponse(&w, r)
-	if (*r).Method == "OPTIONS" {
-		return
-	}
 	users, err := app.Store.GetUsers()
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive user profile")
@@ -28,12 +24,7 @@ func (app *Application) GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func (app *Application) GetUserProfile(w http.ResponseWriter, r *http.Request) {
-	app.setupResponse(&w, r)
-	if (*r).Method == "OPTIONS" {
-		return
-	}
 	vars := mux.Vars(r)
 
 	id, err := strconv.ParseUint(vars["id"], 10, 32)
@@ -59,10 +50,6 @@ func (app *Application) GetUserProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) UpdateUserProfile(w http.ResponseWriter, r *http.Request) {
-	app.setupResponse(&w, r)
-	if (*r).Method == "OPTIONS" {
-		return
-	}
 	vars := mux.Vars(r)
 	var userProfile models.Profile
 
