@@ -1,20 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-//import Home from './views/Home.vue'
+import Home from './views/Home.vue'
 import SystemAdmin from "./views/SystemAdmin";
 import HotelAdmin from "./views/HotelAdmin";
 import User from "./views/User";
 import RacAdmin from "./views/RacAdmin";
 import VehiclesSearch from "./views/VehiclesSearch";
+import RegistrationSuccess from "./views/RegistrationSuccess";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   routes: [
     {
       path: '/',
-      component: SystemAdmin
+      component: Home
     },
     {
       path: '/systemAdmin',
@@ -35,6 +36,10 @@ export default new Router({
     {
       path: '/vehiclesSearch/:id',
       component: VehiclesSearch
+    },
+    {
+      path: '/confirmRegistration/:email/',
+      component: RegistrationSuccess
     }
   ]
 })

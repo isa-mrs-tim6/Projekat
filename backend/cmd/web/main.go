@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/db/gorm/postgre"
 	"github.com/jinzhu/gorm"
@@ -123,17 +124,14 @@ func (app *Application) RunServer() {
 	server := &http.Server{
 		Addr:     address,
 		ErrorLog: app.ErrorLog,
-		Handler:  app.Routes(),
+		Handler: handlers.CORS(
+			handlers.AllowedOrigins([]string{"http://localhost:8080"}),
+			handlers.AllowedHeaders([]string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"}),
+			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}))(app.Routes()),
 	}
 	app.InfoLog.Printf("Starting server on %s", address)
 	err := server.ListenAndServe()
 	app.ErrorLog.Fatal(err)
-}
-
-func (app *Application) setupResponse(w *http.ResponseWriter, req *http.Request) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
 
 func Close(c io.Closer) {

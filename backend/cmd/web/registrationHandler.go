@@ -19,11 +19,6 @@ func (app *Application) CompleteRegistrationSysAdmin(w http.ResponseWriter, r *h
 }
 
 func (app *Application) RegisterSystemAdmin(w http.ResponseWriter, r *http.Request) {
-	// HANDLE CORS
-	app.setupResponse(&w, r)
-	if (*r).Method == "OPTIONS" {
-		return
-	}
 	var credentials models.Credentials
 
 	// DECODE REQUEST
@@ -56,7 +51,7 @@ func (app *Application) RegisterSystemAdmin(w http.ResponseWriter, r *http.Reque
 	}
 
 	// SEND CONFIRMATION EMAIL
-	if err := app.SendRegistrationEmail(emailAdress.Address); err != nil {
+	if err := app.SendRegistrationEmail(emailAdress.Address, credentials); err != nil {
 		app.ErrorLog.Printf("Could not add send confirmation email")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -64,13 +59,19 @@ func (app *Application) RegisterSystemAdmin(w http.ResponseWriter, r *http.Reque
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (app *Application) SendRegistrationEmail(receiver string) error {
+func (app *Application) SendRegistrationEmail(receiver string, credentials models.Credentials) error {
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	message := "From: " + app.EmailAddress + "\n" +
 		"To: " + receiver + "\n" +
 		"Subject: Registration\n" +
 		mime +
-		`<html><head></head><body><h1>Complete your registration</h1> <a href="http://localhost:8000/api/systemAdmin/completeRegistration/q=` + receiver + `">here</a></body></html>`
+		`<html><head></head>
+		<body><h1>ISA/MRS TIM6</h1>
+		Complete your registration <a href="http://localhost:8080/confirmRegistration/` + receiver + `/">here</a>
+		Your login details are: <br>
+		EMAIL: ` + credentials.Email + `<br>
+		PASSWORD: ` + credentials.Password + `
+		</body></html>`
 
 	err := smtp.SendMail("smtp.gmail.com:587",
 		smtp.PlainAuth("", app.EmailAddress, app.EmailPassword, "smtp.gmail.com"),

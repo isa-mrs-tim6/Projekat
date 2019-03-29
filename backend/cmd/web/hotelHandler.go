@@ -25,10 +25,6 @@ func (app *Application) GetHotels(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) CreateHotel(w http.ResponseWriter, r *http.Request) {
-	app.setupResponse(&w, r)
-	if (*r).Method == "OPTIONS" {
-		return
-	}
 	var hotel models.Hotel
 
 	err := json.NewDecoder(r.Body).Decode(&hotel.HotelProfile)
@@ -73,10 +69,6 @@ func (app *Application) GetHotelProfile(w http.ResponseWriter, r *http.Request) 
 }
 
 func (app *Application) UpdateHotelProfile(w http.ResponseWriter, r *http.Request) {
-	app.setupResponse(&w, r)
-	if (*r).Method == "OPTIONS" {
-		return
-	}
 	vars := mux.Vars(r)
 	var hotelProfile models.HotelProfile
 
