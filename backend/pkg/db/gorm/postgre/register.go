@@ -10,30 +10,75 @@ type RegisterInterface interface {
 	CompleteRegistrationSystemAdmin(hashedEmail string) error
 }
 
-func (db *Store) CompleteRegistrationSystemAdmin(email string) error {
-	// UPDATE FIELDS
-	var retVal models.SystemAdmin
-	if err := db.Model(&retVal).Where("email = ?", email).Update("registration_complete", true).Error; err != nil {
-		return err
+func (db *Store) CompleteAdminRegistration(email string, accountType string) error {
+	switch accountType {
+	case "SystemAdmin":
+		var retVal models.SystemAdmin
+		if err := db.Model(&retVal).Where("email = ?", email).Update("registration_complete", true).Error; err != nil {
+			return err
+		}
+		return nil
+	case "AirlineAdmin":
+		var retVal models.AirlineAdmin
+		if err := db.Model(&retVal).Where("email = ?", email).Update("registration_complete", true).Error; err != nil {
+			return err
+		}
+		return nil
+	case "HotelAdmin":
+		var retVal models.HotelAdmin
+		if err := db.Model(&retVal).Where("email = ?", email).Update("registration_complete", true).Error; err != nil {
+			return err
+		}
+		return nil
+	case "Rent-A-CarAdmin":
+		var retVal models.RentACarAdmin
+		if err := db.Model(&retVal).Where("email = ?", email).Update("registration_complete", true).Error; err != nil {
+			return err
+		}
+		return nil
 	}
 	return nil
 }
 
-func (db *Store) RegisterSystemAdmin(credentials models.Credentials) error {
-	// CREATE HASH
+func (db *Store) RegisterAdmin(credentials models.Credentials, accountType string) error {
 	hashedPassword, err := createHash(credentials.Password)
 	if err != nil {
 		return err
 	}
 
-	// CREATE NEW SYSTEM ADMIN
-	var admin models.SystemAdmin
-	admin.Credentials = credentials
-	admin.Password = string(hashedPassword)
-
-	// ADD TO DATABASE
-	if err := db.Create(&admin).Error; err != nil {
-		return err
+	switch accountType {
+	case "SystemAdmin":
+		var admin models.SystemAdmin
+		admin.Credentials = credentials
+		admin.Password = string(hashedPassword)
+		if err := db.Create(&admin).Error; err != nil {
+			return err
+		}
+		return nil
+	case "AirlineAdmin":
+		var admin models.AirlineAdmin
+		admin.Credentials = credentials
+		admin.Password = string(hashedPassword)
+		if err := db.Create(&admin).Error; err != nil {
+			return err
+		}
+		return nil
+	case "HotelAdmin":
+		var admin models.HotelAdmin
+		admin.Credentials = credentials
+		admin.Password = string(hashedPassword)
+		if err := db.Create(&admin).Error; err != nil {
+			return err
+		}
+		return nil
+	case "Rent-A-CarAdmin":
+		var admin models.RentACarAdmin
+		admin.Credentials = credentials
+		admin.Password = string(hashedPassword)
+		if err := db.Create(&admin).Error; err != nil {
+			return err
+		}
+		return nil
 	}
 	return nil
 }

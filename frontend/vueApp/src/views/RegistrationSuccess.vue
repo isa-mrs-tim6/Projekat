@@ -25,7 +25,7 @@
             }
         },
         created() {
-            axios.get('http://localhost:8000/api/systemAdmin/completeRegistration/q='+this.$route.params.email)
+            axios.get('http://localhost:8000/api/admin/'+this.$route.params.type+'/completeRegistration/q='+this.$route.params.email)
                 .then(res => this.regSuccess = true)
                 .catch(err => this.regSuccess = false);
         }

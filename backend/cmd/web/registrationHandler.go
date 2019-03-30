@@ -7,22 +7,27 @@ import (
 	"net/http"
 	"net/mail"
 	"net/smtp"
+	"strings"
 )
 
-func (app *Application) CompleteRegistrationSysAdmin(w http.ResponseWriter, r *http.Request) {
+func (app *Application) CompleteRegistration(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	if err := app.Store.CompleteRegistrationSystemAdmin(vars["email"]); err != nil {
+	if err := app.Store.CompleteAdminRegistration(vars["email"], vars["type"]); err != nil {
 		app.ErrorLog.Printf("Could not complete registration")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
 
-func (app *Application) RegisterSystemAdmin(w http.ResponseWriter, r *http.Request) {
-	var credentials models.Credentials
+func (app *Application) RegisterAdmin(w http.ResponseWriter, r *http.Request) {
+	type RequestJSON struct {
+		models.Credentials
+		AccountType string
+	}
+	var requestObject RequestJSON
 
 	// DECODE REQUEST
-	err := json.NewDecoder(r.Body).Decode(&credentials)
+	err := json.NewDecoder(r.Body).Decode(&requestObject)
 	if err != nil {
 		app.ErrorLog.Println("Could not decode JSON")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -30,20 +35,21 @@ func (app *Application) RegisterSystemAdmin(w http.ResponseWriter, r *http.Reque
 	}
 
 	// CHECK VALIDITY
-	if credentials.Email == "" || credentials.Password == "" {
+	if requestObject.Email == "" || requestObject.Password == "" {
 		app.ErrorLog.Println("Request fields are empty")
 		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
-	emailAdress, emailError := mail.ParseAddress(credentials.Email)
+	emailAddress, emailError := mail.ParseAddress(requestObject.Email)
 	if emailError != nil {
 		app.ErrorLog.Println("Invalid email format")
 		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
+	requestObject.AccountType = strings.Join(strings.Fields(requestObject.AccountType), "")
 
 	// ADD NEW SYSTEM ADMIN TO DATABASE
-	err = app.Store.RegisterSystemAdmin(credentials)
+	err = app.Store.RegisterAdmin(requestObject.Credentials, requestObject.AccountType)
 	if err != nil {
 		app.ErrorLog.Printf("Could not add system admin to database")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -51,7 +57,7 @@ func (app *Application) RegisterSystemAdmin(w http.ResponseWriter, r *http.Reque
 	}
 
 	// SEND CONFIRMATION EMAIL
-	if err := app.SendRegistrationEmail(emailAdress.Address, credentials); err != nil {
+	if err := app.SendRegistrationEmail(emailAddress.Address, requestObject.AccountType, requestObject.Credentials); err != nil {
 		app.ErrorLog.Printf("Could not add send confirmation email")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -59,7 +65,7 @@ func (app *Application) RegisterSystemAdmin(w http.ResponseWriter, r *http.Reque
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (app *Application) SendRegistrationEmail(receiver string, credentials models.Credentials) error {
+func (app *Application) SendRegistrationEmail(receiver string, accountType string, credentials models.Credentials) error {
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	message := "From: " + app.EmailAddress + "\n" +
 		"To: " + receiver + "\n" +
@@ -67,7 +73,7 @@ func (app *Application) SendRegistrationEmail(receiver string, credentials model
 		mime +
 		`<html><head></head>
 		<body><h1>ISA/MRS TIM6</h1>
-		Complete your registration <a href="http://localhost:8080/confirmRegistration/` + receiver + `/">here</a>
+		Complete your registration <a href="http://localhost:8080/confirmRegistration/` + accountType + `/` + receiver + `/">here</a>
 		Your login details are: <br>
 		EMAIL: ` + credentials.Email + `<br>
 		PASSWORD: ` + credentials.Password + `

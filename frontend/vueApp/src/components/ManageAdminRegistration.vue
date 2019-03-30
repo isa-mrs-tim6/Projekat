@@ -78,20 +78,11 @@
                 const credentials = {
                     Email: this.email,
                     Password: this.password,
+                    accountType: this.select
                 };
-                switch (this.select) {
-                    case "System Admin":
-                        axios.post('http://localhost:8000/api/systemAdmin/register', credentials)
-                            .then(res => {if (res.status === 201) alert("Registration successful")})
-                            .catch(err => {console.log(err); alert("Registration unsuccessful")});
-                        break;
-                    case "Airline Admin":
-                        break;
-                    case "Hotel Admin":
-                        break;
-                    case "Rent-A-Car Admin":
-                        break;
-                }
+                axios.post('http://localhost:8000/api/admin/register', credentials)
+                    .then(res => {if (res.status === 201) alert("Registration successful")})
+                    .catch(err => {console.log(err); alert("Registration unsuccessful")});
             },
             clear () {
                 this.email = '';
