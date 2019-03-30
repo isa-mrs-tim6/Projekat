@@ -46,7 +46,8 @@ type RentACarAdmin struct {
 	gorm.Model
 	Credentials
 	UserInfo
-	RentACarCompanyID uint
+	RegistrationComplete bool
+	RentACarCompanyID    uint
 }
 
 type SystemAdmin struct {

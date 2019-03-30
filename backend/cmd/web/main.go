@@ -77,31 +77,17 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/user/{id}/getProfile", app.GetUserProfile).Methods("GET")
 	router.HandleFunc("/api/user/{id}/updateProfile", app.UpdateUserProfile).Methods("POST", "OPTIONS")
 
-	// SYSTEM ADMIN API
-	router.HandleFunc("/api/systemAdmin/register", app.RegisterSystemAdmin).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/systemAdmin/completeRegistration/q={email}", app.CompleteRegistrationSysAdmin).Methods("GET")
-
-	// AIRLINE ADMIN API
-	// TODO
-	router.HandleFunc("/api/airline/getAirline", app.GetAirline).Methods("GET")
-	router.HandleFunc("/api/airline/{id}/getProfile", app.GetAirlineProfiles).Methods("GET")
-	router.HandleFunc("/api/airline/{id}/updateProfile", app.UpdateAirlineProfile).Methods("POST", "OPTIONS")
-
-	// HOTEL ADMIN API
-	// TODO
-
-	// RENT-A-CAR ADMIN API
-	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", app.GetRentACarCompanies).Methods("GET")
-	router.HandleFunc("/api/rentACarCompany/{id}/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
-	router.HandleFunc("/api/rentACarCompany/{id}/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
-	// TODO
+	// ADMIN API
+	router.HandleFunc("/api/admin/register", app.RegisterAdmin).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/admin/{type}/completeRegistration/q={email}", app.CompleteRegistration).Methods("GET")
 
 	// RESERVATION API
 	// TODO
 
 	// AIRLINE API
-	// TODO
+	router.HandleFunc("/api/airline/getAirline", app.GetAirline).Methods("GET")
+	router.HandleFunc("/api/airline/{id}/getProfile", app.GetAirlineProfiles).Methods("GET")
+	router.HandleFunc("/api/airline/{id}/updateProfile", app.UpdateAirlineProfile).Methods("POST", "OPTIONS")
 
 	// HOTEL API
 	router.HandleFunc("/api/hotel/getHotels", app.GetHotels).Methods("GET")
@@ -110,7 +96,10 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/hotel/addHotel", app.CreateHotel).Methods("POST", "OPTIONS")
 
 	// RENT-A-CAR API
-	// TODO
+	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", app.GetRentACarCompanies).Methods("GET")
+	router.HandleFunc("/api/rentACarCompany/{id}/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
+	router.HandleFunc("/api/rentACarCompany/{id}/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
 
 	// STATIC FILE HANDLER
 	staticFileDirectory := http.Dir("./ui/")

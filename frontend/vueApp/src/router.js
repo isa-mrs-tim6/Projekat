@@ -38,7 +38,7 @@ export default new Router({
       component: VehiclesSearch
     },
     {
-      path: '/confirmRegistration/:email/',
+      path: '/confirmRegistration/:type/:email/',
       component: RegistrationSuccess
     }
   ]
