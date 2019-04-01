@@ -2,7 +2,6 @@
     <div>
         <HotelAdminNavbar></HotelAdminNavbar>
         <form>
-            <h1> Hotel <span id="routeID">{{ $route.params.id }}</span> </h1>
             <v-text-field
                     v-model="hotelProfile.Name"
                     label="Name"
@@ -49,8 +48,7 @@
             }
         },
         mounted() {
-            var hotelID = document.getElementById("routeID").innerHTML;
-            axios.get('http://localhost:8000/api/hotel/'+hotelID+'/getProfile')
+            axios.get('http://localhost:8000/api/hotel/'+this.$route.params.id+'/getProfile')
                 .then(res => {
                     this.hotelProfile = res.data;
                     this.backupHotelProfile = JSON.parse(JSON.stringify(this.hotelProfile))
@@ -61,10 +59,19 @@
         methods: {
             update(e) {
                 e.preventDefault();
-                var hotelID = document.getElementById("routeID").innerHTML;
-                axios.post('http://localhost:8000/api/hotel/'+hotelID+'/updateProfile', this.hotelProfile)
-                    .then(res => this.backupHotelProfile = JSON.parse(JSON.stringify(this.hotelProfile)))
-                    .catch(err => console.log(err));
+                if (isNaN(Number(this.AirlineProfile.Longitude)) && isNaN(Number(this.AirlineProfile.Latitude))){
+                    alert("Enter a number for Longitude and Latitude");
+                }else if(isNaN(Number(this.AirlineProfile.Longitude))){
+                    alert("Enter a number for Longitude");
+                }else if(isNaN(Number(this.AirlineProfile.Latitude))){
+                    alert("Enter a number for Latitude");
+                }else {
+                    this.AirlineProfile.Latitude = Number(this.AirlineProfile.Latitude);
+                    this.AirlineProfile.Longitude = Number(this.AirlineProfile.Longitude);
+                    axios.post('http://localhost:8000/api/hotel/' + this.$route.params.id + '/updateProfile', this.hotelProfile)
+                        .then(res => this.backupHotelProfile = JSON.parse(JSON.stringify(this.hotelProfile)))
+                        .catch(err => console.log(err));
+                }
             },
             revert () {
                 this.hotelProfile = JSON.parse(JSON.stringify(this.backupHotelProfile))

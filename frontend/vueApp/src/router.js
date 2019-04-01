@@ -7,6 +7,7 @@ import User from "./views/User";
 import RacAdmin from "./views/RacAdmin";
 import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
+import AirlineAdmin from "./views/AirlineAdmin";
 
 Vue.use(Router);
 
@@ -28,6 +29,10 @@ export default new Router({
     {
       path: '/user',
       component: User
+    },
+    {
+      path: '/airlineAdmin/:id',
+      component: AirlineAdmin
     },
     {
       path: '/racAdmin/:id',
