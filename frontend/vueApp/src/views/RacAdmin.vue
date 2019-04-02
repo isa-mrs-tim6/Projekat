@@ -59,15 +59,15 @@
         methods: {
             update(e) {
                 e.preventDefault();
-                if (isNaN(Number(this.AirlineProfile.Longitude)) && isNaN(Number(this.AirlineProfile.Latitude))){
+                if (isNaN(Number(this.racProfile.Longitude)) && isNaN(Number(this.racProfile.Latitude))){
                     alert("Enter a number for Longitude and Latitude");
-                }else if(isNaN(Number(this.AirlineProfile.Longitude))){
+                }else if(isNaN(Number(this.racProfile.Longitude))){
                     alert("Enter a number for Longitude");
-                }else if(isNaN(Number(this.AirlineProfile.Latitude))){
+                }else if(isNaN(Number(this.racProfile.Latitude))){
                     alert("Enter a number for Latitude");
                 }else{
-                    this.AirlineProfile.Latitude = Number(this.AirlineProfile.Latitude);
-                    this.AirlineProfile.Longitude = Number(this.AirlineProfile.Longitude);
+                    this.racProfile.Latitude = Number(this.racProfile.Latitude);
+                    this.racProfile.Longitude = Number(this.racProfile.Longitude);
                     axios.post('http://localhost:8000/api/rentACarCompany/'+this.$route.params.id+'/updateProfile', this.racProfile)
                         .then(res => this.backupRACProfile = JSON.parse(JSON.stringify(this.racProfile)))
                         .catch(err => console.log(err));
