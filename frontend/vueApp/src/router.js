@@ -8,6 +8,7 @@ import RacAdmin from "./views/RacAdmin";
 import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
 import AirlineAdmin from "./views/AirlineAdmin";
+import RegisterUser from "./views/RegisterUser";
 
 Vue.use(Router);
 
@@ -45,6 +46,10 @@ export default new Router({
     {
       path: '/confirmRegistration/:type/:email/',
       component: RegistrationSuccess
+    },
+    {
+      path: '/register',
+      component: RegisterUser
     }
   ]
 })

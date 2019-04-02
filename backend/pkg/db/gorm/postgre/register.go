@@ -10,7 +10,7 @@ type RegisterInterface interface {
 	CompleteRegistrationSystemAdmin(hashedEmail string) error
 }
 
-func (db *Store) CompleteAdminRegistration(email string, accountType string) error {
+func (db *Store) CompleteRegistration(email string, accountType string) error {
 	switch accountType {
 	case "SystemAdmin":
 		var retVal models.SystemAdmin
@@ -32,6 +32,12 @@ func (db *Store) CompleteAdminRegistration(email string, accountType string) err
 		return nil
 	case "Rent-A-CarAdmin":
 		var retVal models.RentACarAdmin
+		if err := db.Model(&retVal).Where("email = ?", email).Update("registration_complete", true).Error; err != nil {
+			return err
+		}
+		return nil
+	case "User":
+		var retVal models.User
 		if err := db.Model(&retVal).Where("email = ?", email).Update("registration_complete", true).Error; err != nil {
 			return err
 		}
@@ -79,6 +85,20 @@ func (db *Store) RegisterAdmin(credentials models.Credentials, accountType strin
 			return err
 		}
 		return nil
+	}
+	return nil
+}
+
+func (db *Store) RegisterUser(user models.User) error {
+	hashedPassword, err := createHash(user.Credentials.Password)
+	if err != nil {
+		return err
+	}
+	user.Password = string(hashedPassword)
+	//user.RegistrationComplete = false
+
+	if err := db.Create(&user).Error; err != nil {
+		return err
 	}
 	return nil
 }
