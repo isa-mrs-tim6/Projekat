@@ -19,7 +19,7 @@
     </div>
 </template>
 <script>
-    import AirlineAdminNavbar from "../components/AirlineAdminNavbar";
+    import AirlineAdminNavbar from "../../components/AirlineAdmin/AirlineAdminNavbar";
     import axios from 'axios';
 
     export default {

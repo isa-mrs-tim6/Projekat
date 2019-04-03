@@ -27,7 +27,7 @@ func initTables(db *gorm.DB) {
 		&models.RentACarAdmin{}, &models.RentACarCompany{}, &models.Location{}, &models.Vehicle{},
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
-		&models.HotelReservation{}, &models.FlightReservation{}, "user_reservations", "vehicle_reservations")
+		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, "user_reservations", "vehicle_reservations")
 	fmt.Printf("DATABASE: Finished dropping, time taken: %f seconds\n", time.Since(timeDroppingTables).Seconds())
 
 	fmt.Println("DATABASE: Auto migrating schema")
@@ -38,7 +38,7 @@ func initTables(db *gorm.DB) {
 		&models.RentACarAdmin{}, &models.RentACarCompany{}, &models.Location{}, &models.Vehicle{},
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
-		&models.HotelReservation{}, &models.FlightReservation{})
+		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{})
 	fmt.Printf("DATABASE: Finished automigration, time taken: %f seconds\n", time.Since(timeAutoMigration).Seconds())
 }
 
@@ -129,12 +129,16 @@ func addModels(db *gorm.DB) {
 				{Number: 33, Class: "FIRST", QuickReserve: false}},
 			},
 		},
+		Destinations: []models.Destination{
+			{Name: "A1_DEST1", Coordinate: models.Coordinate{Latitude: -11.124, Longitude: 4.24}},
+			{Name: "A1_DEST2", Coordinate: models.Coordinate{Latitude: 12.124, Longitude: 44.24}},
+			{Name: "A1_DEST3", Coordinate: models.Coordinate{Latitude: 3.124, Longitude: 54.24}},
+		},
 		Flights: []models.Flight{
 			{
 				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
 				Duration: time.Hour * 5,
 				Distance: 780,
-				Origin:   "A1_F1_ORIGIN", Destination: "A1_F1_DESTINATION",
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
 				Landing:   time.Date(2019, 2, 3, 14, 15, 0, 0, time.Local),
 				Layovers: []models.Layovers{
@@ -150,7 +154,6 @@ func addModels(db *gorm.DB) {
 				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
 				Duration: time.Hour * 2,
 				Distance: 380,
-				Origin:   "A1_F2_ORIGIN", Destination: "A1_F2_DESTINATION",
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),
 				Landing:   time.Date(2019, 4, 3, 12, 17, 0, 0, time.Local),
 				Layovers: []models.Layovers{
@@ -166,9 +169,15 @@ func addModels(db *gorm.DB) {
 	}
 	DeepCopy(&airline.Airplanes[0], &airline.Flights[0].Airplane)
 	DeepCopy(&airline.Airplanes[1], &airline.Flights[1].Airplane)
-	airline.Flights[0].Airplane.Seats[1].QuickReserve = true
+
 	airline.Flights[1].Airplane.Seats[0].QuickReserve = true
 	airline.Flights[1].Airplane.Seats[2].QuickReserve = true
+	airline.Flights[0].Airplane.Seats[1].QuickReserve = true
+
+	airline.Flights[0].Origin = &airline.Destinations[0]
+	airline.Flights[0].Destination = &airline.Destinations[1]
+	airline.Flights[1].Origin = &airline.Destinations[1]
+	airline.Flights[1].Destination = &airline.Destinations[2]
 
 	airline2 := models.Airline{
 		AirlineProfile: models.AirlineProfile{
@@ -180,6 +189,11 @@ func addModels(db *gorm.DB) {
 		},
 		Admins: []*models.AirlineAdmin{
 			&airlineAdmin3,
+		},
+		Destinations: []models.Destination{
+			{Name: "A2_DEST1", Coordinate: models.Coordinate{Latitude: -51.124, Longitude: 4.24}},
+			{Name: "A2_DEST2", Coordinate: models.Coordinate{Latitude: 12.124, Longitude: 1.24}},
+			{Name: "A2_DEST3", Coordinate: models.Coordinate{Latitude: 35.124, Longitude: 44.24}},
 		},
 		Airplanes: []models.Airplane{
 			{Seats: []models.Seat{
@@ -198,7 +212,6 @@ func addModels(db *gorm.DB) {
 				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
 				Duration: time.Hour * 5,
 				Distance: 780,
-				Origin:   "A2_F1_ORIGIN", Destination: "A2_F1_DESTINATION",
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
 				Landing:   time.Date(2019, 2, 3, 14, 15, 0, 0, time.Local),
 				Layovers:  nil,
@@ -207,7 +220,6 @@ func addModels(db *gorm.DB) {
 				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
 				Duration: time.Hour * 2,
 				Distance: 380,
-				Origin:   "A2_F2_ORIGIN", Destination: "A2_F2_DESTINATION",
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),
 				Landing:   time.Date(2019, 4, 3, 12, 17, 0, 0, time.Local),
 				Layovers: []models.Layovers{
@@ -226,6 +238,12 @@ func addModels(db *gorm.DB) {
 	airline2.Flights[0].Airplane.Seats[2].QuickReserve = true
 	DeepCopy(&airline2.Airplanes[1], &airline2.Flights[1].Airplane)
 	airline2.Flights[1].Airplane.Seats[1].QuickReserve = true
+
+	airline2.Flights[0].Origin = &airline2.Destinations[0]
+	airline2.Flights[0].Destination = &airline2.Destinations[1]
+	airline2.Flights[1].Origin = &airline2.Destinations[1]
+	airline2.Flights[1].Destination = &airline2.Destinations[2]
+
 	db.Create(&airline)
 	db.Create(&airline2)
 
