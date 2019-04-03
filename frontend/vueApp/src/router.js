@@ -7,8 +7,10 @@ import User from "./views/User";
 import RacAdmin from "./views/RacAdmin";
 import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
-import AirlineAdmin from "./views/AirlineAdmin";
+import AirlineAdmin from "./views/AirlineAdmin/AirlineAdmin";
 import RegisterUser from "./views/RegisterUser";
+import Destination from "./views/AirlineAdmin/Destination";
+import UpdateDestination from "./views/AirlineAdmin/UpdateDestination";
 
 Vue.use(Router);
 
@@ -34,6 +36,14 @@ export default new Router({
     {
       path: '/airlineAdmin/:id',
       component: AirlineAdmin
+    },
+    {
+      path: '/airlineAdmin/destination/add',
+      component: Destination
+    },
+    {
+      path: '/airlineAdmin/destination/:id',
+      component: UpdateDestination
     },
     {
       path: '/racAdmin/:id',

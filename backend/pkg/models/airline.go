@@ -20,6 +20,12 @@ type Airplane struct {
 	Seats     []Seat `gorm:"foreignkey:AirplaneID"`
 	AirlineID uint
 }
+type Destination struct{
+	gorm.Model
+	AirlineID uint
+	Name string
+	Coordinate
+}
 
 type Layovers struct {
 	gorm.Model
@@ -29,8 +35,10 @@ type Layovers struct {
 
 type Flight struct {
 	gorm.Model
-	Origin                     string
-	Destination                string
+	Origin                     *Destination
+	OriginID uint
+	Destination                *Destination
+	DestinationID uint
 	Departure                  time.Time
 	Landing                    time.Time
 	Duration                   time.Duration
@@ -58,4 +66,5 @@ type Airline struct {
 	Flights   []Flight        `gorm:"foreignkey:AirlineID"`
 	Airplanes []Airplane      `gorm:"foreignkey:AirlineID"`
 	Admins    []*AirlineAdmin `gorm:"foreignkey:AirlineID"`
+	Destinations []Destination `gorm:"foreignkey:AirlineID"`
 }

@@ -68,7 +68,7 @@ func (app *Application) UpdateAirlineProfile(w http.ResponseWriter, r *http.Requ
 
 	err = app.Store.UpdateAirline(uint(id), airlineProfile)
 	if err != nil {
-		app.ErrorLog.Printf("Could not add hotel to database")
+		app.ErrorLog.Printf("Could not add destination to database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
