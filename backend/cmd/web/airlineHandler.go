@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func (app *Application) GetAirline(w http.ResponseWriter, r *http.Request) {
+func (app *Application) GetAirlines(w http.ResponseWriter, r *http.Request) {
 	airlines, err := app.Store.GetAirlines()
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive airline profile")
@@ -23,6 +23,26 @@ func (app *Application) GetAirline(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (app *Application) CreateAirline(w http.ResponseWriter, r *http.Request) {
+	var airline models.Airline
+
+	err := json.NewDecoder(r.Body).Decode(&airline.AirlineProfile)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = app.Store.CreateAirline(&airline)
+	if err != nil {
+		app.ErrorLog.Printf("Could not add hotel to database")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	w.WriteHeader(http.StatusCreated)
+}
+
 func (app *Application) GetAirlineProfiles(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
