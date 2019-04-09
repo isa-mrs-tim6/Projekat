@@ -107,6 +107,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/rentACarCompany/{id}/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
 	router.HandleFunc("/api/rentACarCompany/{id}/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/rentACarCompany/addRentACarCompany", app.CreateRentACarCompany).Methods("POST", "OPTIONS")
 
 	// STATIC FILE HANDLER
 	staticFileDirectory := http.Dir("./ui/")

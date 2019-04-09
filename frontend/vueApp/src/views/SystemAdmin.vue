@@ -8,7 +8,7 @@
                 <v-btn @click="manageAccounts" flat>Manage admin accounts</v-btn>
                 <v-btn flat>Airlines</v-btn>
                 <v-btn @click="manageHotels" flat>Hotels</v-btn>
-                <v-btn flat>Rent-a-car companies</v-btn>
+                <v-btn @click="manageRentACarCompanies" flat>Rent-a-car companies</v-btn>
             </v-toolbar-items>
         </v-toolbar>
         <component v-bind:is="currentTabComponent"></component>
@@ -18,10 +18,11 @@
 <script>
     import ManageHotels from "../components/ManageHotels";
     import ManageAdminRegistration from "../components/ManageAdminRegistration";
+    import ManageRentACarCompanies from "../components/ManageRentACarCompanies"
 
     export default {
         name: "SystemAdmin",
-        components: {ManageHotels, ManageAdminRegistration},
+        components: {ManageHotels, ManageAdminRegistration, ManageRentACarCompanies},
         data() {
             return {
                 currentTabComponent: "ManageHotels",
@@ -34,6 +35,9 @@
             manageHotels(){
                 this.currentTabComponent = "ManageHotels"
             },
+            manageRentACarCompanies(){
+                this.currentTabComponent = "ManageRentACarCompanies"
+            }
         },
     }
 </script>

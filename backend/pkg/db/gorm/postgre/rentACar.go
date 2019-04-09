@@ -21,6 +21,13 @@ func (db *Store) GetRentACarCompanies() ([]models.RentACarCompany, error) {
 	return retVal, nil
 }
 
+func (db *Store) CreateRentACarCompany(rac *models.RentACarCompany) error {
+	if err := db.Create(&rac).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (db *Store) GetRentACarCompanyProfile(id uint) (models.RentACarCompanyProfile, error) {
 	var retVal models.RentACarCompany
 	if err := db.First(&retVal, id).Error; err != nil {
