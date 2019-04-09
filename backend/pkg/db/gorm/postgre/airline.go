@@ -10,6 +10,13 @@ func (db *Store) GetAirlines() ([]models.Airline, error) {
 	return retVal, nil
 }
 
+func (db *Store) CreateAirline(airline *models.Airline) error {
+	if err := db.Create(&airline).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (db *Store) GetAirlineProfile(id uint) (models.AirlineProfile, error) {
 	var retVal models.Airline
 	if err := db.First(&retVal, id).Error; err != nil {
