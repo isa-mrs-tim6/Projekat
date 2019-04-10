@@ -36,7 +36,7 @@ func (app *Application) CreateAirline(w http.ResponseWriter, r *http.Request) {
 
 	err = app.Store.CreateAirline(&airline)
 	if err != nil {
-		app.ErrorLog.Printf("Could not add hotel to database")
+		app.ErrorLog.Printf("Could not add airline to database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
