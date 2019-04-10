@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/lib/pq"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -137,8 +138,8 @@ func addModels(db *gorm.DB) {
 		Flights: []models.Flight{
 			{
 				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
-				Duration: time.Hour * 5,
-				Distance: 780,
+				Duration:  time.Hour * 5,
+				Distance:  780,
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
 				Landing:   time.Date(2019, 2, 3, 14, 15, 0, 0, time.Local),
 				Layovers: []models.Layovers{
@@ -152,8 +153,8 @@ func addModels(db *gorm.DB) {
 			},
 			{
 				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
-				Duration: time.Hour * 2,
-				Distance: 380,
+				Duration:  time.Hour * 2,
+				Distance:  380,
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),
 				Landing:   time.Date(2019, 4, 3, 12, 17, 0, 0, time.Local),
 				Layovers: []models.Layovers{
@@ -210,16 +211,16 @@ func addModels(db *gorm.DB) {
 		Flights: []models.Flight{
 			{
 				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
-				Duration: time.Hour * 5,
-				Distance: 780,
+				Duration:  time.Hour * 5,
+				Distance:  780,
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
 				Landing:   time.Date(2019, 2, 3, 14, 15, 0, 0, time.Local),
 				Layovers:  nil,
 			},
 			{
 				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
-				Duration: time.Hour * 2,
-				Distance: 380,
+				Duration:  time.Hour * 2,
+				Distance:  380,
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),
 				Landing:   time.Date(2019, 4, 3, 12, 17, 0, 0, time.Local),
 				Layovers: []models.Layovers{
@@ -354,37 +355,47 @@ func addModels(db *gorm.DB) {
 	db.Create(&rentACarCompany)
 	db.Create(&rentACarCompany2)
 
+	// hash passwords
+	pass1, err := bcrypt.GenerateFromPassword([]byte("USER1"), bcrypt.DefaultCost)
+	pass2, err := bcrypt.GenerateFromPassword([]byte("USER2"), bcrypt.DefaultCost)
+	pass3, err := bcrypt.GenerateFromPassword([]byte("USER3"), bcrypt.DefaultCost)
+	pass4, err := bcrypt.GenerateFromPassword([]byte("USER4"), bcrypt.DefaultCost)
+
+	if err != nil {
+		return
+	}
+
 	// CREATING USERS
 	user := models.User{
 		Profile: models.Profile{
-			Credentials: models.Credentials{Email: "USER1@email.com", Password: "USER1"},
+			Credentials: models.Credentials{Email: "USER1@email.com", Password: string(pass1)},
 			UserInfo:    models.UserInfo{Name: "USER1_IME", Surname: "USER1_PREZIME"},
-			Address: "USER1_ADDRESS",
-			Phone: "USER1_PHONE",
+			Address:     "USER1_ADDRESS",
+			Phone:       "USER1_PHONE",
 		},
 	}
 	user2 := models.User{
 		Profile: models.Profile{
-			Credentials: models.Credentials{Email: "USER2@email.com", Password: "USER2"},
+			Credentials: models.Credentials{Email: "USER2@email.com", Password: string(pass2)},
 			UserInfo:    models.UserInfo{Name: "USER2_IME", Surname: "USER2_PREZIME"},
-			Address: "USER2_ADDRESS",
-			Phone: "USER2_ADDRESS",
+			Address:     "USER2_ADDRESS",
+			Phone:       "USER2_ADDRESS",
 		},
 	}
 	user3 := models.User{
 		Profile: models.Profile{
-			Credentials: models.Credentials{Email: "USER3@email.com", Password: "USER3"},
+			Credentials: models.Credentials{Email: "USER3@email.com", Password: string(pass3)},
 			UserInfo:    models.UserInfo{Name: "USER3_IME", Surname: "USER3_PREZIME"},
-			Address: "USER3_ADDRESS",
-			Phone: "USER3_ADDRESS",
+			Address:     "USER3_ADDRESS",
+			Phone:       "USER3_ADDRESS",
 		},
 	}
 	user4 := models.User{
 		Profile: models.Profile{
-			Credentials: models.Credentials{Email: "USER4@email.com", Password: "USER4"},
+			Credentials: models.Credentials{Email: "USER4@email.com", Password: string(pass4)},
 			UserInfo:    models.UserInfo{Name: "USER4_IME", Surname: "USER4_PREZIME"},
-			Address: "USER4_ADDRESS",
-			Phone: "USER4_ADDRESS",
+			Address:     "USER4_ADDRESS",
+			Phone:       "USER4_ADDRESS",
 		},
 	}
 	db.Create(&user)
