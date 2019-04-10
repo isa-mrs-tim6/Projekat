@@ -80,6 +80,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/user/register", app.RegisterUser).Methods("POST", "OPTIONS")
 
 	// ADMIN API
+	router.HandleFunc("/api/admin/login", app.LoginAdmin).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/admin/register", app.RegisterAdmin).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/admin/{type}/completeRegistration/q={email}", app.CompleteRegistration).Methods("GET")
 

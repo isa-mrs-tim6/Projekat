@@ -12,6 +12,7 @@ import RegisterUser from "./views/RegisterUser";
 import LoginUser from "./views/LoginUser";
 import Destination from "./views/AirlineAdmin/Destination";
 import UpdateDestination from "./views/AirlineAdmin/UpdateDestination";
+import LoginAdmin from "./views/LoginAdmin";
 
 Vue.use(Router);
 
@@ -65,6 +66,10 @@ export default new Router({
     {
       path: '/login',
       component: LoginUser
+    },
+    {
+      path: '/admin/login',
+      component: LoginAdmin
     }
   ]
 })

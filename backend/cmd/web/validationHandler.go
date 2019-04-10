@@ -5,6 +5,14 @@ import (
 	"net/http"
 )
 
+var jwtKey = []byte("my_secret_key")
+
+type Claims struct {
+	Username string `json:"username"`
+	Type     string `json:"type"`
+	jwt.StandardClaims
+}
+
 func Validate(next http.HandlerFunc, userTypes []string) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		c, err := r.Cookie("token")
