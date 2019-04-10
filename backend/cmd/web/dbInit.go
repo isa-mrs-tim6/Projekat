@@ -373,6 +373,7 @@ func addModels(db *gorm.DB) {
 			Address:     "USER1_ADDRESS",
 			Phone:       "USER1_PHONE",
 		},
+		RegistrationComplete: true,
 	}
 	user2 := models.User{
 		Profile: models.Profile{
@@ -381,6 +382,7 @@ func addModels(db *gorm.DB) {
 			Address:     "USER2_ADDRESS",
 			Phone:       "USER2_ADDRESS",
 		},
+		RegistrationComplete: true,
 	}
 	user3 := models.User{
 		Profile: models.Profile{
@@ -389,6 +391,7 @@ func addModels(db *gorm.DB) {
 			Address:     "USER3_ADDRESS",
 			Phone:       "USER3_ADDRESS",
 		},
+		RegistrationComplete: false,
 	}
 	user4 := models.User{
 		Profile: models.Profile{
@@ -397,6 +400,7 @@ func addModels(db *gorm.DB) {
 			Address:     "USER4_ADDRESS",
 			Phone:       "USER4_ADDRESS",
 		},
+		RegistrationComplete: false,
 	}
 	db.Create(&user)
 	db.Create(&user2)

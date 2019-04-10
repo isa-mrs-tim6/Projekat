@@ -9,6 +9,7 @@ import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
 import AirlineAdmin from "./views/AirlineAdmin/AirlineAdmin";
 import RegisterUser from "./views/RegisterUser";
+import LoginUser from "./views/LoginUser";
 import Destination from "./views/AirlineAdmin/Destination";
 import UpdateDestination from "./views/AirlineAdmin/UpdateDestination";
 
@@ -60,6 +61,10 @@ export default new Router({
     {
       path: '/register',
       component: RegisterUser
+    },
+    {
+      path: '/login',
+      component: LoginUser
     }
   ]
 })
