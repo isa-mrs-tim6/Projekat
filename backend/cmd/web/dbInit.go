@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/lib/pq"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -46,59 +47,86 @@ func addModels(db *gorm.DB) {
 	fmt.Println("DATABASE: Adding models")
 	timeStart := time.Now()
 
+	// hash passwords
+	pass1, err := bcrypt.GenerateFromPassword([]byte("S_ADMIN1"), bcrypt.DefaultCost)
+
 	// CREATING SYSTEM ADMINS
 	systemAdmin := models.SystemAdmin{
-		Credentials: models.Credentials{Email: "S_ADMIN1@email.com", Password: "S_ADMIN1"},
-		UserInfo:    models.UserInfo{Name: "S_ADMIN1_IME", Surname: "S_ADMIN1_PREZIME"},
+		Credentials:          models.Credentials{Email: "S_ADMIN1@email.com", Password: string(pass1)},
+		UserInfo:             models.UserInfo{Name: "S_ADMIN1_IME", Surname: "S_ADMIN1_PREZIME"},
+		RegistrationComplete: true,
 	}
 	db.Create(&systemAdmin)
 
+	// hash passwords
+	pass1, err = bcrypt.GenerateFromPassword([]byte("A_ADMIN1"), bcrypt.DefaultCost)
+	pass2, err := bcrypt.GenerateFromPassword([]byte("A_ADMIN2"), bcrypt.DefaultCost)
+	pass3, err := bcrypt.GenerateFromPassword([]byte("A_ADMIN3"), bcrypt.DefaultCost)
+
 	// CREATING AIRLINE ADMINS
 	airlineAdmin := models.AirlineAdmin{
-		Credentials: models.Credentials{Email: "A_ADMIN1@email.com", Password: "A_ADMIN1"},
-		UserInfo:    models.UserInfo{Name: "A_ADMIN1_IME", Surname: "A_ADMIN1_PREZIME"},
+		Credentials:          models.Credentials{Email: "A_ADMIN1@email.com", Password: string(pass1)},
+		UserInfo:             models.UserInfo{Name: "A_ADMIN1_IME", Surname: "A_ADMIN1_PREZIME"},
+		RegistrationComplete: true,
 	}
 	airlineAdmin2 := models.AirlineAdmin{
-		Credentials: models.Credentials{Email: "A_ADMIN2@email.com", Password: "A_ADMIN2"},
-		UserInfo:    models.UserInfo{Name: "A_ADMIN2_IME", Surname: "A_ADMIN2_PREZIME"},
+		Credentials:          models.Credentials{Email: "A_ADMIN2@email.com", Password: string(pass2)},
+		UserInfo:             models.UserInfo{Name: "A_ADMIN2_IME", Surname: "A_ADMIN2_PREZIME"},
+		RegistrationComplete: true,
 	}
 	airlineAdmin3 := models.AirlineAdmin{
-		Credentials: models.Credentials{Email: "A_ADMIN3@email.com", Password: "A_ADMIN3"},
-		UserInfo:    models.UserInfo{Name: "A_ADMIN3_IME", Surname: "A_ADMIN3_PREZIME"},
+		Credentials:          models.Credentials{Email: "A_ADMIN3@email.com", Password: string(pass3)},
+		UserInfo:             models.UserInfo{Name: "A_ADMIN3_IME", Surname: "A_ADMIN3_PREZIME"},
+		RegistrationComplete: false,
 	}
 	db.Create(&airlineAdmin)
 	db.Create(&airlineAdmin2)
 	db.Create(&airlineAdmin3)
 
+	// hash passwords
+	pass1, err = bcrypt.GenerateFromPassword([]byte("H_ADMIN1"), bcrypt.DefaultCost)
+	pass2, err = bcrypt.GenerateFromPassword([]byte("H_ADMIN2"), bcrypt.DefaultCost)
+	pass3, err = bcrypt.GenerateFromPassword([]byte("H_ADMIN3"), bcrypt.DefaultCost)
+
 	// CREATING HOTEL ADMINS
 	hotelAdmin := models.HotelAdmin{
-		Credentials: models.Credentials{Email: "H_ADMIN1@email.com", Password: "H_ADMIN1"},
-		UserInfo:    models.UserInfo{Name: "H_ADMIN1_IME", Surname: "H_ADMIN1_PREZIME"},
+		Credentials:          models.Credentials{Email: "H_ADMIN1@email.com", Password: string(pass1)},
+		UserInfo:             models.UserInfo{Name: "H_ADMIN1_IME", Surname: "H_ADMIN1_PREZIME"},
+		RegistrationComplete: true,
 	}
 	hotelAdmin2 := models.HotelAdmin{
-		Credentials: models.Credentials{Email: "H_ADMIN2@email.com", Password: "H_ADMIN2"},
-		UserInfo:    models.UserInfo{Name: "H_ADMIN2_IME", Surname: "H_ADMIN2_PREZIME"},
+		Credentials:          models.Credentials{Email: "H_ADMIN2@email.com", Password: string(pass2)},
+		UserInfo:             models.UserInfo{Name: "H_ADMIN2_IME", Surname: "H_ADMIN2_PREZIME"},
+		RegistrationComplete: true,
 	}
 	hotelAdmin3 := models.HotelAdmin{
-		Credentials: models.Credentials{Email: "H_ADMIN3@email.com", Password: "H_ADMIN3"},
-		UserInfo:    models.UserInfo{Name: "H_ADMIN3_IME", Surname: "H_ADMIN3_PREZIME"},
+		Credentials:          models.Credentials{Email: "H_ADMIN3@email.com", Password: string(pass3)},
+		UserInfo:             models.UserInfo{Name: "H_ADMIN3_IME", Surname: "H_ADMIN3_PREZIME"},
+		RegistrationComplete: false,
 	}
 	db.Create(&hotelAdmin)
 	db.Create(&hotelAdmin2)
 	db.Create(&hotelAdmin3)
 
+	pass1, err = bcrypt.GenerateFromPassword([]byte("R_ADMIN1"), bcrypt.DefaultCost)
+	pass2, err = bcrypt.GenerateFromPassword([]byte("R_ADMIN2"), bcrypt.DefaultCost)
+	pass3, err = bcrypt.GenerateFromPassword([]byte("R_ADMIN3"), bcrypt.DefaultCost)
+
 	// CREATING RENT-A-CAR ADMINS
 	rentACarAdmin := models.RentACarAdmin{
-		Credentials: models.Credentials{Email: "R_ADMIN1@email.com", Password: "R_ADMIN1"},
-		UserInfo:    models.UserInfo{Name: "R_ADMIN1_IME", Surname: "R_ADMIN1_PREZIME"},
+		Credentials:          models.Credentials{Email: "R_ADMIN1@email.com", Password: string(pass1)},
+		UserInfo:             models.UserInfo{Name: "R_ADMIN1_IME", Surname: "R_ADMIN1_PREZIME"},
+		RegistrationComplete: true,
 	}
 	rentACarAdmin2 := models.RentACarAdmin{
-		Credentials: models.Credentials{Email: "R_ADMIN2@email.com", Password: "R_ADMIN2"},
-		UserInfo:    models.UserInfo{Name: "R_ADMIN2_IME", Surname: "R_ADMIN2_PREZIME"},
+		Credentials:          models.Credentials{Email: "R_ADMIN2@email.com", Password: string(pass2)},
+		UserInfo:             models.UserInfo{Name: "R_ADMIN2_IME", Surname: "R_ADMIN2_PREZIME"},
+		RegistrationComplete: true,
 	}
 	rentACarAdmin3 := models.RentACarAdmin{
-		Credentials: models.Credentials{Email: "R_ADMIN3@email.com", Password: "R_ADMIN3"},
-		UserInfo:    models.UserInfo{Name: "R_ADMIN3_IME", Surname: "R_ADMIN3_PREZIME"},
+		Credentials:          models.Credentials{Email: "R_ADMIN3@email.com", Password: string(pass3)},
+		UserInfo:             models.UserInfo{Name: "R_ADMIN3_IME", Surname: "R_ADMIN3_PREZIME"},
+		RegistrationComplete: false,
 	}
 	db.Create(&rentACarAdmin)
 	db.Create(&rentACarAdmin2)
@@ -137,8 +165,8 @@ func addModels(db *gorm.DB) {
 		Flights: []models.Flight{
 			{
 				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
-				Duration: time.Hour * 5,
-				Distance: 780,
+				Duration:  time.Hour * 5,
+				Distance:  780,
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
 				Landing:   time.Date(2019, 2, 3, 14, 15, 0, 0, time.Local),
 				Layovers: []models.Layovers{
@@ -152,8 +180,8 @@ func addModels(db *gorm.DB) {
 			},
 			{
 				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
-				Duration: time.Hour * 2,
-				Distance: 380,
+				Duration:  time.Hour * 2,
+				Distance:  380,
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),
 				Landing:   time.Date(2019, 4, 3, 12, 17, 0, 0, time.Local),
 				Layovers: []models.Layovers{
@@ -210,16 +238,16 @@ func addModels(db *gorm.DB) {
 		Flights: []models.Flight{
 			{
 				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
-				Duration: time.Hour * 5,
-				Distance: 780,
+				Duration:  time.Hour * 5,
+				Distance:  780,
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
 				Landing:   time.Date(2019, 2, 3, 14, 15, 0, 0, time.Local),
 				Layovers:  nil,
 			},
 			{
 				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
-				Duration: time.Hour * 2,
-				Distance: 380,
+				Duration:  time.Hour * 2,
+				Distance:  380,
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),
 				Landing:   time.Date(2019, 4, 3, 12, 17, 0, 0, time.Local),
 				Layovers: []models.Layovers{
@@ -354,38 +382,52 @@ func addModels(db *gorm.DB) {
 	db.Create(&rentACarCompany)
 	db.Create(&rentACarCompany2)
 
+	// hash passwords
+	pass1, err = bcrypt.GenerateFromPassword([]byte("USER1"), bcrypt.DefaultCost)
+	pass2, err = bcrypt.GenerateFromPassword([]byte("USER2"), bcrypt.DefaultCost)
+	pass3, err = bcrypt.GenerateFromPassword([]byte("USER3"), bcrypt.DefaultCost)
+	pass4, err := bcrypt.GenerateFromPassword([]byte("USER4"), bcrypt.DefaultCost)
+
+	if err != nil {
+		return
+	}
+
 	// CREATING USERS
 	user := models.User{
 		Profile: models.Profile{
-			Credentials: models.Credentials{Email: "USER1@email.com", Password: "USER1"},
+			Credentials: models.Credentials{Email: "USER1@email.com", Password: string(pass1)},
 			UserInfo:    models.UserInfo{Name: "USER1_IME", Surname: "USER1_PREZIME"},
-			Address: "USER1_ADDRESS",
-			Phone: "USER1_PHONE",
+			Address:     "USER1_ADDRESS",
+			Phone:       "USER1_PHONE",
 		},
+		RegistrationComplete: true,
 	}
 	user2 := models.User{
 		Profile: models.Profile{
-			Credentials: models.Credentials{Email: "USER2@email.com", Password: "USER2"},
+			Credentials: models.Credentials{Email: "USER2@email.com", Password: string(pass2)},
 			UserInfo:    models.UserInfo{Name: "USER2_IME", Surname: "USER2_PREZIME"},
-			Address: "USER2_ADDRESS",
-			Phone: "USER2_ADDRESS",
+			Address:     "USER2_ADDRESS",
+			Phone:       "USER2_ADDRESS",
 		},
+		RegistrationComplete: true,
 	}
 	user3 := models.User{
 		Profile: models.Profile{
-			Credentials: models.Credentials{Email: "USER3@email.com", Password: "USER3"},
+			Credentials: models.Credentials{Email: "USER3@email.com", Password: string(pass3)},
 			UserInfo:    models.UserInfo{Name: "USER3_IME", Surname: "USER3_PREZIME"},
-			Address: "USER3_ADDRESS",
-			Phone: "USER3_ADDRESS",
+			Address:     "USER3_ADDRESS",
+			Phone:       "USER3_ADDRESS",
 		},
+		RegistrationComplete: false,
 	}
 	user4 := models.User{
 		Profile: models.Profile{
-			Credentials: models.Credentials{Email: "USER4@email.com", Password: "USER4"},
+			Credentials: models.Credentials{Email: "USER4@email.com", Password: string(pass4)},
 			UserInfo:    models.UserInfo{Name: "USER4_IME", Surname: "USER4_PREZIME"},
-			Address: "USER4_ADDRESS",
-			Phone: "USER4_ADDRESS",
+			Address:     "USER4_ADDRESS",
+			Phone:       "USER4_ADDRESS",
 		},
+		RegistrationComplete: false,
 	}
 	db.Create(&user)
 	db.Create(&user2)

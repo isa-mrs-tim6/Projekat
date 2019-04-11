@@ -73,12 +73,14 @@ func (app *Application) Routes() *mux.Router {
 
 	// USER API
 	// TODO
-	router.HandleFunc("/api/user/getUsers", app.GetUser).Methods("GET")
+	router.HandleFunc("/api/user/login", app.LoginUser).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/user/getUsers", Validate(app.GetUser, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/{id}/getProfile", app.GetUserProfile).Methods("GET")
 	router.HandleFunc("/api/user/{id}/updateProfile", app.UpdateUserProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/user/register", app.RegisterUser).Methods("POST", "OPTIONS")
 
 	// ADMIN API
+	router.HandleFunc("/api/admin/login", app.LoginAdmin).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/admin/register", app.RegisterAdmin).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/admin/{type}/completeRegistration/q={email}", app.CompleteRegistration).Methods("GET")
 
