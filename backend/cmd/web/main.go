@@ -87,6 +87,12 @@ func (app *Application) Routes() *mux.Router {
 	// RESERVATION API
 	// TODO
 
+	// FLIGHT API
+	router.HandleFunc("/api/flight/add", app.CreateFlight).Methods("POST", "OPTIONS")
+
+	//AIRPLANE API
+	router.HandleFunc("/api/airplane/getAirplanes", app.GetAirplanes).Methods("GET")
+
 	// AIRLINE API
 	router.HandleFunc("/api/airline/getAirlines", app.GetAirlines).Methods("GET")
 	router.HandleFunc("/api/airline/{id}/getProfile", app.GetAirlineProfiles).Methods("GET")
