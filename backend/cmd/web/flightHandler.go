@@ -23,6 +23,22 @@ func (app *Application) GetAirplanes(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (app *Application) GetCompanysAirplanes(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive airline admin")
+	}
+	airplanes, err := app.Store.GetCompanysAirplanes(user.AirlineID)
+
+	err = json.NewEncoder(w).Encode(airplanes)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode airplanes into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *Application) CreateFlight(w http.ResponseWriter, r *http.Request) {
 	var flightDto models.FlightDto
 
@@ -40,15 +56,15 @@ func (app *Application) CreateFlight(w http.ResponseWriter, r *http.Request) {
 	departure, _ := strconv.ParseInt(flightDto.Departure, 10, 64)
 	landing, _ := strconv.ParseInt(flightDto.Landing, 10, 64)
 
-	var layovers []models.Layovers
+	var layovers []models.Layovers = make([]models.Layovers, 0)
 	var newLayover models.Layovers
-	for index, layover := range flightDto.Layovers {
+	for _, layover := range flightDto.Layovers {
 		newLayover = models.Layovers{
 			Address: models.Address{
 				Address: layover.Address,
 			},
 		}
-		layovers[index] = newLayover
+		layovers = append(layovers, newLayover)
 	}
 
 	flight := models.Flight{
@@ -59,8 +75,35 @@ func (app *Application) CreateFlight(w http.ResponseWriter, r *http.Request) {
 		Distance:        uint(distance),
 		Departure:       time.Unix(0, departure*int64(time.Millisecond)),
 		Landing:         time.Unix(0, landing*int64(time.Millisecond)),
+		Layovers:        layovers,
+	}
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive airline admin")
+	}
+	airplane, err := app.Store.GetAirplane(user.AirlineID, flightDto.Airplane)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive airplane")
 	}
 
+	DeepCopy(airplane, &flight.Airplane)
+	flight.AirlineID = airplane.ID
+
+	origin, err := app.Store.FindDestination(user.AirlineID, flightDto.Origin)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive destination")
+	}
+	flight.Origin = &origin
+	flight.OriginID = flight.Origin.ID
+
+	destination, err := app.Store.FindDestination(user.AirlineID, flightDto.Destination)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive destination")
+	}
+	flight.Destination = &destination
+	flight.DestinationID = flight.Destination.ID
+	flight.AirlineID = user.AirlineID
 	err = app.Store.CreateFlight(&flight)
 	if err != nil {
 		app.ErrorLog.Printf("Could not add destination to database")

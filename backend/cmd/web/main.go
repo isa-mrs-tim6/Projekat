@@ -92,6 +92,7 @@ func (app *Application) Routes() *mux.Router {
 
 	//AIRPLANE API
 	router.HandleFunc("/api/airplane/getAirplanes", app.GetAirplanes).Methods("GET")
+	router.HandleFunc("/api/airplane/getCompanysAirplanes", app.GetCompanysAirplanes).Methods("GET")
 
 	// AIRLINE API
 	router.HandleFunc("/api/airline/getAirlines", app.GetAirlines).Methods("GET")
@@ -101,6 +102,7 @@ func (app *Application) Routes() *mux.Router {
 
 	//DESTINATION API
 	router.HandleFunc("/api/destination/getDestinations", app.GetDestinations).Methods("GET")
+	router.HandleFunc("/api/destination/getCompanysDestinations", app.GetCompanysDestinations).Methods("GET")
 	router.HandleFunc("/api/destination/{id}/getDestination", app.GetDestination).Methods("GET")
 	router.HandleFunc("/api/destination/{id}/updateDestination", app.UpdateDestination).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/destination/add", app.CreateDestination).Methods("POST", "OPTIONS")
@@ -131,6 +133,7 @@ func (app *Application) RunServer() {
 		Addr:     address,
 		ErrorLog: app.ErrorLog,
 		Handler: handlers.CORS(
+			handlers.AllowCredentials(),
 			handlers.AllowedOrigins([]string{"http://localhost:8080"}),
 			handlers.AllowedHeaders([]string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"}),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}))(app.Routes()),

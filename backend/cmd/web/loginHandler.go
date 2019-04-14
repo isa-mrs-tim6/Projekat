@@ -25,11 +25,11 @@ func (app *Application) LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTime := time.Now().Add(24 * time.Hour)
 	// Create the JWT claims, which includes the username and expiry time
 	claims := &Claims{
-		Username: credentials.Email,
-		Type:     "User",
+		Email: credentials.Email,
+		Type:  "User",
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
 			ExpiresAt: expirationTime.Unix(),
@@ -48,6 +48,7 @@ func (app *Application) LoginUser(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   tokenString,
+		Path:    "/",
 		Expires: expirationTime,
 	})
 
@@ -71,11 +72,11 @@ func (app *Application) LoginAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTime := time.Now().Add(24 * time.Hour)
 	// Create the JWT claims, which includes the username and expiry time
 	claims := &Claims{
-		Username: credentials.Email,
-		Type:     typeUser,
+		Email: credentials.Email,
+		Type:  typeUser,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
 			ExpiresAt: expirationTime.Unix(),
@@ -94,6 +95,7 @@ func (app *Application) LoginAdmin(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   tokenString,
+		Path:    "/",
 		Expires: expirationTime,
 	})
 

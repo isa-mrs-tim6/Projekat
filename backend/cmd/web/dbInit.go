@@ -146,15 +146,17 @@ func addModels(db *gorm.DB) {
 			&airlineAdmin2,
 		},
 		Airplanes: []models.Airplane{
-			{Seats: []models.Seat{
-				{Number: 1, Class: "ECONOMIC", QuickReserve: false},
-				{Number: 2, Class: "BUSINESS", QuickReserve: false},
-				{Number: 3, Class: "FIRST", QuickReserve: false}},
+			{Name: "Airplane1",
+				Seats: []models.Seat{
+					{Number: 1, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 2, Class: "BUSINESS", QuickReserve: false},
+					{Number: 3, Class: "FIRST", QuickReserve: false}},
 			},
-			{Seats: []models.Seat{
-				{Number: 11, Class: "ECONOMIC", QuickReserve: false},
-				{Number: 22, Class: "BUSINESS", QuickReserve: false},
-				{Number: 33, Class: "FIRST", QuickReserve: false}},
+			{Name: "Airplane2",
+				Seats: []models.Seat{
+					{Number: 11, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 22, Class: "BUSINESS", QuickReserve: false},
+					{Number: 33, Class: "FIRST", QuickReserve: false}},
 			},
 		},
 		Destinations: []models.Destination{
@@ -224,15 +226,17 @@ func addModels(db *gorm.DB) {
 			{Name: "A2_DEST3", Coordinate: models.Coordinate{Latitude: 35.124, Longitude: 44.24}},
 		},
 		Airplanes: []models.Airplane{
-			{Seats: []models.Seat{
-				{Number: 1, Class: "ECONOMIC", QuickReserve: false},
-				{Number: 2, Class: "BUSINESS", QuickReserve: false},
-				{Number: 3, Class: "FIRST", QuickReserve: false}},
+			{Name: "Airplane3",
+				Seats: []models.Seat{
+					{Number: 1, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 2, Class: "BUSINESS", QuickReserve: false},
+					{Number: 3, Class: "FIRST", QuickReserve: false}},
 			},
-			{Seats: []models.Seat{
-				{Number: 11, Class: "ECONOMIC", QuickReserve: false},
-				{Number: 22, Class: "BUSINESS", QuickReserve: false},
-				{Number: 33, Class: "FIRST", QuickReserve: false}},
+			{Name: "Airplane4",
+				Seats: []models.Seat{
+					{Number: 11, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 22, Class: "BUSINESS", QuickReserve: false},
+					{Number: 33, Class: "FIRST", QuickReserve: false}},
 			},
 		},
 		Flights: []models.Flight{
