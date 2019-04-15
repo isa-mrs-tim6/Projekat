@@ -90,6 +90,14 @@
                         <v-text-field v-model="flight.economyClass" label="Economy class price" prepend-icon="attach_money" type="number" :rules="[rules.required]"></v-text-field>
                     </v-flex>
                 </v-layout>
+                <v-layout row-wrap>
+                    <v-flex xs12 sm2>
+                        <v-text-field v-model="flight.smallSuitcase" label="Suitcase < 21kg" prepend-icon="attach_money" type="number" :rules="[rules.required]"></v-text-field>
+                    </v-flex>
+                    <v-flex sm2>
+                        <v-text-field v-model="flight.bigSuitcase" label="Suitcase > 21kg" prepend-icon="attach_money" type="number" :rules="[rules.required]"></v-text-field>
+                    </v-flex>
+                </v-layout>
 
                 <v-btn v-on:click.prevent="sub">Submit</v-btn>
                 <v-btn>Reset</v-btn>
@@ -133,7 +141,9 @@
                     arrivalTime: "",
                     firstClass: "",
                     businessClass: "",
-                    economyClass: ""
+                    economyClass: "",
+                    smallSuitcase: "",
+                    bigSuitcase: ""
                 }
             }
         },
@@ -157,53 +167,38 @@
             checkNumbers(){
                 var number = parseFloat(this.flight.economyClass);
                 var ind = false;
-                if(!isNaN(number)){
-                    if(number < 0 ){
-                        this.flight.economyClass = "";
-                        ind = true;
-                    }
-                }else{
+                if(number < 0 ){
                     this.flight.economyClass = "";
                     ind = true;
                 }
                 number = parseFloat(this.flight.businessClass);
-                if(!isNaN(number)){
-                    if(number < 0 ){
-                        this.flight.businessClass = "";
-                        ind = true;
-                    }
-                }else{
+                if(number < 0 ){
                     this.flight.businessClass = "";
                     ind = true;
                 }
                 number = parseFloat(this.flight.firstClass);
-                if(!isNaN(number)){
-                    if(number < 0 ){
-                        this.flight.firstClass = "";
-                        ind = true;
-                    }
-                }else{
+                if(number < 0 ){
                     this.flight.firstClass = "";
                     ind = true;
                 }
                 number = parseFloat(this.flight.travelDistance);
-                if(!isNaN(number)){
-                    if(number < 0 ){
-                        this.flight.travelDistance = "";
-                        ind = true;
-                    }
-                }else{
+                if(number < 0 ){
                     this.flight.travelDistance = "";
                     ind = true;
                 }
                 number = parseFloat(this.flight.travelTime);
-                if(!isNaN(number)){
-                    if(number < 0 ){
-                        this.flight.travelTime = "";
-                        ind = true;
-                    }
-                }else{
+                if(number < 0 ){
                     this.flight.travelTime = "";
+                    ind = true;
+                }
+                number = parseFloat(this.flight.bigSuitcase);
+                if(number < 0 ){
+                    this.flight.bigSuitcase = "";
+                    ind = true;
+                }
+                number = parseFloat(this.flight.smallSuitcase);
+                if(number < 0 ){
+                    this.flight.smallSuitcase = "";
                     ind = true;
                 }
                 return ind !== true;
@@ -223,10 +218,10 @@
             },
             sub(e){
                 e.preventDefault();
-                if(!this.flight.from || !this.flight.to || !this.flight.airplane || !this.departureDate || !this.departureTime){
+                if(!this.flight.from || !this.flight.to || !this.flight.airplane || !this.flight.departureDate || !this.flight.departureTime){
                     return;
                 }
-                if(!this.arrivalDate || !this.arrivalTime || !this.flight.travelTime || !this.flight.travelDistance){
+                if(!this.flight.arrivalDate || !this.flight.arrivalTime || !this.flight.travelTime || !this.flight.travelDistance){
                     return;
                 }
                 for(let value of this.layovers){
@@ -237,12 +232,24 @@
                 if(!this.flight.economyClass || !this.flight.businessClass || !this.flight.firstClass){
                     return;
                 }
-                if(!this.checkNumbers()){
-                    console.log(this.flight);
+                if(!this.flight.smallSuitcase || !this.flight.bigSuitcase){
                     return;
                 }
-                var dpTime = moment(this.flight.departureTime + " " + this.flight.departureDate,"HHmm YYYY-MM-DD").valueOf();
-                var ldTime = moment(this.flight.arrivalTime + " " + this.flight.arrivalDate, "HHmm YYYY-MM-DD").valueOf();
+                const pattern = /(([0-1][0-9])|(2[0-3]))[0-5][0-9]/;
+                if(!pattern.test(this.flight.arrivalTime) || !pattern.test(this.flight.departureTime)){
+                    return;
+                }
+
+                if(!this.checkNumbers()){
+                    return;
+                }
+
+                var dpTime = moment(this.flight.departureTime + " " + this.flight.departureDate,"HHmm YYYY-MM-DD");
+                var ldTime = moment(this.flight.arrivalTime + " " + this.flight.arrivalDate, "HHmm YYYY-MM-DD");
+                if (dpTime.isAfter(ldTime)){
+                    alert("Arrival time is before departure time");
+                    return;
+                }
                 var flightDto = {
                     Origin: this.flight.from,
                     Destination: this.flight.to,
@@ -252,12 +259,14 @@
                     Duration: this.flight.travelTime,
                     Distance: this.flight.travelDistance,
                     Layovers: this.layovers,
+                    BigSuitcase: this.flight.bigSuitcase,
+                    SmallSuitcase: this.flight.smallSuitcase,
                     PriceECONOMY: this.flight.economyClass,
                     PriceBUSINESS: this.flight.businessClass,
                     PriceFIRSTCLASS: this.flight.firstClass
                 };
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/flight/add",flightDto)
-                    .then(alert("successfully added flight"))
+                    .then(res => alert("successfully added flight"))
                     .catch(err => console.log(err));
             }
         },

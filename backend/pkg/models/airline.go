@@ -28,6 +28,15 @@ type Destination struct {
 	Coordinate
 }
 
+type PriceList struct {
+	PriceECONOMY               float64
+	PriceBUSINESS              float64
+	PriceFIRSTCLASS            float64
+	SmallSuitcase float64
+	BigSuitcase	float64
+	QuickReservationPriceScale float64
+}
+
 type Layovers struct {
 	gorm.Model
 	Address
@@ -44,11 +53,8 @@ type Flight struct {
 	Landing                    time.Time
 	Duration                   time.Duration
 	Distance                   uint
+	PriceList
 	Layovers                   []Layovers `gorm:"foreignkey:FlightID"`
-	PriceECONOMY               float64
-	PriceBUSINESS              float64
-	PriceFIRSTCLASS            float64
-	QuickReservationPriceScale float64
 	Airplane                   Airplane `gorm:"foreignkey:AirplaneID"`
 	AirplaneID                 uint
 	AirlineID                  uint
@@ -70,6 +76,8 @@ type FlightDto struct {
 	PriceECONOMY    string
 	PriceBUSINESS   string
 	PriceFIRSTCLASS string
+	SmallSuitcase string
+	BigSuitcase	string
 	Airplane        string
 }
 

@@ -166,7 +166,10 @@ func addModels(db *gorm.DB) {
 		},
 		Flights: []models.Flight{
 			{
-				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
+				PriceList:models.PriceList{
+					PriceECONOMY:300, PriceBUSINESS:600, PriceFIRSTCLASS:900,
+					SmallSuitcase:100, BigSuitcase:300,
+				},
 				Duration:  time.Hour * 5,
 				Distance:  780,
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
@@ -181,7 +184,10 @@ func addModels(db *gorm.DB) {
 				},
 			},
 			{
-				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
+				PriceList:models.PriceList{
+					PriceECONOMY:100, PriceBUSINESS:300, PriceFIRSTCLASS:500,
+					SmallSuitcase:50, BigSuitcase:150,
+				},
 				Duration:  time.Hour * 2,
 				Distance:  380,
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),
@@ -241,7 +247,10 @@ func addModels(db *gorm.DB) {
 		},
 		Flights: []models.Flight{
 			{
-				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
+				PriceList:models.PriceList{
+					PriceECONOMY:200, PriceBUSINESS:300, PriceFIRSTCLASS:500,
+					SmallSuitcase:120, BigSuitcase:232, QuickReservationPriceScale:0.8,
+				},
 				Duration:  time.Hour * 5,
 				Distance:  780,
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
@@ -249,7 +258,10 @@ func addModels(db *gorm.DB) {
 				Layovers:  nil,
 			},
 			{
-				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
+				PriceList:models.PriceList{
+					PriceECONOMY:100, PriceBUSINESS:200, PriceFIRSTCLASS:400,
+					SmallSuitcase:100, BigSuitcase:300,
+				},
 				Duration:  time.Hour * 2,
 				Distance:  380,
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),

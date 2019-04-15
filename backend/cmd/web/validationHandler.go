@@ -65,10 +65,7 @@ func Validate(next http.HandlerFunc, userTypes []string) http.HandlerFunc {
 }
 
 func getEmail(r *http.Request) string {
-	c, err := r.Cookie("token")
-	if err != nil {
-		return "a"
-	}
+	c, _ := r.Cookie("token")
 	tknStr := c.Value
 	claims := &Claims{}
 	_, _ = jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {

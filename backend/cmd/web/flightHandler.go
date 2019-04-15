@@ -51,6 +51,8 @@ func (app *Application) CreateFlight(w http.ResponseWriter, r *http.Request) {
 	priceECONOMY, _ := strconv.ParseFloat(flightDto.PriceECONOMY, 64)
 	priceBUSINESS, _ := strconv.ParseFloat(flightDto.PriceBUSINESS, 64)
 	priceFIRSTCLASS, _ := strconv.ParseFloat(flightDto.PriceFIRSTCLASS, 64)
+	smallSuitcase, _:= strconv.ParseFloat(flightDto.SmallSuitcase, 64)
+	bigSuitcase, _:= strconv.ParseFloat(flightDto.BigSuitcase, 64)
 	duration, _ := strconv.ParseInt(flightDto.Duration, 10, 64)
 	distance, _ := strconv.ParseUint(flightDto.Distance, 10, 64)
 	departure, _ := strconv.ParseInt(flightDto.Departure, 10, 64)
@@ -68,9 +70,10 @@ func (app *Application) CreateFlight(w http.ResponseWriter, r *http.Request) {
 	}
 
 	flight := models.Flight{
-		PriceECONOMY:    priceECONOMY,
-		PriceBUSINESS:   priceBUSINESS,
-		PriceFIRSTCLASS: priceFIRSTCLASS,
+		PriceList: models.PriceList{
+			PriceECONOMY:    priceECONOMY, PriceBUSINESS:   priceBUSINESS, PriceFIRSTCLASS: priceFIRSTCLASS,
+			SmallSuitcase: smallSuitcase,  BigSuitcase: bigSuitcase,
+		},
 		Duration:        time.Minute * time.Duration(duration),
 		Distance:        uint(distance),
 		Departure:       time.Unix(0, departure*int64(time.Millisecond)),
