@@ -17,14 +17,24 @@ type Seat struct {
 
 type Airplane struct {
 	gorm.Model
+	Name      string
 	Seats     []Seat `gorm:"foreignkey:AirplaneID"`
 	AirlineID uint
 }
-type Destination struct{
+type Destination struct {
 	gorm.Model
 	AirlineID uint
-	Name string
+	Name      string
 	Coordinate
+}
+
+type PriceList struct {
+	PriceECONOMY               float64
+	PriceBUSINESS              float64
+	PriceFIRSTCLASS            float64
+	SmallSuitcase float64
+	BigSuitcase	float64
+	QuickReservationPriceScale float64
 }
 
 type Layovers struct {
@@ -36,35 +46,52 @@ type Layovers struct {
 type Flight struct {
 	gorm.Model
 	Origin                     *Destination
-	OriginID uint
+	OriginID                   uint
 	Destination                *Destination
-	DestinationID uint
+	DestinationID              uint
 	Departure                  time.Time
 	Landing                    time.Time
 	Duration                   time.Duration
 	Distance                   uint
+	PriceList
 	Layovers                   []Layovers `gorm:"foreignkey:FlightID"`
-	PriceECONOMY               float64
-	PriceBUSINESS              float64
-	PriceFIRSTCLASS            float64
-	QuickReservationPriceScale float64
 	Airplane                   Airplane `gorm:"foreignkey:AirplaneID"`
 	AirplaneID                 uint
 	AirlineID                  uint
 	Reservations               []FlightReservation `gorm:"foreignkey:FlightID"`
 }
 
-type AirlineProfile struct{
+type LayoverDto struct {
+	Address string
+}
+
+type FlightDto struct {
+	Origin          string
+	Destination     string
+	Departure       string
+	Landing         string
+	Duration        string
+	Distance        string
+	Layovers        []LayoverDto
+	PriceECONOMY    string
+	PriceBUSINESS   string
+	PriceFIRSTCLASS string
+	SmallSuitcase string
+	BigSuitcase	string
+	Airplane        string
+}
+
+type AirlineProfile struct {
 	Name string
 	Address
-	Promo     string
+	Promo string
 }
 
 type Airline struct {
 	gorm.Model
 	AirlineProfile
-	Flights   []Flight        `gorm:"foreignkey:AirlineID"`
-	Airplanes []Airplane      `gorm:"foreignkey:AirlineID"`
-	Admins    []*AirlineAdmin `gorm:"foreignkey:AirlineID"`
-	Destinations []Destination `gorm:"foreignkey:AirlineID"`
+	Flights      []Flight        `gorm:"foreignkey:AirlineID"`
+	Airplanes    []Airplane      `gorm:"foreignkey:AirlineID"`
+	Admins       []*AirlineAdmin `gorm:"foreignkey:AirlineID"`
+	Destinations []Destination   `gorm:"foreignkey:AirlineID"`
 }

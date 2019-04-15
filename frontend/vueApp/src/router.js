@@ -13,6 +13,7 @@ import LoginUser from "./views/LoginUser";
 import Destination from "./views/AirlineAdmin/Destination";
 import UpdateDestination from "./views/AirlineAdmin/UpdateDestination";
 import LoginAdmin from "./views/LoginAdmin";
+import AddFlight from "./views/AirlineAdmin/AddFlight";
 
 Vue.use(Router);
 
@@ -38,6 +39,10 @@ export default new Router({
     {
       path: '/airlineAdmin/:id',
       component: AirlineAdmin
+    },
+    {
+      path: '/airlineAdmin/flight/add',
+      component: AddFlight
     },
     {
       path: '/airlineAdmin/destination/add',

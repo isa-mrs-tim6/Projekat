@@ -23,6 +23,23 @@ func (app *Application) GetDestinations(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 }
+
+func (app *Application) GetCompanysDestinations(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive airline admin")
+	}
+	destinations, err := app.Store.GetCompanysDestinations(user.AirlineID)
+
+	err = json.NewEncoder(w).Encode(destinations)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode destinations into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *Application) GetDestination(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 

@@ -146,15 +146,17 @@ func addModels(db *gorm.DB) {
 			&airlineAdmin2,
 		},
 		Airplanes: []models.Airplane{
-			{Seats: []models.Seat{
-				{Number: 1, Class: "ECONOMIC", QuickReserve: false},
-				{Number: 2, Class: "BUSINESS", QuickReserve: false},
-				{Number: 3, Class: "FIRST", QuickReserve: false}},
+			{Name: "Airplane1",
+				Seats: []models.Seat{
+					{Number: 1, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 2, Class: "BUSINESS", QuickReserve: false},
+					{Number: 3, Class: "FIRST", QuickReserve: false}},
 			},
-			{Seats: []models.Seat{
-				{Number: 11, Class: "ECONOMIC", QuickReserve: false},
-				{Number: 22, Class: "BUSINESS", QuickReserve: false},
-				{Number: 33, Class: "FIRST", QuickReserve: false}},
+			{Name: "Airplane2",
+				Seats: []models.Seat{
+					{Number: 11, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 22, Class: "BUSINESS", QuickReserve: false},
+					{Number: 33, Class: "FIRST", QuickReserve: false}},
 			},
 		},
 		Destinations: []models.Destination{
@@ -164,7 +166,10 @@ func addModels(db *gorm.DB) {
 		},
 		Flights: []models.Flight{
 			{
-				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
+				PriceList:models.PriceList{
+					PriceECONOMY:300, PriceBUSINESS:600, PriceFIRSTCLASS:900,
+					SmallSuitcase:100, BigSuitcase:300,
+				},
 				Duration:  time.Hour * 5,
 				Distance:  780,
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
@@ -179,7 +184,10 @@ func addModels(db *gorm.DB) {
 				},
 			},
 			{
-				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
+				PriceList:models.PriceList{
+					PriceECONOMY:100, PriceBUSINESS:300, PriceFIRSTCLASS:500,
+					SmallSuitcase:50, BigSuitcase:150,
+				},
 				Duration:  time.Hour * 2,
 				Distance:  380,
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),
@@ -224,20 +232,25 @@ func addModels(db *gorm.DB) {
 			{Name: "A2_DEST3", Coordinate: models.Coordinate{Latitude: 35.124, Longitude: 44.24}},
 		},
 		Airplanes: []models.Airplane{
-			{Seats: []models.Seat{
-				{Number: 1, Class: "ECONOMIC", QuickReserve: false},
-				{Number: 2, Class: "BUSINESS", QuickReserve: false},
-				{Number: 3, Class: "FIRST", QuickReserve: false}},
+			{Name: "Airplane3",
+				Seats: []models.Seat{
+					{Number: 1, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 2, Class: "BUSINESS", QuickReserve: false},
+					{Number: 3, Class: "FIRST", QuickReserve: false}},
 			},
-			{Seats: []models.Seat{
-				{Number: 11, Class: "ECONOMIC", QuickReserve: false},
-				{Number: 22, Class: "BUSINESS", QuickReserve: false},
-				{Number: 33, Class: "FIRST", QuickReserve: false}},
+			{Name: "Airplane4",
+				Seats: []models.Seat{
+					{Number: 11, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 22, Class: "BUSINESS", QuickReserve: false},
+					{Number: 33, Class: "FIRST", QuickReserve: false}},
 			},
 		},
 		Flights: []models.Flight{
 			{
-				PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500, QuickReservationPriceScale: 0.8,
+				PriceList:models.PriceList{
+					PriceECONOMY:200, PriceBUSINESS:300, PriceFIRSTCLASS:500,
+					SmallSuitcase:120, BigSuitcase:232, QuickReservationPriceScale:0.8,
+				},
 				Duration:  time.Hour * 5,
 				Distance:  780,
 				Departure: time.Date(2019, 2, 3, 9, 15, 0, 0, time.Local),
@@ -245,7 +258,10 @@ func addModels(db *gorm.DB) {
 				Layovers:  nil,
 			},
 			{
-				PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
+				PriceList:models.PriceList{
+					PriceECONOMY:100, PriceBUSINESS:200, PriceFIRSTCLASS:400,
+					SmallSuitcase:100, BigSuitcase:300,
+				},
 				Duration:  time.Hour * 2,
 				Distance:  380,
 				Departure: time.Date(2019, 4, 3, 10, 17, 0, 0, time.Local),

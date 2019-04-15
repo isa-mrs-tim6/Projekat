@@ -8,8 +8,8 @@ import (
 var jwtKey = []byte("my_secret_key")
 
 type Claims struct {
-	Username string `json:"username"`
-	Type     string `json:"type"`
+	Email string `json:"email"`
+	Type  string `json:"type"`
 	jwt.StandardClaims
 }
 
@@ -62,6 +62,16 @@ func Validate(next http.HandlerFunc, userTypes []string) http.HandlerFunc {
 		// All is good, route the request forward
 		next(w, r)
 	})
+}
+
+func getEmail(r *http.Request) string {
+	c, _ := r.Cookie("token")
+	tknStr := c.Value
+	claims := &Claims{}
+	_, _ = jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+	return claims.Email
 }
 
 func contains(s []string, e string) bool {
