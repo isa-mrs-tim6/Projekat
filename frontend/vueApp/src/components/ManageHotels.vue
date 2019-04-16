@@ -52,7 +52,7 @@
             }
         },
         created() {
-            axios.get('http://localhost:8000/api/hotel/getHotels')
+            axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getHotels')
                 .then(res => this.hotels = res.data)
                 .catch(err => console.log(err));
         },
@@ -67,12 +67,12 @@
                     'Description': this.Description,
                 };
                 this.clear();
-                axios.post('http://localhost:8000/api/hotel/addHotel', newHotel)
+                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/addHotel', newHotel)
                     .then(res =>
-                        axios.get('http://localhost:8000/api/hotel/getHotels')
+                        axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getHotels')
                             .then(res => this.hotels = res.data)
-                            .catch(err => console.log(err)))
-                    .catch(err => console.log(err));
+                            .catch(err => alert(err)))
+                    .catch(err => alert(err));
             },
             clear() {
                 this.Name = '';

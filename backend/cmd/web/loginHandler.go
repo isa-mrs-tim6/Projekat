@@ -99,5 +99,10 @@ func (app *Application) LoginAdmin(w http.ResponseWriter, r *http.Request) {
 		Expires: expirationTime,
 	})
 
-	w.WriteHeader(http.StatusCreated)
+	err = json.NewEncoder(w).Encode(typeUser)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode admin type into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }

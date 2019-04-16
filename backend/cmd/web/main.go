@@ -81,8 +81,11 @@ func (app *Application) Routes() *mux.Router {
 
 	// ADMIN API
 	router.HandleFunc("/api/admin/login", app.LoginAdmin).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/admin/register", app.RegisterAdmin).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/admin/register", Validate(app.RegisterAdmin, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/admin/{type}/completeRegistration/q={email}", app.CompleteRegistration).Methods("GET")
+	router.HandleFunc("/api/admin/getProfile", Validate(app.GetAdminProfile, []string{"SystemAdmin", "HotelAdmin", "AirlineAdmin", "Rent-A-CarAdmin"})).Methods("GET")
+	router.HandleFunc("/api/admin/updateProfile", Validate(app.UpdateAdminProfile, []string{"SystemAdmin", "HotelAdmin", "AirlineAdmin", "Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
+	//
 
 	// RESERVATION API
 	// TODO
@@ -99,10 +102,10 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/priceList/update", app.UpdatePriceList).Methods("POST", "OPTIONS")
 
 	// AIRLINE API
-	router.HandleFunc("/api/airline/getAirlines", app.GetAirlines).Methods("GET")
-	router.HandleFunc("/api/airline/getProfile", app.GetAirlineProfiles).Methods("GET")
+	router.HandleFunc("/api/airline/getAirlines", Validate(app.GetAirlines, []string{"SystemAdmin"})).Methods("GET")
+  router.HandleFunc("/api/airline/getProfile", app.GetAirlineProfiles).Methods("GET")
 	router.HandleFunc("/api/airline/updateProfile", app.UpdateAirlineProfile).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/airline/addAirline", app.CreateAirline).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/airline/addAirline", Validate(app.CreateAirline, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 
 	//DESTINATION API
 	router.HandleFunc("/api/destination/getDestinations", app.GetDestinations).Methods("GET")
@@ -112,17 +115,17 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/destination/add", app.CreateDestination).Methods("POST", "OPTIONS")
 
 	// HOTEL API
-	router.HandleFunc("/api/hotel/getHotels", app.GetHotels).Methods("GET")
-	router.HandleFunc("/api/hotel/{id}/getProfile", app.GetHotelProfile).Methods("GET")
-	router.HandleFunc("/api/hotel/{id}/updateProfile", app.UpdateHotelProfile).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/hotel/addHotel", app.CreateHotel).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/hotel/getHotels", Validate(app.GetHotels, []string{"SystemAdmin"})).Methods("GET")
+	router.HandleFunc("/api/hotel/getProfile", app.GetHotelProfile).Methods("GET")
+	router.HandleFunc("/api/hotel/updateProfile", app.UpdateHotelProfile).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/hotel/addHotel", Validate(app.CreateHotel, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 
 	// RENT-A-CAR API
-	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", app.GetRentACarCompanies).Methods("GET")
+	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", Validate(app.GetRentACarCompanies, []string{"SystemAdmin"})).Methods("GET")
 	router.HandleFunc("/api/rentACarCompany/{id}/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
 	router.HandleFunc("/api/rentACarCompany/{id}/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/rentACarCompany/addRentACarCompany", app.CreateRentACarCompany).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/rentACarCompany/addRentACarCompany", Validate(app.CreateRentACarCompany, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 
 	// STATIC FILE HANDLER
 	staticFileDirectory := http.Dir("./ui/")

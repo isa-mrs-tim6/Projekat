@@ -52,8 +52,12 @@ func addModels(db *gorm.DB) {
 
 	// CREATING SYSTEM ADMINS
 	systemAdmin := models.SystemAdmin{
-		Credentials:          models.Credentials{Email: "S_ADMIN1@email.com", Password: string(pass1)},
-		UserInfo:             models.UserInfo{Name: "S_ADMIN1_IME", Surname: "S_ADMIN1_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "S_ADMIN1@email.com", Password: string(pass1)},
+			UserInfo:    models.UserInfo{Name: "S_ADMIN1_IME", Surname: "S_ADMIN1_PREZIME"},
+			Address:     "S_ADMIN1_ADDRESS",
+			Phone:       "S_ADMIN1_PHONE",
+		},
 		RegistrationComplete: true,
 	}
 	db.Create(&systemAdmin)
@@ -65,18 +69,30 @@ func addModels(db *gorm.DB) {
 
 	// CREATING AIRLINE ADMINS
 	airlineAdmin := models.AirlineAdmin{
-		Credentials:          models.Credentials{Email: "A_ADMIN1@email.com", Password: string(pass1)},
-		UserInfo:             models.UserInfo{Name: "A_ADMIN1_IME", Surname: "A_ADMIN1_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "A_ADMIN1@email.com", Password: string(pass1)},
+			UserInfo:    models.UserInfo{Name: "A_ADMIN1_IME", Surname: "A_ADMIN1_PREZIME"},
+			Address:     "A_ADMIN1_ADDRESS",
+			Phone:       "A_ADMIN1_PHONE",
+		},
 		RegistrationComplete: true,
 	}
 	airlineAdmin2 := models.AirlineAdmin{
-		Credentials:          models.Credentials{Email: "A_ADMIN2@email.com", Password: string(pass2)},
-		UserInfo:             models.UserInfo{Name: "A_ADMIN2_IME", Surname: "A_ADMIN2_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "A_ADMIN2@email.com", Password: string(pass2)},
+			UserInfo:    models.UserInfo{Name: "A_ADMIN2_IME", Surname: "A_ADMIN2_PREZIME"},
+			Address:     "A_ADMIN2_ADDRESS",
+			Phone:       "A_ADMIN2_PHONE",
+		},
 		RegistrationComplete: true,
 	}
 	airlineAdmin3 := models.AirlineAdmin{
-		Credentials:          models.Credentials{Email: "A_ADMIN3@email.com", Password: string(pass3)},
-		UserInfo:             models.UserInfo{Name: "A_ADMIN3_IME", Surname: "A_ADMIN3_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "A_ADMIN3@email.com", Password: string(pass3)},
+			UserInfo:    models.UserInfo{Name: "A_ADMIN3_IME", Surname: "A_ADMIN3_PREZIME"},
+			Address:     "A_ADMIN3_ADDRESS",
+			Phone:       "A_ADMIN3_PHONE",
+		},
 		RegistrationComplete: false,
 	}
 	db.Create(&airlineAdmin)
@@ -90,18 +106,30 @@ func addModels(db *gorm.DB) {
 
 	// CREATING HOTEL ADMINS
 	hotelAdmin := models.HotelAdmin{
-		Credentials:          models.Credentials{Email: "H_ADMIN1@email.com", Password: string(pass1)},
-		UserInfo:             models.UserInfo{Name: "H_ADMIN1_IME", Surname: "H_ADMIN1_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "H_ADMIN1@email.com", Password: string(pass1)},
+			UserInfo:    models.UserInfo{Name: "H_ADMIN1_IME", Surname: "H_ADMIN1_PREZIME"},
+			Address:     "H_ADMIN1_ADDRESS",
+			Phone:       "H_ADMIN1_PHONE",
+		},
 		RegistrationComplete: true,
 	}
 	hotelAdmin2 := models.HotelAdmin{
-		Credentials:          models.Credentials{Email: "H_ADMIN2@email.com", Password: string(pass2)},
-		UserInfo:             models.UserInfo{Name: "H_ADMIN2_IME", Surname: "H_ADMIN2_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "H_ADMIN2@email.com", Password: string(pass2)},
+			UserInfo:    models.UserInfo{Name: "H_ADMIN2_IME", Surname: "H_ADMIN2_PREZIME"},
+			Address:     "H_ADMIN2_ADDRESS",
+			Phone:       "H_ADMIN2_PHONE",
+		},
 		RegistrationComplete: true,
 	}
 	hotelAdmin3 := models.HotelAdmin{
-		Credentials:          models.Credentials{Email: "H_ADMIN3@email.com", Password: string(pass3)},
-		UserInfo:             models.UserInfo{Name: "H_ADMIN3_IME", Surname: "H_ADMIN3_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "H_ADMIN3@email.com", Password: string(pass3)},
+			UserInfo:    models.UserInfo{Name: "H_ADMIN3_IME", Surname: "H_ADMIN3_PREZIME"},
+			Address:     "H_ADMIN3_ADDRESS",
+			Phone:       "H_ADMIN3_PHONE",
+		},
 		RegistrationComplete: false,
 	}
 	db.Create(&hotelAdmin)
@@ -114,18 +142,30 @@ func addModels(db *gorm.DB) {
 
 	// CREATING RENT-A-CAR ADMINS
 	rentACarAdmin := models.RentACarAdmin{
-		Credentials:          models.Credentials{Email: "R_ADMIN1@email.com", Password: string(pass1)},
-		UserInfo:             models.UserInfo{Name: "R_ADMIN1_IME", Surname: "R_ADMIN1_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "R_ADMIN1@email.com", Password: string(pass1)},
+			UserInfo:    models.UserInfo{Name: "R_ADMIN1_IME", Surname: "R_ADMIN1_PREZIME"},
+			Address:     "R_ADMIN1_ADDRESS",
+			Phone:       "R_ADMIN1_PHONE",
+		},
 		RegistrationComplete: true,
 	}
 	rentACarAdmin2 := models.RentACarAdmin{
-		Credentials:          models.Credentials{Email: "R_ADMIN2@email.com", Password: string(pass2)},
-		UserInfo:             models.UserInfo{Name: "R_ADMIN2_IME", Surname: "R_ADMIN2_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "R_ADMIN2@email.com", Password: string(pass2)},
+			UserInfo:    models.UserInfo{Name: "R_ADMIN2_IME", Surname: "R_ADMIN2_PREZIME"},
+			Address:     "R_ADMIN2_ADDRESS",
+			Phone:       "R_ADMIN2_PHONE",
+		},
 		RegistrationComplete: true,
 	}
 	rentACarAdmin3 := models.RentACarAdmin{
-		Credentials:          models.Credentials{Email: "R_ADMIN3@email.com", Password: string(pass3)},
-		UserInfo:             models.UserInfo{Name: "R_ADMIN3_IME", Surname: "R_ADMIN3_PREZIME"},
+		Profile: models.Profile{
+			Credentials: models.Credentials{Email: "R_ADMIN3@email.com", Password: string(pass3)},
+			UserInfo:    models.UserInfo{Name: "R_ADMIN3_IME", Surname: "R_ADMIN3_PREZIME"},
+			Address:     "R_ADMIN3_ADDRESS",
+			Phone:       "R_ADMIN3_PHONE",
+		},
 		RegistrationComplete: false,
 	}
 	db.Create(&rentACarAdmin)
@@ -166,9 +206,9 @@ func addModels(db *gorm.DB) {
 		},
 		Flights: []models.Flight{
 			{
-				PriceList:models.PriceList{
-					PriceECONOMY:300, PriceBUSINESS:600, PriceFIRSTCLASS:900,
-					SmallSuitcase:100, BigSuitcase:300,
+				PriceList: models.PriceList{
+					PriceECONOMY: 300, PriceBUSINESS: 600, PriceFIRSTCLASS: 900,
+					SmallSuitcase: 100, BigSuitcase: 300,
 				},
 				Duration:  time.Hour * 5,
 				Distance:  780,
@@ -184,9 +224,9 @@ func addModels(db *gorm.DB) {
 				},
 			},
 			{
-				PriceList:models.PriceList{
-					PriceECONOMY:100, PriceBUSINESS:300, PriceFIRSTCLASS:500,
-					SmallSuitcase:50, BigSuitcase:150,
+				PriceList: models.PriceList{
+					PriceECONOMY: 100, PriceBUSINESS: 300, PriceFIRSTCLASS: 500,
+					SmallSuitcase: 50, BigSuitcase: 150,
 				},
 				Duration:  time.Hour * 2,
 				Distance:  380,
@@ -247,9 +287,9 @@ func addModels(db *gorm.DB) {
 		},
 		Flights: []models.Flight{
 			{
-				PriceList:models.PriceList{
-					PriceECONOMY:200, PriceBUSINESS:300, PriceFIRSTCLASS:500,
-					SmallSuitcase:120, BigSuitcase:232, QuickReservationPriceScale:0.8,
+				PriceList: models.PriceList{
+					PriceECONOMY: 200, PriceBUSINESS: 300, PriceFIRSTCLASS: 500,
+					SmallSuitcase: 120, BigSuitcase: 232, QuickReservationPriceScale: 0.8,
 				},
 				Duration:  time.Hour * 5,
 				Distance:  780,
@@ -258,9 +298,9 @@ func addModels(db *gorm.DB) {
 				Layovers:  nil,
 			},
 			{
-				PriceList:models.PriceList{
-					PriceECONOMY:100, PriceBUSINESS:200, PriceFIRSTCLASS:400,
-					SmallSuitcase:100, BigSuitcase:300,
+				PriceList: models.PriceList{
+					PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
+					SmallSuitcase: 100, BigSuitcase: 300,
 				},
 				Duration:  time.Hour * 2,
 				Distance:  380,

@@ -38,3 +38,24 @@ func (db *Store) GetAirlineAdmin(email string) (models.AirlineAdmin, error) {
 	}
 	return retVal, nil
 }
+
+func (db *Store) GetHotelAdmin(email string) (models.HotelAdmin, error) {
+	var retVal models.HotelAdmin
+	if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) UpdateHotelAdmin(id uint, newProfile models.Profile) error {
+	var retVal models.HotelAdmin
+	if err := db.First(&retVal, id).Error; err != nil {
+		return err
+	}
+	retVal.Profile = newProfile
+
+	if err := db.Save(&retVal).Error; err != nil {
+		return err
+	}
+	return nil
+}
