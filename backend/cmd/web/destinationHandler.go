@@ -30,7 +30,7 @@ func (app *Application) GetCompanysDestinations(w http.ResponseWriter, r *http.R
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive airline admin")
 	}
-	destinations, err := app.Store.GetCompanysDestinations(user.AirlineID)
+	destinations, err := app.Store.GetCompanyDestinations(user.AirlineID)
 
 	err = json.NewEncoder(w).Encode(destinations)
 	if err != nil {

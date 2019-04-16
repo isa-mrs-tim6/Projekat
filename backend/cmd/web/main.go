@@ -92,20 +92,24 @@ func (app *Application) Routes() *mux.Router {
 
 	// FLIGHT API
 	router.HandleFunc("/api/flight/add", app.CreateFlight).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/flight/getCompanyFlights", app.GetCompanyFlights).Methods("GET")
 
 	//AIRPLANE API
 	router.HandleFunc("/api/airplane/getAirplanes", app.GetAirplanes).Methods("GET")
-	router.HandleFunc("/api/airplane/getCompanysAirplanes", app.GetCompanysAirplanes).Methods("GET")
+	router.HandleFunc("/api/airplane/getCompanyAirplanes", app.GetCompanysAirplanes).Methods("GET")
+
+	//Pricelist API
+	router.HandleFunc("/api/priceList/update", app.UpdatePriceList).Methods("POST", "OPTIONS")
 
 	// AIRLINE API
 	router.HandleFunc("/api/airline/getAirlines", Validate(app.GetAirlines, []string{"SystemAdmin"})).Methods("GET")
-	router.HandleFunc("/api/airline/{id}/getProfile", app.GetAirlineProfiles).Methods("GET")
-	router.HandleFunc("/api/airline/{id}/updateProfile", app.UpdateAirlineProfile).Methods("POST", "OPTIONS")
+  router.HandleFunc("/api/airline/getProfile", app.GetAirlineProfiles).Methods("GET")
+	router.HandleFunc("/api/airline/updateProfile", app.UpdateAirlineProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/airline/addAirline", Validate(app.CreateAirline, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 
 	//DESTINATION API
 	router.HandleFunc("/api/destination/getDestinations", app.GetDestinations).Methods("GET")
-	router.HandleFunc("/api/destination/getCompanysDestinations", app.GetCompanysDestinations).Methods("GET")
+	router.HandleFunc("/api/destination/getCompanyDestinations", app.GetCompanysDestinations).Methods("GET")
 	router.HandleFunc("/api/destination/{id}/getDestination", app.GetDestination).Methods("GET")
 	router.HandleFunc("/api/destination/{id}/updateDestination", app.UpdateDestination).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/destination/add", app.CreateDestination).Methods("POST", "OPTIONS")

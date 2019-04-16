@@ -148,11 +148,11 @@
             }
         },
         created() {
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/destination/getCompanysDestinations")
+            axios.create({withCredentials: true}).get("http://localhost:8000/api/destination/getCompanyDestinations")
                 .then(res => {
                     this.destinations = res.data;
                 });
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/airplane/getCompanysAirplanes")
+            axios.create({withCredentials: true}).get("http://localhost:8000/api/airplane/getCompanyAirplanes")
                 .then(res => {
                     this.airplanes = res.data;
                 })

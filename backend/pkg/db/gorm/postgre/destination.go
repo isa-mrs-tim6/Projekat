@@ -10,7 +10,7 @@ func (db *Store) GetDestinations() ([]models.Destination, error) {
 	return retVal, nil
 }
 
-func (db *Store) GetCompanysDestinations(id uint) ([]models.Destination, error) {
+func (db *Store) GetCompanyDestinations(id uint) ([]models.Destination, error) {
 	var retVal []models.Destination
 	if err := db.Set("gorm:auto_preload", true).Where("airline_id = ?", id).Find(&retVal).Error; err != nil {
 		return retVal, err
