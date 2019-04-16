@@ -1,81 +1,37 @@
 <template>
     <div>
-        <HotelAdminNavbar></HotelAdminNavbar>
-        <form>
-            <v-text-field
-                    v-model="hotelProfile.Name"
-                    label="Name"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="hotelProfile.Address"
-                    label="Address"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="hotelProfile.Latitude"
-                    label="Latitude"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="hotelProfile.Longitude"
-                    label="Longitude"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="hotelProfile.Description"
-                    label="Description"
-                    required
-            ></v-text-field>
-
-            <v-btn @click="update">update</v-btn>
-            <v-btn @click="revert">revert</v-btn>
-        </form>
+        <v-toolbar>
+            <v-toolbar-side-icon></v-toolbar-side-icon>
+            <v-toolbar-title>System Admin Panel</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items class="hidden-sm-and-down">
+                <v-btn @click="manageHotelProfile" flat>Hotel Profile</v-btn>
+                <v-btn @click="manageProfile" flat>Admin Profile</v-btn>
+            </v-toolbar-items>
+        </v-toolbar>
+        <component v-bind:is="currentTabComponent"></component>
     </div>
 </template>
 
 <script>
-    import HotelAdminNavbar from "../components/HotelAdminNavbar";
-    import axios from 'axios';
+    import ManageHotelProfile from "../components/ManageHotelProfile";
+    import AdminProfile from "../components/AdminProfile";
 
     export default {
-        name: "SystemAdmin",
-        components: {HotelAdminNavbar},
+        name: "HotelAdmin",
+        components: {ManageHotelProfile, AdminProfile},
         data() {
             return {
-                backupHotelProfile: '',
-                hotelProfile: '',
+                currentTabComponent: "ManageHotelProfile",
             }
-        },
-        mounted() {
-            axios.get('http://localhost:8000/api/hotel/'+this.$route.params.id+'/getProfile')
-                .then(res => {
-                    this.hotelProfile = res.data;
-                    this.backupHotelProfile = JSON.parse(JSON.stringify(this.hotelProfile))
-                    }
-                )
-                .catch(err => console.log(err));
         },
         methods: {
-            update(e) {
-                e.preventDefault();
-                if (isNaN(Number(this.AirlineProfile.Longitude)) && isNaN(Number(this.AirlineProfile.Latitude))){
-                    alert("Enter a number for Longitude and Latitude");
-                }else if(isNaN(Number(this.AirlineProfile.Longitude))){
-                    alert("Enter a number for Longitude");
-                }else if(isNaN(Number(this.AirlineProfile.Latitude))){
-                    alert("Enter a number for Latitude");
-                }else {
-                    this.AirlineProfile.Latitude = Number(this.AirlineProfile.Latitude);
-                    this.AirlineProfile.Longitude = Number(this.AirlineProfile.Longitude);
-                    axios.post('http://localhost:8000/api/hotel/' + this.$route.params.id + '/updateProfile', this.hotelProfile)
-                        .then(res => this.backupHotelProfile = JSON.parse(JSON.stringify(this.hotelProfile)))
-                        .catch(err => console.log(err));
-                }
+            manageHotelProfile(){
+                this.currentTabComponent = "ManageHotelProfile"
             },
-            revert () {
-                this.hotelProfile = JSON.parse(JSON.stringify(this.backupHotelProfile))
-            }
+            manageProfile(){
+                this.currentTabComponent = "AdminProfile"
+            },
         },
     }
 </script>
