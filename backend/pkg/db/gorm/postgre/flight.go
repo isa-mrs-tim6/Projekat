@@ -12,7 +12,28 @@ func (db *Store) GetAirplanes() ([]models.Airplane, error) {
 	return retVal, nil
 }
 
-func (db *Store) GetCompanysAirplanes(id uint) ([]models.Airplane, error) {
+func (db *Store) UpdateFlight(id uint, newFlight models.Flight) error {
+	var retVal models.Flight
+	if err := db.First(&retVal, id).Error; err != nil {
+		return err
+	}
+	retVal = newFlight
+
+	if err := db.Save(&retVal).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db *Store) GetFlight(id uint) (models.Flight, error) {
+	var retVal models.Flight
+	if err := db.Set("gorm:auto_preload", true).First(&retVal, id).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) GetCompanyAirplanes(id uint) ([]models.Airplane, error) {
 	var retVal []models.Airplane
 	if err := db.Set("gorm:auto_preload", true).Where("airline_id = ?", id).Find(&retVal).Error; err != nil {
 		return retVal, err
@@ -33,4 +54,12 @@ func (db *Store) CreateFlight(flight *models.Flight) error {
 		return err
 	}
 	return nil
+}
+
+func (db *Store) GetCompanyFlights(id uint) ([]models.Flight, error) {
+	var retVal []models.Flight
+	if err := db.Set("gorm:auto_preload", true).Where("airline_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
 }

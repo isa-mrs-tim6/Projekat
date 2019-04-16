@@ -32,7 +32,7 @@
             }
         },
         mounted() {
-            axios.get('http://localhost:8000/api/airline/' + this.$route.params.id + '/getProfile')
+            axios.create({withCredentials:true}).get('http://localhost:8000/api/airline/getProfile')
                 .then(res => {
                         this.AirlineProfile = res.data;
                         this.BackupAirlienProfile = JSON.parse(JSON.stringify(this.AirlineProfile))
@@ -55,7 +55,7 @@
                 } else {
                     this.AirlineProfile.Latitude = Number(this.AirlineProfile.Latitude);
                     this.AirlineProfile.Longitude = Number(this.AirlineProfile.Longitude);
-                    axios.post('http://localhost:8000/api/airline/' + this.$route.params.id + '/updateProfile', this.AirlineProfile)
+                    axios.create({withCredentials:true}).post('http://localhost:8000/api/airline/updateProfile', this.AirlineProfile)
                         .then(res => this.BackupAirlienProfile = JSON.parse(JSON.stringify(this.AirlineProfile)))
                         .catch(err => console.log(err));
                 }

@@ -2,10 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"net/http"
-	"strconv"
 )
 
 func (app *Application) GetAirlines(w http.ResponseWriter, r *http.Request) {
@@ -44,16 +42,12 @@ func (app *Application) CreateAirline(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) GetAirlineProfiles(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
 	if err != nil {
-		app.ErrorLog.Printf(vars["id"] + "is not a valid ID")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		app.ErrorLog.Printf("Could not retrive airline admin")
 	}
-
-	airlineProfile, err := app.Store.GetAirlineProfile(uint(id))
+	airlineProfile, err := app.Store.GetAirlineProfile(user.AirlineID)
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive airline profile")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -69,16 +63,12 @@ func (app *Application) GetAirlineProfiles(w http.ResponseWriter, r *http.Reques
 }
 
 func (app *Application) UpdateAirlineProfile(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
 	var airlineProfile models.AirlineProfile
-
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
 	if err != nil {
-		app.ErrorLog.Printf(vars["id"] + "is not a valid ID")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		app.ErrorLog.Printf("Could not retrive airline admin")
 	}
-
 	err = json.NewDecoder(r.Body).Decode(&airlineProfile)
 	if err != nil {
 		app.ErrorLog.Println("Could not decode JSON")
@@ -86,7 +76,7 @@ func (app *Application) UpdateAirlineProfile(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	err = app.Store.UpdateAirline(uint(id), airlineProfile)
+	err = app.Store.UpdateAirline(user.AirlineID, airlineProfile)
 	if err != nil {
 		app.ErrorLog.Printf("Could not add destination to database")
 		w.WriteHeader(http.StatusInternalServerError)
