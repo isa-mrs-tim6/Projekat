@@ -15,7 +15,6 @@ import UpdateDestination from "./views/AirlineAdmin/UpdateDestination";
 import LoginAdmin from "./views/LoginAdmin";
 import AddFlight from "./views/AirlineAdmin/AddFlight";
 import PriceList from "./views/AirlineAdmin/PriceList";
-import MainUserPage from "./views/MainUserPage";
 
 Vue.use(Router);
 
@@ -25,10 +24,6 @@ export default new Router({
     {
       path: '/',
       component: Home
-    },
-    {
-      path: '/main',
-      component: MainUserPage
     },
     {
       path: '/systemAdmin',

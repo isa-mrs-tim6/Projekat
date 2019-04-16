@@ -10,9 +10,9 @@
 </template>
 
 <script>
-    import Airlines from "../components/Airlines";
-    import Hotels from "../components/Hotels";
-    import RentACarCompanies from "../components/RentACarCompanies";
+    import Airlines from "./Airlines";
+    import Hotels from "./Hotels";
+    import RentACarCompanies from "./RentACarCompanies";
     import axios from 'axios';
     export default {
         name: "MainUserPage",

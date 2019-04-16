@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import MainUserPage from "./MainUserPage";
+    import MainUserPage from "../components/MainUserPage";
     import UserProfile from "../components/UserProfile";
 
     export default {
