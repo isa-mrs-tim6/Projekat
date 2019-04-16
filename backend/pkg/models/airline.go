@@ -66,6 +66,7 @@ type LayoverDto struct {
 }
 
 type FlightDto struct {
+	FlightID string
 	Origin          string
 	Destination     string
 	Departure       string
