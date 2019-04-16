@@ -30,7 +30,7 @@ export default new Router({
       component: SystemAdmin
     },
     {
-      path: '/hotelAdmin/:id',
+      path: '/hotelAdmin/',
       component: HotelAdmin
     },
     {

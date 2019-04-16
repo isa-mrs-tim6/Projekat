@@ -35,10 +35,29 @@
                 };
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/admin/login", creds)
                     .then(
-                        res => alert("Login successful")
+                        res => {
+                            switch (res.data) {
+                                case "AirlineAdmin":
+                                    this.$router.replace("../../airlineAdmin");
+                                    break;
+                                case "HotelAdmin":
+                                    this.$router.replace("../../hotelAdmin");
+                                    break;
+                                case "Rent-A-CarAdmin":
+                                    this.$router.replace("../../racAdmin");
+                                    break;
+                                case "SystemAdmin":
+                                    this.$router.replace("../../systemAdmin");
+                                    break;
+                                default:
+                                    alert("Invalid login info");
+                                    break;
+                            }
+
+                        }
                     )
                     .catch(
-                        err => alert("Invalid credentials")
+                        err => alert("Invalid login info")
                     );
             }
         }

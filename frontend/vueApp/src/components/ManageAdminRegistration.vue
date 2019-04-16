@@ -80,7 +80,7 @@
                     Password: this.password,
                     accountType: this.select
                 };
-                axios.post('http://localhost:8000/api/admin/register', credentials)
+                axios.create({withCredentials: true}).post('http://localhost:8000/api/admin/register', credentials)
                     .then(res => {if (res.status === 201) alert("Registration successful")})
                     .catch(err => {console.log(err); alert("Registration unsuccessful")});
             },

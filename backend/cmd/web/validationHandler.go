@@ -74,6 +74,16 @@ func getEmail(r *http.Request) string {
 	return claims.Email
 }
 
+func getAccountType(r *http.Request) string {
+	c, _ := r.Cookie("token")
+	tknStr := c.Value
+	claims := &Claims{}
+	_, _ = jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+	return claims.Type
+}
+
 func contains(s []string, e string) bool {
 	for _, a := range s {
 		if a == e {

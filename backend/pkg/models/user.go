@@ -28,31 +28,27 @@ type User struct {
 
 type AirlineAdmin struct {
 	gorm.Model
-	Credentials
-	UserInfo
+	Profile
 	RegistrationComplete bool
 	AirlineID            uint
 }
 
 type HotelAdmin struct {
 	gorm.Model
-	Credentials
-	UserInfo
+	Profile
 	RegistrationComplete bool
 	HotelID              uint
 }
 
 type RentACarAdmin struct {
 	gorm.Model
-	Credentials
-	UserInfo
+	Profile
 	RegistrationComplete bool
 	RentACarCompanyID    uint
 }
 
 type SystemAdmin struct {
 	gorm.Model
-	Credentials
-	UserInfo
+	Profile
 	RegistrationComplete bool
 }

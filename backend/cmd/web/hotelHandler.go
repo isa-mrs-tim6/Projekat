@@ -2,10 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"net/http"
-	"strconv"
 )
 
 func (app *Application) GetHotels(w http.ResponseWriter, r *http.Request) {
@@ -44,16 +42,14 @@ func (app *Application) CreateHotel(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) GetHotelProfile(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	email := getEmail(r)
+	user, err := app.Store.GetHotelAdmin(email)
 	if err != nil {
-		app.ErrorLog.Printf(vars["id"] + "is not a valid ID")
+		app.ErrorLog.Printf("Could not retrive hotel admin")
 		w.WriteHeader(http.StatusInternalServerError)
-		return
 	}
 
-	hotelProfile, err := app.Store.GetHotelProfile(uint(id))
+	hotelProfile, err := app.Store.GetHotelProfile(user.HotelID)
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive hotel profile")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -69,15 +65,13 @@ func (app *Application) GetHotelProfile(w http.ResponseWriter, r *http.Request) 
 }
 
 func (app *Application) UpdateHotelProfile(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	var hotelProfile models.HotelProfile
-
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	email := getEmail(r)
+	user, err := app.Store.GetHotelAdmin(email)
 	if err != nil {
-		app.ErrorLog.Printf(vars["id"] + "is not a valid ID")
+		app.ErrorLog.Printf("Could not retrive hotel admin")
 		w.WriteHeader(http.StatusInternalServerError)
-		return
 	}
+	var hotelProfile models.HotelProfile
 
 	err = json.NewDecoder(r.Body).Decode(&hotelProfile)
 	if err != nil {
@@ -86,7 +80,7 @@ func (app *Application) UpdateHotelProfile(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	err = app.Store.UpdateHotel(uint(id), hotelProfile)
+	err = app.Store.UpdateHotel(user.HotelID, hotelProfile)
 	if err != nil {
 		app.ErrorLog.Printf("Could not add hotel to database")
 		w.WriteHeader(http.StatusInternalServerError)
