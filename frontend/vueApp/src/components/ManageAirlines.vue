@@ -32,7 +32,7 @@
                     required
             ></v-text-field>
 
-            <v-btn @click="addRentACarCompany">submit</v-btn>
+            <v-btn @click="addAirline">submit</v-btn>
             <v-btn @click="clear">clear</v-btn>
         </v-form>
         <Airlines v-bind:airlines="Airlines"/>
@@ -66,7 +66,7 @@
                 .catch(err => alert("Could not retrieve airline companies"));
         },
         methods: {
-            addRentACarCompany(e) {
+            addAirline(e) {
                 e.preventDefault();
 
                 const newAirline = {

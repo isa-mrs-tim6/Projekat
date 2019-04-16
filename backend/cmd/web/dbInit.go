@@ -351,11 +351,11 @@ func addModels(db *gorm.DB) {
 			{Description: "H1_FEATURE3", Price: 90},
 		},
 		Rooms: []models.Room{
-			{Number: 101, Capacity: 2, Price: 250},
-			{Number: 102, Capacity: 3, Price: 350},
-			{Number: 103, Capacity: 4, Price: 450},
-			{Number: 104, Capacity: 5, Price: 650},
-			{Number: 105, Capacity: 2, Price: 250},
+			{Number: 1, Capacity: 2, Price: 250},
+			{Number: 2, Capacity: 3, Price: 350},
+			{Number: 3, Capacity: 4, Price: 450},
+			{Number: 4, Capacity: 5, Price: 650},
+			{Number: 5, Capacity: 2, Price: 250},
 		},
 	}
 	hotel2 := models.Hotel{

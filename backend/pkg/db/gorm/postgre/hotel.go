@@ -46,3 +46,25 @@ func (db *Store) UpdateHotel(id uint, newProfile models.HotelProfile) error {
 	}
 	return nil
 }
+
+func (db *Store) GetRooms(id uint) ([]models.Room, error) {
+	var retVal models.Hotel
+	if err := db.Set("gorm:auto_preload", true).First(&retVal, id).Error; err != nil {
+		return retVal.Rooms, err
+	}
+	return retVal.Rooms, nil
+}
+
+func (db *Store) AddRooms(id uint, rooms []models.Room) error {
+	var retVal models.Hotel
+	if err := db.Set("gorm:auto_preload", true).First(&retVal, id).Error; err != nil {
+		return err
+	}
+	newRooms := append(retVal.Rooms, rooms...)
+	retVal.Rooms = newRooms
+
+	if err := db.Save(&retVal).Error; err != nil {
+		return err
+	}
+	return nil
+}
