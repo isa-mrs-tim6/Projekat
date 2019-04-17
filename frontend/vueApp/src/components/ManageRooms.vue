@@ -22,7 +22,7 @@
             <v-btn @click="addRooms">submit</v-btn>
             <v-btn @click="clear">clear</v-btn>
         </v-form>
-        <Rooms ref="roomReference" v-bind:rooms="Rooms"/>
+        <Rooms @update-room="updateRoom" ref="roomReference" v-bind:rooms="Rooms"/>
         <v-btn @click="deleteRooms">delete</v-btn>
     </div>
 </template>
@@ -92,6 +92,12 @@
                         else
                             { alert("Could not remove selected rooms") }
                     });
+            },
+            updateRoom: function(id, number, price, capacity) {
+                console.log(id);
+                console.log(number);
+                console.log(price);
+                console.log(capacity);
             }
         }
     }
