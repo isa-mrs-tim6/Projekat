@@ -23,6 +23,105 @@
                 </v-flex>
             </v-layout>
             <h2>Flights:</h2>
+            <v-dialog v-model="dialogSeat" max-width="1000px">
+                <v-card>
+                    <v-card-title>
+                        <span class="headline">Edit seat map:</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-layout row-wrap>
+                                <v-flex xs3 >
+                                    <div class="airplane">
+                                        <div v-for="n in editedSeats.RowNum">
+                                            <v-layout row-wrap class="row">
+                                                <div v-for="m in editedSeats.RowWidth/2">
+                                                   <div class="seat" @click="chooseSeat(n*editedSeats.RowWidth + m - editedSeats.RowWidth - 1)"
+                                                                                    v-bind:class="{first: editedSeats.Seats[n*editedSeats.RowWidth + m - editedSeats.RowWidth - 1].Class === 'FIRST',
+                                                                                    business: editedSeats.Seats[n*editedSeats.RowWidth + m - editedSeats.RowWidth - 1].Class === 'BUSINESS',
+                                                                                    selected: editedSeats.SelectedSeat === n*editedSeats.RowWidth + m - editedSeats.RowWidth - 1,
+                                                                                    economic: editedSeats.Seats[n*editedSeats.RowWidth + m - editedSeats.RowWidth - 1].Class === 'ECONOMIC'
+                                                                                    }"></div>
+                                                    {{n*editedSeats.RowWidth + m - editedSeats.RowWidth - 1}}
+                                                </div>
+                                                <div class="passage"></div>
+                                                <div v-for="m in editedSeats.RowWidth/2">
+                                                    <div class="seat" @click="chooseSeat(n*editedSeats.RowWidth + editedSeats.RowWidth / 2 + m - editedSeats.RowWidth - 1)"
+                                                                                    v-bind:class="{first: editedSeats.Seats[n*editedSeats.RowWidth + editedSeats.RowWidth / 2 + m - editedSeats.RowWidth - 1].Class === 'FIRST',
+                                                                                    selected: editedSeats.SelectedSeat === n*editedSeats.RowWidth + editedSeats.RowWidth / 2 + m - editedSeats.RowWidth - 1,
+                                                                                    business: editedSeats.Seats[n*editedSeats.RowWidth + editedSeats.RowWidth / 2 + m - editedSeats.RowWidth - 1].Class === 'BUSINESS',
+                                                                                    economic: editedSeats.Seats[n*editedSeats.RowWidth + editedSeats.RowWidth / 2 + m - editedSeats.RowWidth - 1].Class === 'ECONOMIC'}"></div>
+                                                    {{n*editedSeats.RowWidth + editedSeats.RowWidth / 2 + m - editedSeats.RowWidth - 1}}
+                                                </div>
+                                            </v-layout>
+                                        </div>
+                                        <div v-if="editedSeats.LastRow <= (editedSeats.RowWidth / 2)">
+                                            <v-layout row-wrap class="row">
+                                                <div v-for="a in editedSeats.LastRow">
+                                                    <div class="seat" @click="chooseSeat(editedSeats.RowNum * editedSeats.RowWidth + a - 1)"
+                                                                                    v-bind:class="{first: editedSeats.Seats[editedSeats.RowNum * editedSeats.RowWidth + a - 1].Class === 'FIRST',
+                                                                                    selected: editedSeats.SelectedSeat === editedSeats.RowNum * editedSeats.RowWidth + a - 1,
+                                                                                    business: editedSeats.Seats[editedSeats.RowNum * editedSeats.RowWidth + a - 1].Class === 'BUSINESS',
+                                                                                    economic: editedSeats.Seats[editedSeats.RowNum * editedSeats.RowWidth + a - 1].Class === 'ECONOMIC'}"></div>
+                                                    {{editedSeats.RowNum * editedSeats.RowWidth + a}}
+                                                </div>
+                                                <div class="passage"></div>
+                                                <div v-for="k in (editedSeats.RowWidth - editedSeats.LastRow)">
+                                                    <div class="passage"></div>
+                                                </div>
+                                            </v-layout>
+                                        </div>
+                                        <div v-else>
+                                            <v-layout row-wrap class="row">
+                                                <div v-for="m in editedSeats.RowWidth/2">
+                                                    <div class="seat" @click="chooseSeat(editedSeats.RowNum * editedSeats.RowWidth + m - 1)"
+                                                                                    v-bind:class="{first: editedSeats.Seats[editedSeats.RowNum * editedSeats.RowWidth + m - 1].Class === 'FIRST',
+                                                                                    selected: editedSeats.SelectedSeat === editedSeats.RowNum * editedSeats.RowWidth + m - 1,
+                                                                                    business: editedSeats.Seats[editedSeats.RowNum * editedSeats.RowWidth + m - 1].Class === 'BUSINESS',
+                                                                                    economic: editedSeats.Seats[editedSeats.RowNum * editedSeats.RowWidth + m - 1].Class === 'ECONOMIC'}"></div>
+                                                    {{editedSeats.RowNum * editedSeats.RowWidth + m}}
+                                                </div>
+                                                <div class="passage"></div>
+                                                <div v-for="m in (editedSeats.LastRow -(editedSeats.RowWidth/2))">
+                                                    <div class="seat" @click="chooseSeat(editedSeats.RowNum * editedSeats.RowWidth + editedSeats.RowWidth/2 + m - 1)"
+                                                                                    v-bind:class="{first: editedSeats.Seats[editedSeats.RowNum * editedSeats.RowWidth + editedSeats.RowWidth/2 + m - 1].Class === 'FIRST',
+                                                                                    selected: editedSeats.SelectedSeat === editedSeats.RowNum * editedSeats.RowWidth + editedSeats.RowWidth/2 + m - 1,
+                                                                                    business: editedSeats.Seats[editedSeats.RowNum * editedSeats.RowWidth + editedSeats.RowWidth/2 + m - 1].Class === 'BUSINESS',
+                                                                                    economic: editedSeats.Seats[editedSeats.RowNum * editedSeats.RowWidth + editedSeats.RowWidth/2 + m - 1].Class === 'ECONOMIC'}"></div>
+                                                    {{editedSeats.RowNum * editedSeats.RowWidth + editedSeats.RowWidth/2 + m}}
+                                                </div>
+                                                <div v-for="k in (editedSeats.RowWidth - editedSeats.LastRow)">
+                                                    <div class="passage"></div>
+                                                </div>
+                                            </v-layout>
+                                        </div>
+                                    </div>
+                                </v-flex>
+                                <v-flex xs4>
+
+                                </v-flex>
+                                <v-flex xs4>
+                                    <v-layout row-wrap>
+                                        <v-flex xs12>
+                                            <v-text-field label="Seat number" outline v-model="editedSeats.Number" @change="changeSeat"></v-text-field>
+                                        </v-flex>
+                                    </v-layout>
+                                    <v-layout row-wrap>
+                                        <v-flex xs12>
+                                            <v-select :items="seatClass" label="Seat class" outline v-model="editedSeats.Class" @change="changeSeat"></v-select>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+                        <v-btn color="blue darken-1" flat @click="saveSeats">Save</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <v-dialog v-model="dialog" persistent max-width="500px">
                 <v-card>
                     <v-card-title>
@@ -74,7 +173,10 @@
                             <td>{{props.item.PriceFIRSTCLASS}}</td>
                             <td>{{props.item.SmallSuitcase}}</td>
                             <td>{{props.item.BigSuitcase}}</td>
-                            <td><v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon></td>
+                            <td>
+                                <v-icon class="ma-1" small @click="editItem(props.item, 0)">attach_money</v-icon>
+                                <v-icon class="ma-1" small @click="editItem(props.item, 1)">event_seat</v-icon>
+                            </td>
                         </template>
                     </v-data-table>
                 </v-flex>
@@ -96,12 +198,16 @@
                     required: value => !!value || 'Required.'
                 },
                 dialog: false,
+                seatNumber: 0,
+                idx: 0,
+                dialogSeat: false,
                 flights:[],
                 filter: {
                     fromDestination: '',
                     toDestination: '',
                     date: ''
                 },
+                seatClass:['ECONOMIC', 'BUSINESS','FIRST'],
                 editedItem:{
                     ID: '',
                     PriceFIRSTCLASS: '',
@@ -117,6 +223,24 @@
                     PriceECONOMY: '',
                     SmallSuitcase: '',
                     BigSuitcase: ''
+                },
+                editedSeats:{
+                    RowWidth: 0,
+                    RowNum: 0,
+                    LastRow: 0,
+                    SelectedSeat: -1,
+                    Seats: [],
+                    Number: "",
+                    Class: ""
+                },
+                defaultSeats:{
+                    RowWidth: 0,
+                    RowNum: 0,
+                    LastRow: 0,
+                    SelectedSeat: -1,
+                    Seats: [],
+                    Number: "",
+                    Class: ""
                 },
                 editedIndex: -1,
                 headers:[
@@ -201,15 +325,40 @@
                 }
                 return ind !== true;
             },
-            editItem (item) {
+            editItem (item, idx) {
+                this.idx = idx;
                 this.editedIndex = this.flights.indexOf(item);
                 this.editedItem = Object.assign({}, item);
-                this.dialog = true
+                if(this.idx === 0){
+                    this.dialog = true;
+                }else if(this.idx === 1){
+                    this.dialogSeat = true;
+                    this.editedSeats.RowWidth = item.Airplane.RowWidth;
+                    this.editedSeats.RowNum = Math.floor(item.Airplane.Seats.length / item.Airplane.RowWidth);
+                    this.editedSeats.LastRow = item.Airplane.Seats.length % item.Airplane.RowWidth;
+                    this.editedSeats.Seats = item.Airplane.Seats;
+                }
+
+            },
+            chooseSeat(index){
+                this.editedSeats.Number = this.editedSeats.Seats[index].Number;
+                this.editedSeats.Class = this.editedSeats.Seats[index].Class;
+                this.editedSeats.SelectedSeat = index;
+            },
+            changeSeat(){
+                if(this.editedSeats.SelectedSeat === -1){
+                    return;
+                }
+                this.editedSeats.Seats[this.editedSeats.SelectedSeat].Number = this.editedSeats.Number;
+                this.editedSeats.Seats[this.editedSeats.SelectedSeat].Class = this.editedSeats.Class;
             },
             close(){
+                this.dialogSeat = false;
                 this.dialog = false;
+
                 setTimeout(()=>{
                     this.editedItem = Object.assign({}, this.defaultItem);
+                    this.editedSeats = Object.assign({}, this.defaultSeats);
                     this.editedIndex = -1;
                     }, 300);
             },
@@ -234,14 +383,25 @@
                             });
                     });
                 this.close()
+            },
+            saveSeats(){
+                Object.assign(this.flights[this.editedIndex].Airplane.Seats, this.editedSeats.Seats);
+                this.close();
             }
         },
         watch:{
             dialog(val){
                 val || this.close()
-            }
+            },
+            dialogSeat(val){
+                val || this.close()
+            },
         },
         computed:{
+            proba(){
+              this.seatNumber++;
+              return this.seatNumber
+            },
             flightsToShow() {
                 let flights = this.flights;
                 if(this.filter.fromDestination.length > 0){
@@ -265,5 +425,5 @@
 </script>
 
 <style scoped>
-
+    @import '../../assets/css/SeatMap.css';
 </style>

@@ -18,6 +18,7 @@ type Seat struct {
 type Airplane struct {
 	gorm.Model
 	Name      string
+	RowWidth uint
 	Seats     []Seat `gorm:"foreignkey:AirplaneID"`
 	AirlineID uint
 }

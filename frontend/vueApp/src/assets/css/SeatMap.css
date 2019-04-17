@@ -1,0 +1,42 @@
+.seat{
+    width: 20px;
+    height: 20px;
+    background-color: beige;
+    margin: 2px;
+    border: 1px solid black
+}
+
+.seat:hover{
+    background-color: purple;
+}
+
+.selected{
+    background-color: purple !important;
+    border: 2px solid pink;
+}
+
+.economic{
+    background-color: #3a78c3;
+}
+.business{
+    background-color: yellow;
+}
+
+.first{
+    background-color: coral;
+}
+.airplane{
+    border: 1px solid black;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.row{
+    justify-content: center;
+}
+
+.passage{
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+}
