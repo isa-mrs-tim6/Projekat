@@ -4,11 +4,11 @@ import "github.com/jinzhu/gorm"
 
 type Room struct {
 	gorm.Model
-	Number        int
-	Price         float64
-	Capacity      uint
-	HotelID       uint
-	ReservationID uint
+	Number       int
+	Price        float64
+	Capacity     uint
+	HotelID      uint
+	Reservations []*HotelReservation `gorm:"many2many:room_reservations;"`
 }
 
 type Feature struct {

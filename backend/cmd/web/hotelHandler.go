@@ -110,7 +110,7 @@ func (app *Application) GetRooms(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *Application) AddRooms(w http.ResponseWriter, r *http.Request) {
+func (app *Application) UpdateRooms(w http.ResponseWriter, r *http.Request) {
 	email := getEmail(r)
 	user, err := app.Store.GetHotelAdmin(email)
 	if err != nil {
@@ -128,10 +128,35 @@ func (app *Application) AddRooms(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.Store.AddRooms(user.HotelID, rooms)
+	err = app.Store.UpdateRooms(user.HotelID, rooms)
 	if err != nil {
 		app.ErrorLog.Println("Could not add new rooms to database")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
+	}
+}
+
+func (app *Application) DeleteRooms(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetHotelAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive hotel admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	var rooms []models.Room
+	data, err := ioutil.ReadAll(r.Body)
+	if err == nil && data != nil {
+		err = json.Unmarshal(data, &rooms)
+	} else {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = app.Store.DeleteRooms(user.HotelID, rooms)
+	if err != nil {
+		app.ErrorLog.Printf(err.Error())
+		w.WriteHeader(http.StatusNotAcceptable)
 	}
 }

@@ -523,7 +523,7 @@ func addModels(db *gorm.DB) {
 			},
 			Occupation: models.Occupation{
 				Beginning: time.Date(2019, 4, 3, 0, 0, 0, 0, time.Local),
-				End:       time.Date(2019, 4, 7, 0, 0, 0, 0, time.Local),
+				End:       time.Date(2020, 4, 7, 0, 0, 0, 0, time.Local),
 			},
 			HotelID: hotel.ID,
 		},
@@ -555,12 +555,13 @@ func addModels(db *gorm.DB) {
 		ReservationHotel: models.HotelReservation{
 			Price: 180,
 			Rooms: []models.Room{
-				hotel2.Rooms[1],
+				hotel.Rooms[0],
 			},
 			Occupation: models.Occupation{
 				Beginning: time.Date(2019, 5, 3, 0, 0, 0, 0, time.Local),
 				End:       time.Date(2019, 5, 6, 0, 0, 0, 0, time.Local),
 			},
+			HotelID: hotel.ID,
 		},
 	}
 	reservation3 := models.Reservation{
