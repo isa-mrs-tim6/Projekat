@@ -137,11 +137,9 @@
                         !Number.isInteger(this.editPrice) || !Number.isInteger(this.editCapacity) || !Number.isInteger(this.editNumber)) {
                         alert("Fields must be numeric");
                     } else {
-                        console.log(room);
                         room.Number = this.editNumber;
                         room.Price = this.editPrice;
                         room.Capacity = this.editCapacity;
-                        console.log(room);
                         this.$emit('update-room', room);
                     }
                 }

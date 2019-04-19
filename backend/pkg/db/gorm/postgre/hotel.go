@@ -50,11 +50,11 @@ func (db *Store) UpdateHotel(id uint, newProfile models.HotelProfile) error {
 }
 
 func (db *Store) GetRooms(id uint) ([]models.Room, error) {
-	var retVal models.Hotel
-	if err := db.Set("gorm:auto_preload", true).First(&retVal, id).Error; err != nil {
-		return retVal.Rooms, err
+	var retVal []models.Room
+	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
 	}
-	return retVal.Rooms, nil
+	return retVal, nil
 }
 
 func (db *Store) AddRooms(id uint, rooms []models.Room) error {
