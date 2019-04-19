@@ -57,12 +57,13 @@ func (db *Store) GetRooms(id uint) ([]models.Room, error) {
 	return retVal.Rooms, nil
 }
 
-func (db *Store) UpdateRooms(id uint, rooms []models.Room) error {
+func (db *Store) AddRooms(id uint, rooms []models.Room) error {
 	var retVal models.Hotel
 	if err := db.Set("gorm:auto_preload", true).First(&retVal, id).Error; err != nil {
 		return err
 	}
-	retVal.Rooms = rooms
+	newRooms := append(retVal.Rooms, rooms...)
+	retVal.Rooms = newRooms
 
 	if err := db.Save(&retVal).Error; err != nil {
 		return err
@@ -79,7 +80,7 @@ func (db *Store) DeleteRooms(id uint, rooms []models.Room) error {
 		for _, v := range retVal {
 			for _, room := range v.Rooms {
 				if room.ID == rooms[i].ID && v.Occupation.End.After(time.Now()) {
-					return errors.New("Room is occupied and can't be deleted")
+					return errors.New("room is occupied and can't be deleted")
 				}
 			}
 		}
@@ -87,6 +88,19 @@ func (db *Store) DeleteRooms(id uint, rooms []models.Room) error {
 
 	for i := 0; i < len(rooms); i++ {
 		db.Delete(&rooms[i])
+	}
+	return nil
+}
+
+func (db *Store) UpdateRoom(room models.Room) error {
+	var retVal models.Room
+	if err := db.Find(&retVal, room.ID).Error; err != nil {
+		return err
+	}
+	retVal = room
+
+	if err := db.Save(&retVal).Error; err != nil {
+		return err
 	}
 	return nil
 }
