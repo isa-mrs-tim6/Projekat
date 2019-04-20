@@ -63,7 +63,7 @@
                 items: [
                     'System Admin',
                     'Airline Admin',
-                    'Hotel Admin',
+                    'HotelAdmin Admin',
                     'Rent-A-Car Admin'
                 ],
             }

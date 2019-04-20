@@ -88,7 +88,7 @@ func (app *Application) Routes() *mux.Router {
 	//
 
 	// RESERVATION API
-	// TODO
+	router.HandleFunc("/api/hotel/getHotelReservations", Validate(app.GetHotelReservations, []string{"HotelAdmin"})).Methods("GET")
 
 	// FLIGHT API
 	router.HandleFunc("/api/flight/add", app.CreateFlight).Methods("POST", "OPTIONS")
@@ -120,6 +120,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/hotel/updateProfile", app.UpdateHotelProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/addHotel", Validate(app.CreateHotel, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/getRooms", Validate(app.GetRooms, []string{"HotelAdmin"})).Methods("GET")
+	router.HandleFunc("/api/hotel/getRoomRatings", Validate(app.GetRoomRatings, []string{"HotelAdmin"})).Methods("GET")
 	router.HandleFunc("/api/hotel/updateRooms", Validate(app.UpdateRooms, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/deleteRooms", Validate(app.DeleteRooms, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
 

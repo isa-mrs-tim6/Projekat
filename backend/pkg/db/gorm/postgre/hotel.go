@@ -57,6 +57,41 @@ func (db *Store) GetRooms(id uint) ([]models.Room, error) {
 	return retVal.Rooms, nil
 }
 
+func (db *Store) GetRoomRatings(id uint) ([]models.RoomRatingDAO, error) {
+	var retVal []models.RoomRatingDAO
+	var rooms []models.Room
+	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&rooms).Error; err != nil {
+		return nil, err
+	}
+
+	for _, room := range rooms {
+		var ratings []models.RoomRating
+		if err := db.Where("room_id = ?", room.ID).Find(&ratings).Error; err != nil {
+			return nil, err
+		}
+		sumRating := 0
+		lenRating := 1
+		if len(ratings) > 0 {
+			lenRating = len(ratings)
+		}
+
+		for _, rating := range ratings {
+			sumRating += rating.Rating
+		}
+		retVal = append(retVal, models.RoomRatingDAO{Room: room, Rating: sumRating / lenRating})
+	}
+
+	return retVal, nil
+}
+
+func (db *Store) GetHotelReservations(id uint) ([]models.HotelReservation, error) {
+	var retVal []models.HotelReservation
+	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
 func (db *Store) UpdateRooms(id uint, rooms []models.Room) error {
 	var retVal models.Hotel
 	if err := db.Set("gorm:auto_preload", true).First(&retVal, id).Error; err != nil {
