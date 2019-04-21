@@ -20,6 +20,7 @@
     import ManageHotelProfile from "../components/ManageHotelProfile";
     import AdminProfile from "../components/AdminProfile";
     import HotelReport from "./HotelAdmin/HotelReport";
+    import axios from "axios";
 
     export default {
         name: "HotelAdmin",
@@ -29,18 +30,35 @@
                 currentTabComponent: "ManageRooms",
             }
         },
+        mounted(){
+            this.checkFirstPass()
+        },
         methods: {
             manageRooms(){
-                this.currentTabComponent = "ManageRooms"
+                this.currentTabComponent = "ManageRooms";
+                this.checkFirstPass()
             },
             manageHotelProfile(){
-                this.currentTabComponent = "ManageHotelProfile"
+                this.currentTabComponent = "ManageHotelProfile";
+                this.checkFirstPass()
             },
             manageProfile(){
-                this.currentTabComponent = "AdminProfile"
+                this.currentTabComponent = "AdminProfile";
             },
             hotelReport(){
-                this.currentTabComponent = "HotelReport"
+                this.currentTabComponent = "HotelReport";
+                this.checkFirstPass()
+            },
+            checkFirstPass(){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/admin/checkFirstPass")
+                    .then(
+                        res =>{
+                            if(res.data === false){
+                                alert("Please update your password");
+                                this.manageProfile();
+                            }
+                        }
+                    )
             }
         },
     }

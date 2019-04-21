@@ -39,6 +39,14 @@ func (db *Store) GetAirlineAdmin(email string) (models.AirlineAdmin, error) {
 	return retVal, nil
 }
 
+func (db *Store) GetRACAdmin(email string) (models.RentACarAdmin, error) {
+	var retVal models.RentACarAdmin
+	if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
 func (db *Store) GetHotelAdmin(email string) (models.HotelAdmin, error) {
 	var retVal models.HotelAdmin
 	if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
@@ -53,7 +61,7 @@ func (db *Store) UpdateHotelAdmin(id uint, newProfile models.Profile) error {
 		return err
 	}
 	retVal.Profile = newProfile
-
+	retVal.FirstPassChanged = true
 	if err := db.Save(&retVal).Error; err != nil {
 		return err
 	}

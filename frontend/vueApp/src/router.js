@@ -58,7 +58,7 @@ export default new Router({
       component: UpdateDestination
     },
     {
-      path: '/racAdmin/:id',
+      path: '/racAdmin',
       component: RacAdmin
     },
     {

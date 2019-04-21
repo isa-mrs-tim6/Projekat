@@ -44,16 +44,14 @@ func (app *Application) CreateRentACarCompany(w http.ResponseWriter, r *http.Req
 }
 
 func (app *Application) GetRentACarCompanyProfile(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	email := getEmail(r)
+	user, err := app.Store.GetRACAdmin(email)
 	if err != nil {
-		app.ErrorLog.Printf(vars["id"] + "is not a valid ID")
+		app.ErrorLog.Printf("Could not retrive hotel admin")
 		w.WriteHeader(http.StatusInternalServerError)
-		return
 	}
 
-	racCompanyProfile, err := app.Store.GetRentACarCompanyProfile(uint(id))
+	racCompanyProfile, err := app.Store.GetRentACarCompanyProfile(user.RentACarCompanyID)
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrieve rent-a-car company profile")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -69,15 +67,14 @@ func (app *Application) GetRentACarCompanyProfile(w http.ResponseWriter, r *http
 }
 
 func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	var racCompanyProfile models.RentACarCompanyProfile
-
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	email := getEmail(r)
+	user, err := app.Store.GetRACAdmin(email)
 	if err != nil {
-		app.ErrorLog.Printf(vars["id"] + "is not a valid ID")
+		app.ErrorLog.Printf("Could not retrive rent-a-car admin")
 		w.WriteHeader(http.StatusInternalServerError)
-		return
 	}
+
+	var racCompanyProfile models.RentACarCompanyProfile
 
 	err = json.NewDecoder(r.Body).Decode(&racCompanyProfile)
 	if err != nil {
@@ -86,7 +83,7 @@ func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *h
 		return
 	}
 
-	err = app.Store.UpdateRentACarCompanyProfile(uint(id), racCompanyProfile)
+	err = app.Store.UpdateRentACarCompanyProfile(user.RentACarCompanyID, racCompanyProfile)
 	if err != nil {
 		app.ErrorLog.Printf("Could not add rent-a-car company to database")
 		w.WriteHeader(http.StatusInternalServerError)

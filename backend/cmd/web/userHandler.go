@@ -95,7 +95,18 @@ func (app *Application) GetAdminProfile(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 	case "Rent-A-CarAdmin":
-		// TODO
+		admin, err := app.Store.GetRACAdmin(email)
+		if err != nil {
+			app.ErrorLog.Printf("Could not retrive hotel admin")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		err = json.NewEncoder(w).Encode(admin.Profile)
+		if err != nil {
+			app.ErrorLog.Printf("Cannot encode user profile into JSON object")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	default:
 		app.ErrorLog.Printf("Invalid user type")
 		w.WriteHeader(http.StatusExpectationFailed)
