@@ -94,6 +94,9 @@
                         </template>
                     </v-edit-dialog>
                 </td>
+                <td>
+                    <v-checkbox @change="save(rooms.item)" v-model="rooms.item.QuickReserve"></v-checkbox>
+                </td>
             </template>
         </v-data-table>
     </div>
@@ -109,6 +112,7 @@
                     { text: 'Number', value: 'Number' },
                     { text: 'Capacity', value: 'Capacity' },
                     { text: 'Price', value: 'Price' },
+                    { text: 'Quick reservation', value: 'QuickReserve' },
                 ],
                 selected: [],
                 numeric: value => !isNaN(value) || 'Numeric',
@@ -126,6 +130,13 @@
                 }
             },
             save(room) {
+                // Quick reservation field is changed
+                if (this.editNumber === null && this.editPrice === null && this.editCapacity === null) {
+                    this.$emit('update-room', room);
+                    return;
+                }
+
+                // Price, Capacity or Number fields are changed
                 if (isNaN(this.editPrice) || isNaN(this.editCapacity) || isNaN(this.editNumber)) {
                     alert("Fields must be numeric");
                 } else {
