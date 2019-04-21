@@ -22,7 +22,7 @@
             <v-btn @click="addRooms">submit</v-btn>
             <v-btn @click="clear">clear</v-btn>
         </v-form>
-        <Rooms ref="roomReference" v-bind:rooms="Rooms"/>
+        <Rooms @update-room="updateRoom" ref="roomReference" v-bind:rooms="Rooms"/>
         <v-btn @click="deleteRooms">delete</v-btn>
     </div>
 </template>
@@ -55,23 +55,22 @@
         methods: {
             addRooms(e) {
                 e.preventDefault();
-                const maxNum = Math.max.apply(Math, this.Rooms.map(function(o) { return o.Number; }))
+                let rooms = [];
                 for (let i = 0; i < this.AddNum; i++) {
                     const newRoom = {
-                        'Number': maxNum + i + 1,
+                        'Number': this.Rooms.length + i + 1,
                         'Capacity': parseInt(this.Capacity),
                         'Price': parseFloat(this.Price),
                     };
-                    this.Rooms.push(newRoom);
+                    rooms.push(newRoom);
                 }
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/updateRooms', this.Rooms)
+                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/addRooms', rooms)
                     .then(res =>
                         axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getRooms')
                             .then(res => this.Rooms = res.data)
                             .catch(err => alert("Could not retrieve hotel rooms"))
-                    .catch(err => alert("Error adding new rooms")));
-                this.clear();
-            },
+                            .catch(err => alert("Error adding new rooms")));
+                this.clear();            },
             clear() {
                 this.$refs.form.reset();
             },
@@ -92,6 +91,13 @@
                         else
                             { alert("Could not remove selected rooms") }
                     });
+            },
+            updateRoom: function(room) {
+                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/updateRoom', room)
+                    .then(res => axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getRooms')
+                        .then(res => this.Rooms = res.data)
+                        .catch(err => alert("Could not retrieve hotel rooms"))
+                        .catch(err => alert("Error updating room")));
             }
         }
     }
