@@ -85,7 +85,36 @@ func (app *Application) UpdatePriceList(w http.ResponseWriter, r *http.Request) 
 
 	err = app.Store.UpdateFlight(uint(id),flight)
 	if err != nil {
-		app.ErrorLog.Printf("Could not add destination to database")
+		app.ErrorLog.Printf("Could not update flight in database")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func (app *Application) UpdateSeats(w http.ResponseWriter, r *http.Request) {
+	var flightDTO models.FlightDto;
+	var flight models.Flight;
+	err := json.NewDecoder(r.Body).Decode(&flightDTO)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	id, err:= strconv.ParseUint(flightDTO.FlightID, 10, 32)
+	if err != nil {
+		app.ErrorLog.Printf(flightDTO.FlightID + " is not a valid ID")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	flight, err = app.Store.GetFlight(uint(id))
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive flight")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	flight.Airplane.Seats = flightDTO.AirplaneObject.Seats;
+	err = app.Store.UpdateFlight(uint(flight.ID),flight)
+	if err != nil {
+		app.ErrorLog.Printf("Could not update flight in database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

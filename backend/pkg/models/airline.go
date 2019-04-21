@@ -10,6 +10,7 @@ type Seat struct {
 	gorm.Model
 	Number        uint
 	Class         string
+	Disabled bool
 	AirplaneID    uint
 	ReservationID uint
 	QuickReserve  bool
@@ -81,6 +82,7 @@ type FlightDto struct {
 	SmallSuitcase string
 	BigSuitcase	string
 	Airplane        string
+	AirplaneObject Airplane
 }
 
 type AirlineProfile struct {
