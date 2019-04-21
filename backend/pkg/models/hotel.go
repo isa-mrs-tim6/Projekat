@@ -9,6 +9,18 @@ type Room struct {
 	Capacity     uint
 	HotelID      uint
 	Reservations []*HotelReservation `gorm:"many2many:room_reservations;"`
+	Ratings      []RoomRating        `gorm:"foreignkey:RoomReferer"`
+}
+
+type RoomRating struct {
+	RoomID        uint
+	ReservationID uint
+	Rating        int
+}
+
+type RoomRatingDAO struct {
+	Room   Room
+	Rating int
 }
 
 type Feature struct {

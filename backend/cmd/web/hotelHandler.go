@@ -110,6 +110,50 @@ func (app *Application) GetRooms(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (app *Application) GetRoomRatings(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetHotelAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive hotel admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	rooms, err := app.Store.GetRoomRatings(user.HotelID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive hotel rooms and their ratings")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(rooms)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode hotel rooms and their ratings into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetHotelReservations(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetHotelAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive hotel admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	rooms, err := app.Store.GetHotelReservations(user.HotelID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive hotel reservations")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(rooms)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode hotel reservations into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *Application) AddRooms(w http.ResponseWriter, r *http.Request) {
 	email := getEmail(r)
 	user, err := app.Store.GetHotelAdmin(email)
