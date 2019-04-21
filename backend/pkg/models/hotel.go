@@ -10,6 +10,7 @@ type Room struct {
 	HotelID      uint
 	Reservations []*HotelReservation `gorm:"many2many:room_reservations;"`
 	Ratings      []RoomRating        `gorm:"foreignkey:RoomReferer"`
+	QuickReserve bool
 }
 
 type RoomRating struct {

@@ -352,11 +352,11 @@ func addModels(db *gorm.DB) {
 			{Description: "H1_FEATURE3", Price: 90},
 		},
 		Rooms: []models.Room{
-			{Number: 1, Capacity: 2, Price: 250},
-			{Number: 2, Capacity: 3, Price: 350},
-			{Number: 3, Capacity: 4, Price: 450},
-			{Number: 4, Capacity: 5, Price: 650},
-			{Number: 5, Capacity: 2, Price: 250},
+			{Number: 1, Capacity: 2, Price: 250, QuickReserve: false},
+			{Number: 2, Capacity: 3, Price: 350, QuickReserve: true},
+			{Number: 3, Capacity: 4, Price: 450, QuickReserve: false},
+			{Number: 4, Capacity: 5, Price: 650, QuickReserve: true},
+			{Number: 5, Capacity: 2, Price: 250, QuickReserve: false},
 		},
 	}
 	hotel2 := models.Hotel{
@@ -376,11 +376,11 @@ func addModels(db *gorm.DB) {
 			{Description: "H2_FEATURE3", Price: 60},
 		},
 		Rooms: []models.Room{
-			{Number: 1, Capacity: 2, Price: 150},
-			{Number: 2, Capacity: 3, Price: 250},
-			{Number: 3, Capacity: 4, Price: 350},
-			{Number: 4, Capacity: 5, Price: 450},
-			{Number: 5, Capacity: 2, Price: 550},
+			{Number: 1, Capacity: 2, Price: 150, QuickReserve: true},
+			{Number: 2, Capacity: 3, Price: 250, QuickReserve: false},
+			{Number: 3, Capacity: 4, Price: 350, QuickReserve: true},
+			{Number: 4, Capacity: 5, Price: 450, QuickReserve: false},
+			{Number: 5, Capacity: 2, Price: 550, QuickReserve: true},
 		},
 	}
 	db.Create(&hotel)
