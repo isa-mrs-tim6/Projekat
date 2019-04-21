@@ -87,7 +87,8 @@
                     Email: this.Email,
                     Address: this.Address,
                     Phone: this.Phone,
-                    Password: this.OldPassword
+                    Password: this.OldPassword,
+                    FirstPassChanged: true,
                 };
                 if(this.Password !== "") {
                     newUserProfile.Password = this.Password;

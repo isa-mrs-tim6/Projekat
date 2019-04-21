@@ -60,6 +60,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "S_ADMIN1_PHONE",
 		},
 		RegistrationComplete: true,
+		FirstPassChanged:     true,
 	}
 	db.Create(&systemAdmin)
 
@@ -77,6 +78,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "A_ADMIN1_PHONE",
 		},
 		RegistrationComplete: true,
+		FirstPassChanged:     true,
 	}
 	airlineAdmin2 := models.AirlineAdmin{
 		Profile: models.Profile{
@@ -86,6 +88,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "A_ADMIN2_PHONE",
 		},
 		RegistrationComplete: true,
+		FirstPassChanged:     false,
 	}
 	airlineAdmin3 := models.AirlineAdmin{
 		Profile: models.Profile{
@@ -95,6 +98,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "A_ADMIN3_PHONE",
 		},
 		RegistrationComplete: false,
+		FirstPassChanged:     true,
 	}
 	db.Create(&airlineAdmin)
 	db.Create(&airlineAdmin2)
@@ -114,6 +118,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "H_ADMIN1_PHONE",
 		},
 		RegistrationComplete: true,
+		FirstPassChanged:     true,
 	}
 	hotelAdmin2 := models.HotelAdmin{
 		Profile: models.Profile{
@@ -123,6 +128,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "H_ADMIN2_PHONE",
 		},
 		RegistrationComplete: true,
+		FirstPassChanged:     false,
 	}
 	hotelAdmin3 := models.HotelAdmin{
 		Profile: models.Profile{
@@ -132,6 +138,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "H_ADMIN3_PHONE",
 		},
 		RegistrationComplete: false,
+		FirstPassChanged:     true,
 	}
 	db.Create(&hotelAdmin)
 	db.Create(&hotelAdmin2)
@@ -150,6 +157,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "R_ADMIN1_PHONE",
 		},
 		RegistrationComplete: true,
+		FirstPassChanged:     true,
 	}
 	rentACarAdmin2 := models.RentACarAdmin{
 		Profile: models.Profile{
@@ -159,6 +167,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "R_ADMIN2_PHONE",
 		},
 		RegistrationComplete: true,
+		FirstPassChanged:     false,
 	}
 	rentACarAdmin3 := models.RentACarAdmin{
 		Profile: models.Profile{
@@ -168,6 +177,7 @@ func addModels(db *gorm.DB) {
 			Phone:       "R_ADMIN3_PHONE",
 		},
 		RegistrationComplete: false,
+		FirstPassChanged:     true,
 	}
 	db.Create(&rentACarAdmin)
 	db.Create(&rentACarAdmin2)
