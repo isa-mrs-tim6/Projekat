@@ -148,7 +148,23 @@ func (app *Application) UpdateAdminProfile(w http.ResponseWriter, r *http.Reques
 			return
 		}
 	case "Rent-A-CarAdmin":
-		// TODO
+		admin, err := app.Store.GetRACAdmin(email)
+		if err != nil {
+			app.ErrorLog.Printf("Could not retrive hotel admin")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		err = app.Store.UpdateRACAdmin(admin.ID, profile)
+		if err != nil {
+			app.ErrorLog.Printf("Could not update rac admin profile")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		err = json.NewEncoder(w).Encode(admin.Profile)
+		if err != nil {
+			app.ErrorLog.Printf("Cannot encode hotel admin profile into JSON object")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	default:
 		app.ErrorLog.Printf("Invalid user type")
 		w.WriteHeader(http.StatusExpectationFailed)
