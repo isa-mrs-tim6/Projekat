@@ -94,8 +94,8 @@
                         </template>
                     </v-edit-dialog>
                 </td>
-                <td>
-                    <v-checkbox @change="save(rooms.item)" v-model="rooms.item.QuickReserve"></v-checkbox>
+                <td class="text-xs-center">
+                    <v-checkbox style="padding-top: 17px" class="text-xs-center" @change="save(rooms.item)" v-model="rooms.item.QuickReserve"></v-checkbox>
                 </td>
             </template>
         </v-data-table>

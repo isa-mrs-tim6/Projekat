@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <v-form>
-            <v-container>
-                <v-flex xs12 sm2>
+    <v-container grid-list-xl text-xs-center>
+        <v-layout align-center justify-center column wrap fill-height>
+            <v-flex style="width: 40vw">
+                <v-form>
                     <v-text-field label="First Name" v-model="Name"></v-text-field>
                     <v-text-field label="Surname" v-model="Surname"></v-text-field>
                     <v-text-field label="Email" :rules="emailRules" v-model="Email"></v-text-field>
@@ -32,10 +32,10 @@
                     <v-flex xs12 sm1>
                         <v-btn @click="updateUser">submit</v-btn>
                     </v-flex>
-                </v-flex>
-            </v-container>
-        </v-form>
-    </div>
+                </v-form>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

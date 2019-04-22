@@ -92,3 +92,30 @@ func (db *Store) UpdateHotelAdmin(id uint, newProfile models.Profile) error {
 	}
 	return nil
 }
+
+func (db *Store) GetSystemAdmin(email string) (models.SystemAdmin, error) {
+	var retVal models.SystemAdmin
+	if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) UpdateSystemAdmin(id uint, newProfile models.Profile) error {
+	var retVal models.SystemAdmin
+	if err := db.First(&retVal, id).Error; err != nil {
+		return err
+	}
+	hashedPassword, err := createHash(retVal.Credentials.Password)
+	if err != nil {
+		return err
+	}
+	newProfile.Password = string(hashedPassword)
+
+	retVal.Profile = newProfile
+	retVal.FirstPassChanged = true
+	if err := db.Save(&retVal).Error; err != nil {
+		return err
+	}
+	return nil
+}

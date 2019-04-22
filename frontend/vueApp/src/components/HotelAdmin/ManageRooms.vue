@@ -1,35 +1,41 @@
 <template>
-    <div>
-        <v-form ref="form">
-            <v-text-field
-                    v-model="Capacity"
-                    label="Capacity"
-                    :rules="[rules.required, rules.numeric]"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="Price"
-                    label="Price"
-                    :rules="[rules.required, rules.numeric]"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="AddNum"
-                    label="Number of rooms"
-                    :rules="[rules.required, rules.numeric]"
-                    required
-            ></v-text-field>
-            <v-btn @click="addRooms">submit</v-btn>
-            <v-btn @click="clear">clear</v-btn>
-        </v-form>
-        <Rooms @update-room="updateRoom" ref="roomReference" v-bind:rooms="Rooms"/>
-        <v-btn @click="deleteRooms">delete</v-btn>
-    </div>
+    <v-container grid-list-xl text-xs-center>
+        <v-layout align-center justify-center column wrap fill-height>
+            <v-flex style="width: 75vw">
+                <Rooms style="margin-bottom: 2vh" @update-room="updateRoom" ref="roomReference" v-bind:rooms="Rooms"/>
+                <v-btn style="margin-top: 1vh; float: left" @click="deleteRooms">delete</v-btn>
+                <v-flex style="width: 35vw; margin-left: 20vw; margin-top: 10vh">
+                    <v-form ref="form" class="align-center justify-center">
+                        <v-text-field
+                                v-model="Capacity"
+                                label="Capacity"
+                                :rules="[rules.required, rules.numeric]"
+                                required
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="Price"
+                                label="Price"
+                                :rules="[rules.required, rules.numeric]"
+                                required
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="AddNum"
+                                label="Number of rooms"
+                                :rules="[rules.required, rules.numeric]"
+                                required
+                        ></v-text-field>
+                        <v-btn style="float: left" @click="addRooms">submit</v-btn>
+                        <v-btn style="float: right" @click="clear">clear</v-btn>
+                    </v-form>
+                </v-flex>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
     import Rooms from "./Rooms";
-    import axios from 'axios';
+    import axios from 'axios/index';
 
     export default {
         name: "ManageRooms",

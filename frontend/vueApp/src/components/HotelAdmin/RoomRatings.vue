@@ -1,5 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
+    <v-container>
         <v-data-table
                 :headers="headers"
                 :items="rooms"
@@ -7,8 +7,8 @@
                 item-key="ID"
         >
             <template v-slot:items="rooms">
-                <td>{{rooms.item.Room.Number}}</td>
-                <td>
+                <td class="text-xs-center">{{rooms.item.Room.Number}}</td>
+                <td class="text-xs-center">
                     <v-rating
                             v-model="rooms.item.Rating"
                             background-color="indigo lighten-3"
@@ -16,12 +16,12 @@
                             half-increments
                             readonly
                             color="indigo"
-                            size="16"
+                            size="32"
                     ></v-rating>
                 </td>
             </template>
         </v-data-table>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -31,8 +31,8 @@
         data() {
             return {
                 headers: [
-                    { text: 'Number', value: 'Number' },
-                    { text: 'Rating', value: 'Rating' },
+                    { text: 'Number', value: 'Number', align: 'center', width: '50%' },
+                    { text: 'Rating', value: 'Rating', align: 'center', width: '50%' },
                 ],
             }
         },
