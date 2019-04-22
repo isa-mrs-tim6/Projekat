@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    import ManageRacProfile from "../components/ManageRacProfile";
+    import ManageRacProfile from "../components/RACAdmin/ManageRacProfile";
     import AdminProfile from "../components/AdminProfile";
     import axios from "axios";
 
