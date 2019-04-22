@@ -1,47 +1,53 @@
 <template>
-    <div>
-        <v-form ref="form">
-            <v-text-field
-                    v-model="Name"
-                    label="Name"
-                    :rules="[rules.required]"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="Address"
-                    label="Address"
-                    :rules="[rules.required]"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="Latitude"
-                    label="Latitude"
-                    :rules="[rules.required, rules.numeric]"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="Longitude"
-                    label="Longitude"
-                    :rules="[rules.required, rules.numeric]"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="Promo"
-                    label="Promo"
-                    :rules="[rules.required]"
-                    required
-            ></v-text-field>
+    <v-container grid-list-xl text-xs-center>
+        <v-layout align-center justify-center column wrap fill-height>
+            <v-flex style="width: 75vw">
+                <RentACarCompanies style="margin-top: 2vh" v-bind:rentACarCompanies="RentACarCompanies"/>
+                <v-flex style="width: 35vw; margin-left: 20vw">
+                    <v-form ref="form" class="align-center justify-center">
+                        <v-text-field
+                                v-model="Name"
+                                label="Name"
+                                :rules="[rules.required]"
+                                required
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="Address"
+                                label="Address"
+                                :rules="[rules.required]"
+                                required
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="Latitude"
+                                label="Latitude"
+                                :rules="[rules.required, rules.numeric]"
+                                required
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="Longitude"
+                                label="Longitude"
+                                :rules="[rules.required, rules.numeric]"
+                                required
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="Promo"
+                                label="Promo"
+                                :rules="[rules.required]"
+                                required
+                        ></v-text-field>
 
-            <v-btn @click="addRentACarCompany">submit</v-btn>
-            <v-btn @click="clear">clear</v-btn>
-        </v-form>
-        <RentACarCompanies v-bind:rentACarCompanies="RentACarCompanies"/>
-    </div>
+                        <v-btn style="float: left" @click="addRentACarCompany">submit</v-btn>
+                        <v-btn style="float: right" @click="clear">clear</v-btn>
+                    </v-form>
+                </v-flex>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
-    import RentACarCompanies from "../components/RentACarCompanies";
-    import axios from 'axios';
+    import RentACarCompanies from "../RentACarCompanies";
+    import axios from 'axios/index';
 
     export default {
         name: "ManageRentACarCompanies",

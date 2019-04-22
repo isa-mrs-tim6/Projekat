@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container>
         <v-layout column align-center>
             <h1>{{name}}</h1>
             <v-rating
@@ -9,11 +9,11 @@
                     readonly
                     half-increments
                     color="indigo"
-                    size="32"
+                    size="48"
             ></v-rating>
-            <RoomRatings v-bind:rooms="rooms"></RoomRatings>
+            <RoomRatings style="width: 75vw" v-bind:rooms="rooms"></RoomRatings>
         </v-layout>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -27,5 +27,4 @@
 </script>
 
 <style scoped>
-
 </style>

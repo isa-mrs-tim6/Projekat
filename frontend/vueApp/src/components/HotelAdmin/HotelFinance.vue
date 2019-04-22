@@ -20,9 +20,13 @@
                 </v-menu>
             </v-flex>
         </v-layout>
-        <v-layout align-center justify-center row fill-height>
-            <FinanceGraph :width="600" v-bind:item="item.visitors" ref="chart" :chart-data="dataCollectionVisitors"></FinanceGraph>
-            <FinanceGraph :width="600" v-bind:item="item.currency" ref="chart" :chart-data="dataCollectionFinances"></FinanceGraph>
+        <v-layout align-center justify-space-around column fill-height>
+            <div id="wrapper1" style="position: relative; height: 40vh; width: 80vw">
+                <FinanceGraph v-bind:item="item.visitors" ref="chart" :chart-data="dataCollectionVisitors"></FinanceGraph>
+            </div>
+            <div id="wrapper2" style="position: relative; height: 40vh; width: 80vw">
+                <FinanceGraph v-bind:item="item.currency" ref="chart" :chart-data="dataCollectionFinances"></FinanceGraph>
+            </div>
         </v-layout>
         <v-layout align-center justify-space-around row fill-height>
             <v-btn @click="daily()">Daily</v-btn>
@@ -198,8 +202,8 @@
                 if (!moment(this.time.from).isValid() || !moment(this.time.to).isValid()) {
                     return;
                 }
-                let dateFrom = moment(this.time.from);
-                const dateTo = moment(this.time.to);
+                let dateFrom = moment(this.time.from).startOf("month");
+                const dateTo = moment(this.time.to).endOf("month");
 
                 while (dateFrom.isSameOrBefore(dateTo)) {
                     this.monthlyDictVisitors.set(monthNames[dateFrom.month()] + ", " + dateFrom.year(), 0);
@@ -302,6 +306,6 @@
     }
 </script>
 
-<style>
+<style scoped>
 
 </style>

@@ -44,7 +44,7 @@
                     },
                     responsive: true,
                     maintainAspectRatio: false,
-                    height: 200,
+                    minWidth: 400,
                 },
             }
         },
