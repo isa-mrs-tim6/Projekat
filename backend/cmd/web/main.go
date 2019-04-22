@@ -80,6 +80,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/user/register", app.RegisterUser).Methods("POST", "OPTIONS")
 
 	// ADMIN API
+	router.HandleFunc("/api/admin/checkFirstPass", Validate(app.CheckFirstPass, []string{"SystemAdmin", "HotelAdmin", "AirlineAdmin", "Rent-A-CarAdmin"})).Methods("GET")
 	router.HandleFunc("/api/admin/login", app.LoginAdmin).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/admin/register", Validate(app.RegisterAdmin, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/admin/{type}/completeRegistration/q={email}", app.CompleteRegistration).Methods("GET")
@@ -127,8 +128,8 @@ func (app *Application) Routes() *mux.Router {
 
 	// RENT-A-CAR API
 	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", Validate(app.GetRentACarCompanies, []string{"SystemAdmin"})).Methods("GET")
-	router.HandleFunc("/api/rentACarCompany/{id}/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
-	router.HandleFunc("/api/rentACarCompany/{id}/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/rentACarCompany/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
+	router.HandleFunc("/api/rentACarCompany/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/addRentACarCompany", Validate(app.CreateRentACarCompany, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 
