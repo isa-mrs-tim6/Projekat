@@ -11,7 +11,7 @@ import (
 func (app *Application) GetDestinations(w http.ResponseWriter, r *http.Request) {
 	destinations, err := app.Store.GetDestinations()
 	if err != nil {
-		app.ErrorLog.Println("Could not retrive destination")
+		app.ErrorLog.Println("Could not retrive destinations")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -24,7 +24,7 @@ func (app *Application) GetDestinations(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-func (app *Application) GetCompanysDestinations(w http.ResponseWriter, r *http.Request) {
+func (app *Application) GetCompanyDestinations(w http.ResponseWriter, r *http.Request) {
 	email := getEmail(r)
 	user, err := app.Store.GetAirlineAdmin(email)
 	if err != nil {

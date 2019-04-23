@@ -54,13 +54,13 @@ func (app *Application) UpdatePriceList(w http.ResponseWriter, r *http.Request) 
 	}
 	smallSuitcase, err:= strconv.ParseFloat(flightDTO.SmallSuitcase, 64)
 	if err != nil {
-		app.ErrorLog.Println("Small suitacase price is not a valid")
+		app.ErrorLog.Println("Small suitacse price is not a valid")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	bigSuitcase, err:= strconv.ParseFloat(flightDTO.BigSuitcase, 64)
 	if err != nil {
-		app.ErrorLog.Println("Big suitacase price is not a valid")
+		app.ErrorLog.Println("Big suitacse price is not a valid")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

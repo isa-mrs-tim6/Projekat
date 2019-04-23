@@ -9,7 +9,7 @@ import (
 func (app *Application) GetAirlines(w http.ResponseWriter, r *http.Request) {
 	airlines, err := app.Store.GetAirlines()
 	if err != nil {
-		app.ErrorLog.Println("Could not retrive airline profile")
+		app.ErrorLog.Println("Could not retrive airlines")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

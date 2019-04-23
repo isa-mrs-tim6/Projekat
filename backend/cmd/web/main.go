@@ -110,7 +110,7 @@ func (app *Application) Routes() *mux.Router {
 
 	//DESTINATION API
 	router.HandleFunc("/api/destination/getDestinations", app.GetDestinations).Methods("GET")
-	router.HandleFunc("/api/destination/getCompanyDestinations", app.GetCompanysDestinations).Methods("GET")
+	router.HandleFunc("/api/destination/getCompanyDestinations", app.GetCompanyDestinations).Methods("GET")
 	router.HandleFunc("/api/destination/{id}/getDestination", app.GetDestination).Methods("GET")
 	router.HandleFunc("/api/destination/{id}/updateDestination", app.UpdateDestination).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/destination/add", app.CreateDestination).Methods("POST", "OPTIONS")
