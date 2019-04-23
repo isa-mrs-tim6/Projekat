@@ -104,7 +104,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/priceList/update", app.UpdatePriceList).Methods("POST", "OPTIONS")
 
 	// AIRLINE API
-	router.HandleFunc("/api/airline/getAirlines", Validate(app.GetAirlines, []string{"SystemAdmin"})).Methods("GET")
+	router.HandleFunc("/api/airline/getAirlines", Validate(app.GetAirlines, []string{"SystemAdmin", "User"})).Methods("GET")
 	router.HandleFunc("/api/airline/getProfile", app.GetAirlineProfiles).Methods("GET")
 	router.HandleFunc("/api/airline/updateProfile", app.UpdateAirlineProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/airline/addAirline", Validate(app.CreateAirline, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
@@ -117,7 +117,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/destination/add", app.CreateDestination).Methods("POST", "OPTIONS")
 
 	// HOTEL API
-	router.HandleFunc("/api/hotel/getHotels", Validate(app.GetHotels, []string{"SystemAdmin"})).Methods("GET")
+	router.HandleFunc("/api/hotel/getHotels", Validate(app.GetHotels, []string{"SystemAdmin", "User"})).Methods("GET")
 	router.HandleFunc("/api/hotel/getProfile", app.GetHotelProfile).Methods("GET")
 	router.HandleFunc("/api/hotel/updateProfile", app.UpdateHotelProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/addHotel", Validate(app.CreateHotel, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
@@ -136,7 +136,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/rentACarCompany/deleteLocation", Validate(app.DeleteLocation, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/updateLocation", Validate(app.UpdateLocation, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/getCompanyLocations", Validate(app.GetCompanyLocations, []string{"Rent-A-CarAdmin"})).Methods("GET")
-	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", Validate(app.GetRentACarCompanies, []string{"SystemAdmin"})).Methods("GET")
+	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", Validate(app.GetRentACarCompanies, []string{"SystemAdmin", "User"})).Methods("GET")
 	router.HandleFunc("/api/rentACarCompany/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
 	router.HandleFunc("/api/rentACarCompany/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
