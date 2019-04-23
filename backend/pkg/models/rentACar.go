@@ -33,7 +33,6 @@ type Location struct {
 }
 
 type LocationParams struct {
-	gorm.Model
 	ID uint
 	Address
 	RentACarCompanyID uint
