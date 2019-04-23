@@ -1,45 +1,66 @@
 <template>
-    <div>
-        <v-form>
-            <v-container fluid>
-                <v-layout align-center justify-center column fill-height/>
-                    <v-flex offset-xs1 sm10 sm6>
-                        <v-text-field
-                                v-model="email"
-                                :rules="emailRules"
-                                label="E-mail"
-                                required
-                        ></v-text-field>
-                    </v-flex>
-                    <v-flex offset-xs1 sm10 sm6>
-                        <v-text-field
-                                v-model="password"
-                                :append-icon="show1 ? 'visibility' : 'visibility_off'"
-                                :rules="[rules.required, rules.min]"
-                                :type="show1 ? 'text' : 'password'"
-                                name="input-10-1"
-                                label="Password"
-                                hint="At least 8 characters"
-                                counter
-                                @click:append="show1 = !show1"
-                        ></v-text-field>
-                    </v-flex>
-                    <v-flex offset-xs1 sm10 sm6>
-                        <v-select
-                                v-model="select"
-                                :items="items"
-                                label="Account type"
-                                required
-                        ></v-select>
-                    </v-flex>
-                <v-flex offset-xs1 sm10 sm6>
-                    <v-btn @click="register">submit</v-btn>
-                    <v-btn @click="clear">clear</v-btn>
-                </v-flex>
-            </v-container>
-
-        </v-form>
-    </div>
+    <v-container grid-list-xl text-xs-center style="height: 100vh;">
+        <v-layout align-center justify-center column wrap fill-height>
+            <v-flex style="width: 60vw">
+                <v-card min-height="100%" class="flexcard">
+                    <v-card-title primary-title>
+                        <div class="headline font-weight-medium">Register new admin accounts</div>
+                    </v-card-title>
+                    <v-card-text class="grow">
+                        <v-form ref="form" class="align-center justify-center">
+                            <v-text-field
+                                    v-model="email"
+                                    :rules="emailRules"
+                                    label="E-mail"
+                                    class="body-2"
+                                    prepend-icon="email"
+                                    required
+                            ></v-text-field>
+                            <v-text-field
+                                    v-model="password"
+                                    :append-icon="show1 ? 'visibility' : 'visibility_off'"
+                                    :rules="[rules.required, rules.min]"
+                                    :type="show1 ? 'text' : 'password'"
+                                    name="input-10-1"
+                                    label="Password"
+                                    prepend-icon="lock"
+                                    hint="At least 8 characters"
+                                    class="body-2"
+                                    counter
+                                    @click:append="show1 = !show1"
+                            ></v-text-field>
+                            <v-select
+                                    v-model="select"
+                                    :items="items"
+                                    label="Account type"
+                                    prepend-icon="person"
+                                    class="body-2"
+                                    required
+                            ></v-select>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="primary" :loading="loading" :disabled="loading" @click="register">submit</v-btn>
+                        <v-btn @click="clear">clear</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-flex>
+        </v-layout>
+        <v-snackbar
+                v-model="snackbar_fields.snackbar"
+                :timeout="4000"
+                :top="true"
+                :color="snackbar_fields.color"
+        >
+            {{ snackbar_fields.text }}
+            <v-btn
+                    flat
+                    @click="snackbar_fields.snackbar = false"
+            >
+                Close
+            </v-btn>
+        </v-snackbar>
+    </v-container>
 </template>
 
 <script>
@@ -66,11 +87,19 @@
                     'HotelAdmin Admin',
                     'Rent-A-Car Admin'
                 ],
+                loader: null,
+                loading: false,
+                snackbar_fields: {
+                    snackbar: false,
+                    text: null,
+                    color: null,
+                },
             }
         },
         methods: {
             register (e) {
                 e.preventDefault();
+
                 if (this.email === "" || this.password === "" || this.select === null) {
                     alert("Please fill in the required fields");
                     return;
@@ -80,19 +109,43 @@
                     Password: this.password,
                     accountType: this.select
                 };
+                this.loader = "loading";
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/admin/register', credentials)
-                    .then(res => {if (res.status === 201) alert("Registration successful")})
-                    .catch(err => alert("Registration unsuccessful"));
+                    .then(res => {
+                        if (res.status === 201) {
+                            this.snackbar_fields.text = "Registration successful";
+                            this.snackbar_fields.color = "success";
+                            this.snackbar_fields.snackbar = true;
+                            this.loader = null;
+                        }
+                    })
+                    .catch(err => {
+                        this.snackbar_fields.text = "Registration unsuccessful";
+                        this.snackbar_fields.color = "error";
+                        this.snackbar_fields.snackbar = true;
+                        this.loader = null;
+                    });
             },
             clear () {
                 this.email = '';
                 this.password = '';
                 this.select = null;
             },
+        },
+        watch: {
+            loader () {
+                const l = this.loader;
+                this[l] = !this[l];
+                setTimeout(() => (this[l] = false), 2000);
+                this.loader = null
+            }
         }
     }
 </script>
 
 <style scoped>
-
+    .flexcard {
+        display: flex;
+        flex-direction: column;
+    }
 </style>

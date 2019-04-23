@@ -4,6 +4,8 @@
             :mini-variant.sync="mini"
             hide-overlay
             stateless
+            app
+            absolute
     >
         <v-toolbar flat class="transparent">
             <v-list class="pa-0">
@@ -11,7 +13,7 @@
                     <v-list-tile-avatar>
                         <v-btn
                                 icon
-                                @click.stop="mini = !mini"
+                                @click.stop="sizeClick"
                         >
                             <v-icon>menu</v-icon>
                         </v-btn>
@@ -59,6 +61,10 @@
             visit(path) {
                 this.$router.replace(path);
             },
+            sizeClick() {
+                this.mini = !this.mini;
+                this.$emit('sizeClick', this.mini);
+            }
         }
     }
 </script>
