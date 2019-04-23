@@ -11,7 +11,7 @@ import Destination from "./views/AirlineAdmin/Destination";
 import UpdateDestination from "./views/AirlineAdmin/UpdateDestination";
 import LoginAdmin from "./views/LoginAdmin";
 import AddFlight from "./views/AirlineAdmin/AddFlight";
-import PriceList from "./views/AirlineAdmin/PriceList";
+import EditFlight from "./views/AirlineAdmin/EditFlight";
 import HotelFinancialReport from "./views/HotelAdmin/HotelFinancialReport";
 import HotelAdminProfile from "./views/HotelAdmin/HotelAdminProfile";
 import HotelRooms from "./views/HotelAdmin/HotelRooms";
@@ -89,8 +89,8 @@ export default new Router({
       component: AirlineAdmin
     },
     {
-      path:'/airlineAdmin/priceList',
-      component: PriceList
+      path:'/airlineAdmin/flight/edit',
+      component: EditFlight
     },
     {
       path: '/airlineAdmin/flight/add',

@@ -94,10 +94,11 @@ func (app *Application) Routes() *mux.Router {
 	// FLIGHT API
 	router.HandleFunc("/api/flight/add", app.CreateFlight).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/flight/getCompanyFlights", app.GetCompanyFlights).Methods("GET")
+	router.HandleFunc("/api/flight/updateSeats", app.UpdateSeats).Methods("POST", "OPTIONS")
 
 	//AIRPLANE API
 	router.HandleFunc("/api/airplane/getAirplanes", app.GetAirplanes).Methods("GET")
-	router.HandleFunc("/api/airplane/getCompanyAirplanes", app.GetCompanysAirplanes).Methods("GET")
+	router.HandleFunc("/api/airplane/getCompanyAirplanes", app.GetCompanyAirplanes).Methods("GET")
 
 	//Pricelist API
 	router.HandleFunc("/api/priceList/update", app.UpdatePriceList).Methods("POST", "OPTIONS")
@@ -110,7 +111,7 @@ func (app *Application) Routes() *mux.Router {
 
 	//DESTINATION API
 	router.HandleFunc("/api/destination/getDestinations", app.GetDestinations).Methods("GET")
-	router.HandleFunc("/api/destination/getCompanyDestinations", app.GetCompanysDestinations).Methods("GET")
+	router.HandleFunc("/api/destination/getCompanyDestinations", app.GetCompanyDestinations).Methods("GET")
 	router.HandleFunc("/api/destination/{id}/getDestination", app.GetDestination).Methods("GET")
 	router.HandleFunc("/api/destination/{id}/updateDestination", app.UpdateDestination).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/destination/add", app.CreateDestination).Methods("POST", "OPTIONS")
@@ -127,6 +128,10 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/hotel/updateRoom", Validate(app.UpdateRoom, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
 
 	// RENT-A-CAR API
+	router.HandleFunc("/api/rentACarCompany/getCompanyVehicles", Validate(app.GetCompanyVehicles, []string{"Rent-A-CarAdmin"})).Methods("GET")
+	router.HandleFunc("/api/rentACarCompany/addVehicle", Validate(app.AddVehicle, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/rentACarCompany/updateVehicle", Validate(app.UpdateVehicle, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/rentACarCompany/deleteVehicle", Validate(app.DeleteVehicle, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/addLocation", Validate(app.AddLocation, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/deleteLocation", Validate(app.DeleteLocation, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/updateLocation", Validate(app.UpdateLocation, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
