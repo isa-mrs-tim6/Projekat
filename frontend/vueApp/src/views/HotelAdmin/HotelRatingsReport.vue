@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <HotelAdminNavDrawer height="100%"/>
-        <HotelRatings v-bind:rooms="Rooms" v-bind:name="Name" v-bind:rating="Rating"></HotelRatings>
+    <div id="main">
+        <HotelAdminNavDrawer/>
+        <HotelRatings style="height: 100vh;" v-bind:rooms="Rooms" v-bind:name="Name" v-bind:rating="Rating"></HotelRatings>
     </div>
 </template>
 
@@ -62,8 +62,6 @@
     }
 </script>
 
-<style>
-    #main {
-        background-image: linear-gradient(to right top, #ffffff, #fafafb, #f5f5f6, #eff0f2, #eaebee, #e7eaee, #e4e9ee, #e1e8ee, #dfebf1, #deeef3, #ddf1f3, #ddf4f2);
-    }
+<style scoped>
+    @import '../../assets/css/HotelAdmin.css';
 </style>

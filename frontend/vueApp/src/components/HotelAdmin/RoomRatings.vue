@@ -15,7 +15,7 @@
                             empty-icon="$vuetify.icons.ratingFull"
                             half-increments
                             readonly
-                            color="indigo"
+                            color="orange"
                             size="32"
                     ></v-rating>
                 </td>

@@ -1,20 +1,8 @@
 <template>
-    <v-container id="main" style="height: 100vh; max-height: 100%;" fluid>
-        <v-layout style="height: 100vh; max-height: 100%;" row>
-            <v-flex
-                    shrink
-                    pa-1
-            >
-                <HotelAdminNavDrawer height="100%"/>
-            </v-flex>
-            <v-flex
-                    grow
-                    pa-1
-            >
-                <HotelFinance v-bind:reservations="Reservations"></HotelFinance>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <div id="main">
+    <HotelAdminNavDrawer height="100%"/>
+    <HotelFinance v-bind:reservations="Reservations"></HotelFinance>
+</div>
 </template>
 
 <script>
@@ -71,5 +59,6 @@
     }
 </script>
 
-<style>
+<style scoped>
+    @import '../../assets/css/HotelAdmin.css';
 </style>

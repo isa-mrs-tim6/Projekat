@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         <HotelAdminNavDrawer/>
         <ManageHotelProfile/>
     </div>
@@ -33,4 +33,5 @@
 </script>
 
 <style scoped>
+    @import '../../assets/css/HotelAdmin.css';
 </style>
