@@ -6,11 +6,29 @@
             </v-flex>
         </v-layout>
         <v-layout row-wrap>
-            <v-flex xs3>
+            <v-flex xs9 mr-3>
                 <h2>Filters:</h2>
-                <v-text-field v-model="filter.address" label="Address"></v-text-field>
+                <v-layout row-wrap>
+                    <v-text-field v-model="filter.address" label="Address"></v-text-field>
+                </v-layout>
+                <h2>Offices:</h2>
+                <v-layout row-wrap>
+                    <v-flex x12>
+                        <v-data-table :headers="headers" :items="officesToShow" class="elevation-1">
+                            <template v-slot:items="props">
+                                <td>{{props.item.Address}}</td>
+                                <td>{{props.item.Longitude}}</td>
+                                <td>{{props.item.Latitude}}</td>
+                                <td>
+                                    <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                                    <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
+                                </td>
+                            </template>
+                        </v-data-table>
+                    </v-flex>
+                </v-layout>
             </v-flex>
-            <v-flex style="width: 35vw; margin-left: 20vw; margin-top: 10vh">
+            <v-flex xs3>
                 <h2>Add Office:</h2>
                 <v-form ref="form" class="align-center justify-center">
                     <v-text-field
@@ -36,7 +54,7 @@
                 </v-form>
             </v-flex>
         </v-layout>
-        <h2>Offices:</h2>
+
         <v-dialog v-model="dialog" persistent max-width="500px">
             <v-card>
                 <v-card-title>
@@ -68,21 +86,6 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-layout row-wrap>
-            <v-flex x12>
-                <v-data-table :headers="headers" :items="officesToShow" class="elevation-1">
-                    <template v-slot:items="props">
-                        <td>{{props.item.Address}}</td>
-                        <td>{{props.item.Longitude}}</td>
-                        <td>{{props.item.Latitude}}</td>
-                        <td>
-                            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-                            <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
-                        </td>
-                    </template>
-                </v-data-table>
-            </v-flex>
-        </v-layout>
     </v-container>
 </template>
 
@@ -173,7 +176,6 @@
                     Longitude: parseFloat(this.addedItem.Longitude),
                     Latitude: parseFloat(this.addedItem.Latitude)
                 };
-                console.log(location)
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/addLocation', location)
                     .then(res =>
                         axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getCompanyLocations')

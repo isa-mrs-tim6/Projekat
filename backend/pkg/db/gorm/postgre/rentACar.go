@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"strings"
+	"time"
 )
 
 type RentACarDBInterface interface {
@@ -74,6 +75,74 @@ func (db *Store) FindVehicles(id uint, params models.FindVehicleParams) ([]model
 	}
 
 	return retVal, nil
+}
+
+func (db *Store) GetCompanyVehicles(id uint) ([]models.Vehicle, error) {
+	var retVal []models.Vehicle
+	if err := db.Set("gorm:auto_preload", true).Where("rent_a_car_company_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) UpdateVehicle(id uint, newVehicle models.Vehicle) error {
+	var retVal models.Vehicle
+	var res []models.RentACarReservation
+	if err := db.Set("gorm:auto_preload", true).Find(&res).Error; err != nil {
+		return err
+	}
+	if err := db.First(&retVal, id).Error; err != nil {
+		return err
+	}
+	for _, r := range res {
+		if r.ID == id && r.Occupation.End.After(time.Now()) {
+			return errors.New("Vehicle is reserved and cannot be updated")
+		}
+	}
+
+	retVal.Name = newVehicle.Name
+	retVal.Capacity = newVehicle.Capacity
+	retVal.Type = newVehicle.Type
+	retVal.PricePerDay = newVehicle.PricePerDay
+	retVal.Discount = newVehicle.Discount
+
+	if err := db.Save(&retVal).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db *Store) DeleteVehicle(id uint) error {
+	var retVal models.Vehicle
+	var res []models.RentACarReservation
+	if err := db.Set("gorm:auto_preload", true).Find(&res).Error; err != nil {
+		return err
+	}
+	if err := db.Set("gorm:auto_preload", true).First(&retVal, id).Error; err != nil {
+		return err
+	}
+
+	for _, r := range res {
+		if r.ID == id && r.Occupation.End.After(time.Now()) {
+			return errors.New("Vehicle is reserved and cannot be deleted")
+		}
+	}
+
+	if err := db.Delete(&retVal).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db *Store) AddVehicle(vehicle models.Vehicle) error {
+	var retVal models.Vehicle
+
+	retVal = vehicle
+
+	if err := db.Create(&retVal).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (db *Store) GetCompanyLocations(id uint) ([]models.Location, error) {
