@@ -8,7 +8,7 @@
                     </v-card-title>
                     <v-card-text class="grow">
                         <v-layout align-center justify-center row wrap fill-height>
-                            <v-flex xs4>
+                            <v-flex>
                                 <v-form ref="form" class="align-center justify-center">
                                     <v-text-field
                                             v-model="Name"

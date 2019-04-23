@@ -1,87 +1,88 @@
 <template>
-    <v-container fluid>
-        <v-layout row-wrap mb-3>
-            <v-flex>
-                <h1>Manage Vehicles:</h1>
-            </v-flex>
-        </v-layout>
-
-        <v-layout row-wrap>
-            <v-flex xs9 mr-3>
-                <h2>Filters:</h2>
+    <v-container>
+        <v-card min-height="100%" class="flexcard" style="padding: 5px">
+            <v-card-title primary-title>
+                    <div class="headline font-weight-medium">Manage Vehicles:</div>
+            </v-card-title>
+            <v-card-text class="grow">
                 <v-layout row-wrap>
-                    <v-flex ma-2>
-                        <v-text-field v-model="filter.Name" label="Name"></v-text-field>
+                    <v-flex xs9 mr-5>
+                        <h2>Filters:</h2>
+                        <v-layout row-wrap>
+                            <v-flex ma-2>
+                                <v-text-field v-model="filter.Name" label="Name"></v-text-field>
+                            </v-flex>
+                            <v-flex ma-2>
+                                <v-text-field v-model="filter.Capacity" label="Capacity"></v-text-field>
+                            </v-flex>
+                            <v-flex ma-2>
+                                <v-text-field v-model="filter.Type" label="Type"></v-text-field>
+                            </v-flex>
+                            <v-flex ma-2>
+                                <v-text-field v-model="filter.PricePerDay" label="Price Per Day"></v-text-field>
+                            </v-flex>
+                        </v-layout>
+                        <h2>Vehicles:</h2>
+                        <v-layout row-wrap>
+                            <v-flex xs12>
+                                <v-data-table :headers="headers" :items="vehiclesToShow" class="elevation-1">
+                                    <template v-slot:items="props">
+                                        <td>{{props.item.Name}}</td>
+                                        <td>{{props.item.Capacity}}</td>
+                                        <td>{{props.item.Type}}</td>
+                                        <td>{{props.item.PricePerDay}}</td>
+                                        <td>{{props.item.Discount | valueConversion}}</td>
+                                        <td>
+                                            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                                            <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
+                                        </td>
+                                    </template>
+                                </v-data-table>
+                            </v-flex>
+                        </v-layout>
                     </v-flex>
-                    <v-flex ma-2>
-                        <v-text-field v-model="filter.Capacity" label="Capacity"></v-text-field>
-                    </v-flex>
-                    <v-flex ma-2>
-                        <v-text-field v-model="filter.Type" label="Type"></v-text-field>
-                    </v-flex>
-                    <v-flex ma-2>
-                        <v-text-field v-model="filter.PricePerDay" label="Price Per Day"></v-text-field>
+                    <v-flex xs3>
+                        <v-layout row-wrap>
+                            <v-flex xs12>
+                                <h2>Add Vehicle:</h2>
+                                <v-form ref="form" class="align-center justify-center">
+                                    <v-text-field
+                                            v-model="addedItem.Name"
+                                            label="Name"
+                                            :rules="[rules.required]"
+                                            required
+                                    ></v-text-field>
+                                    <v-text-field
+                                            v-model="addedItem.Capacity"
+                                            label="Capacity"
+                                            :rules="[rules.required]"
+                                            required
+                                    ></v-text-field>
+                                    <v-text-field
+                                            v-model="addedItem.Type"
+                                            label="Type"
+                                            :rules="[rules.required]"
+                                            required
+                                    ></v-text-field>
+                                    <v-text-field
+                                            v-model="addedItem.PricePerDay"
+                                            label="Price Per Day"
+                                            :rules="[rules.required]"
+                                            required
+                                    ></v-text-field>
+                                    <v-checkbox
+                                            v-model="addedItem.Discount"
+                                            label="Discount"
+                                    ></v-checkbox>
+                                    <v-btn color="primary" style="float: left" @click="addVehicle">submit</v-btn>
+                                    <v-btn style="float: right" @click="clear">clear</v-btn>
+                                </v-form>
+                            </v-flex>
+                        </v-layout>
                     </v-flex>
                 </v-layout>
-                <h2>Vehicles:</h2>
-                <v-layout row-wrap>
-                    <v-flex xs12>
-                        <v-data-table :headers="headers" :items="vehiclesToShow" class="elevation-1">
-                            <template v-slot:items="props">
-                                <td>{{props.item.Name}}</td>
-                                <td>{{props.item.Capacity}}</td>
-                                <td>{{props.item.Type}}</td>
-                                <td>{{props.item.PricePerDay}}</td>
-                                <td>{{props.item.Discount | valueConversion}}</td>
-                                <td>
-                                    <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-                                    <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
-                                </td>
-                            </template>
-                        </v-data-table>
-                    </v-flex>
-                </v-layout>
-            </v-flex>
-            <v-flex xs3>
-                <v-layout row-wrap>
-                    <v-flex xs12>
-                        <h2>Add Vehicle:</h2>
-                        <v-form ref="form" class="align-center justify-center">
-                            <v-text-field
-                                    v-model="addedItem.Name"
-                                    label="Name"
-                                    :rules="[rules.required]"
-                                    required
-                            ></v-text-field>
-                            <v-text-field
-                                    v-model="addedItem.Capacity"
-                                    label="Capacity"
-                                    :rules="[rules.required]"
-                                    required
-                            ></v-text-field>
-                            <v-text-field
-                                    v-model="addedItem.Type"
-                                    label="Type"
-                                    :rules="[rules.required]"
-                                    required
-                            ></v-text-field>
-                            <v-text-field
-                                    v-model="addedItem.PricePerDay"
-                                    label="Price Per Day"
-                                    :rules="[rules.required]"
-                                    required
-                            ></v-text-field>
-                            <v-checkbox
-                                    v-model="addedItem.Discount"
-                                    label="Discount"
-                            ></v-checkbox>
-                            <v-btn style="float: left" @click="addVehicle">submit</v-btn>
-                            <v-btn style="float: right" @click="clear">clear</v-btn>
-                        </v-form>
-                    </v-flex>
-                </v-layout>
-            </v-flex>
-        </v-layout>
+            </v-card-text>
+        </v-card>
         <v-dialog v-model="dialog" persistent max-width="500px">
             <v-card>
                 <v-card-title>
@@ -132,6 +133,8 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-snackbar v-model="SuccessSnackbar" :timeout=2000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
+        <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </v-container>
 </template>
 
@@ -141,6 +144,10 @@
         name: "ManageVehicles",
         data () {
             return {
+                SuccessSnackbar: false,
+                SuccessSnackbarText: '',
+                ErrorSnackbar: false,
+                ErrorSnackbarText: '',
                 rules:{
                     required: value => !!value || 'Required.'
                 },
@@ -180,27 +187,32 @@
                     {
                         text: 'Name',
                         value: "Name",
-                        width: '30%'
+                        width: '40%'
                     },
                     {
                         text: 'Capacity',
-                        value: "Capacity"
+                        value: "Capacity",
+                        width: '5%'
                     },
                     {
                         text: 'Type',
-                        value: "Type"
+                        value: "Type",
+                        width: '25%'
                     },
                     {
-                        text: 'Price Per Day',
-                        value: "PricePerDay"
+                        text: 'Price/Day',
+                        value: "PricePerDay",
+                        width: '5%'
                     },
                     {
                         text: 'Discount',
-                        value: "Discount"
+                        value: "Discount",
+                        width: '5%'
                     },
                     {
                         text: 'Action',
-                        sortable: false
+                        sortable: false,
+                        width: '20%'
                     }
                 ]
             }
@@ -230,12 +242,19 @@
                             .then(res => {
                                 this.vehicles = res.data;
                             });
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Vehicle successfully deleted'
                     })
-                    .catch(err => alert("Vehicle has active reservations and cannot be deleted"));
+                    .catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'Vehicle has active reservations and cannot be deleted';
+                    });
             },
             addVehicle(e){
                 e.preventDefault();
                 if (!this.checkAddInput()){
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Cannot add vehicle';
                     return;
                 }
                 let vehicle = {
@@ -246,18 +265,39 @@
                     Discount: this.addedItem.Discount
                 };
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/addVehicle', vehicle)
-                    .then(res =>
+                    .then(res =>{
                         axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getCompanyVehicles')
-                            .then(res => this.vehicles = res.data)
-                            .catch(err => alert("Could not retrieve company vehicles"))
-                            .catch(err => alert("Error adding new vehicle")));
+                            .then(res => this.vehicles = res.data);
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Vehicle successfully added';
+                    })
+                    .catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'Cannot add vehicle'
+                    });
+
                 this.clear();
             },
             clear() {
                 this.$refs.form.reset();
             },
             checkAddInput(){
-                return true;
+                if(!this.addedItem.Name || !this.addedItem.Capacity || !this.addedItem.Type ||
+                    !this.addedItem.PricePerDay){
+                    return false;
+                }
+                let ind = false;
+                let number = parseInt(this.addedItem.Capacity);
+                if(isNaN(number)){
+                    this.addedItem.Capacity = "";
+                    ind = true;
+                }
+                number = parseFloat(this.addedItem.PricePerDay);
+                if(isNaN(number)){
+                    this.addedItem.PricePerDay = "";
+                    ind = true;
+                }
+                return ind !== true;
             },
             checkInput(){
                 if(!this.editedItem.Name || !this.editedItem.Capacity || !this.editedItem.Type ||
@@ -291,6 +331,8 @@
             },
             save(){
                 if (!this.checkInput()){
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Cannot edit vehicle';
                     return;
                 }
                 let vehicle = {
@@ -308,8 +350,13 @@
                                 Object.assign(this.vehicles[this.editedIndex], this.editedItem);
                                 this.vehicles = res.data;
                             });
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Vehicle successfully edited'
                     })
-                    .catch(err => alert("Vehicle has active reservations and cannot be edited"));
+                    .catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'Vehicle has active reservations and cannot be edited'
+                    });
                 this.close()
             }
         },
