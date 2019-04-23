@@ -92,14 +92,18 @@ func (app *Application) UpdateDestination(w http.ResponseWriter, r *http.Request
 
 func (app *Application) CreateDestination(w http.ResponseWriter, r *http.Request) {
 	var destination models.Destination
-
-	err := json.NewDecoder(r.Body).Decode(&destination)
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrive airline admin")
+	}
+	err = json.NewDecoder(r.Body).Decode(&destination)
 	if err != nil {
 		app.ErrorLog.Println("Could not decode JSON")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+	destination.AirlineID = user.AirlineID
 	err = app.Store.CreateDestination(&destination)
 	if err != nil {
 		app.ErrorLog.Println("Could not add destination to database")

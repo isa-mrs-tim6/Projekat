@@ -80,7 +80,18 @@ func (app *Application) GetAdminProfile(w http.ResponseWriter, r *http.Request) 
 
 	switch accountType {
 	case "AirlineAdmin":
-		// TODO
+		admin, err := app.Store.GetAirlineAdmin(email)
+		if err != nil {
+			app.ErrorLog.Printf("Could not retrive airline admin")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		err = json.NewEncoder(w).Encode(admin.Profile)
+		if err != nil {
+			app.ErrorLog.Printf("Cannot encode user profile into JSON object")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	case "HotelAdmin":
 		admin, err := app.Store.GetHotelAdmin(email)
 		if err != nil {

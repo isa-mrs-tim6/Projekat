@@ -38,7 +38,7 @@
                         res => {
                             switch (res.data) {
                                 case "AirlineAdmin":
-                                    this.$router.replace("../../airlineAdmin");
+                                    this.$router.replace("../../airlineAdmin/admin_profile");
                                     break;
                                 case "HotelAdmin":
                                     this.$router.replace("../../hotelAdmin/admin_profile");
