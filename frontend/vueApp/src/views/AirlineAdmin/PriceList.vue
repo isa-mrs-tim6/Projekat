@@ -23,53 +23,133 @@
                 </v-flex>
             </v-layout>
             <h2>Flights:</h2>
-            <v-dialog v-model="dialogSeat" max-width="1000px">
+            <v-dialog v-model="dialogSeat" max-width="1000px" scrollable persistent>
                 <v-card>
                     <v-card-title>
-                        <span class="headline">Edit seat map:</span>
+                            <v-flex xs12>
+                                <v-tabs centered grow color="#eeeeee" v-model="tab">
+                                    <v-tabs-slider color="black"></v-tabs-slider>
+                                    <v-tab href="#addSeat">Add seat</v-tab>
+                                    <v-tab href="#editSeat">Edit seat</v-tab>
+                                </v-tabs>
+                            </v-flex>
                     </v-card-title>
-                    <v-card-text>
-                        <v-container>
-                            <v-layout row-wrap justify-center>
-                                <v-flex xs6>
-                                    <div class = "airplane">
-                                        <template v-for="(seat, index) in editedSeats.Seats">
-                                            <v-layout row-wrap v-if="index % editedSeats.RowWidth  === 0">
+                    <v-tabs-items v-model="tab">
+                        <v-tab-item value="addSeat">
+                            <v-card-text>
+                                <v-container>
+                                    <v-layout row-wrap justify-center>
+                                        <v-flex xs5>
+                                            <v-layout row-wrap justify-center>
+                                                <seat-map :editedSeats="this.editedSeats"></seat-map>
                                             </v-layout>
-                                            <div class="passage" v-if="index % editedSeats.RowWidth === editedSeats.RowWidth / 2"></div>
-                                            <div v-if="editedSeats.Seats[index].ReservationID !== 0" class=seat :class="seatClassBinding(index)" :key="index">
-                                                <span v-if="editedSeats.Seats[index].ReservationID !== 0" class="occupied"></span>
-                                            </div>
-                                            <div class="seat" :key="index" @click="chooseSeat(index)" :class="seatClassBinding(index)" v-else>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </v-flex>
-                                <v-flex xs5>
-                                    <v-layout row-wrap>
-                                        <v-flex xs12>
-                                            <v-text-field label="Seat number" outline v-model="editedSeats.Number" @change="changeSeat"></v-text-field>
+                                            <v-layout row-wrap mt-3 align-center class="legendBlock">
+                                                <v-flex xs6>
+                                                    <div class="seat first"></div>
+                                                    <span class="body-2" style="position:relative; bottom:7px">First class seat</span>
+                                                </v-flex>
+                                                <v-flex xs 6>
+                                                    <div class="seat business"></div>
+                                                    <span class="body-2" style="position:relative; bottom:7px">Business class seat</span>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row-wrap align-center class="legendBlock">
+                                                <v-flex xs6>
+                                                    <div class="seat economic"></div>
+                                                    <span class="body-2" style="position:relative; bottom:7px">Economic class seat</span>
+                                                </v-flex>
+                                                <v-flex xs6>
+                                                    <div class="seat disabled"></div>
+                                                    <span class="body-2" style="position:relative; bottom:7px">Disabled seat</span>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row-wrap align-center class="legendBlock">
+                                                <div class="seat occupied leftOccupied"></div>
+                                                <span class="body-2">Occupied seat</span>
+                                            </v-layout>
+                                        </v-flex>
+                                        <v-flex xs6 pr-2>
+                                            <v-layout row-wrap>
+                                                <h5 class="headline">Add seat:</h5>
+                                            </v-layout>
+                                            <v-layout row-wrap>
+                                                <v-flex xs8>
+                                                    <v-select :items="seatClass" label="Seat class" outline v-model="newSeatClass"></v-select>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row-wrap justify-center>
+                                                <v-flex xs8>
+                                                    <v-btn absolute large @click="addSeat">Add</v-btn>
+                                                </v-flex>
+                                            </v-layout>
                                         </v-flex>
                                     </v-layout>
-                                    <v-layout row-wrap>
-                                        <v-flex xs12>
-                                            <v-select :items="seatClass" label="Seat class" outline v-model="editedSeats.Class" @change="changeSeat"></v-select>
+                                </v-container>
+                            </v-card-text>
+                        </v-tab-item>
+                        <v-tab-item value="editSeat">
+                            <v-card-text>
+                                <v-container>
+                                    <v-layout row-wrap justify-center>
+                                        <v-flex xs5>
+                                            <v-layout row-wrap justify-center>
+                                                <seat-map :editedSeats="this.editedSeats"></seat-map>
+                                            </v-layout>
+                                            <v-layout row-wrap mt-3 align-center class="legendBlock">
+                                                <v-flex xs6>
+                                                    <div class="seat first"></div>
+                                                    <span class="body-2" style="position:relative; bottom:7px">First class seat</span>
+                                                </v-flex>
+                                                <v-flex xs 6>
+                                                    <div class="seat business"></div>
+                                                    <span class="body-2" style="position:relative; bottom:7px">Business class seat</span>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row-wrap align-center class="legendBlock">
+                                                <v-flex xs6>
+                                                    <div class="seat economic"></div>
+                                                    <span class="body-2" style="position:relative; bottom:7px">Economic class seat</span>
+                                                </v-flex>
+                                                <v-flex xs6>
+                                                    <div class="seat disabled"></div>
+                                                    <span class="body-2" style="position:relative; bottom:7px">Disabled seat</span>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row-wrap align-center class="legendBlock">
+                                                <div class="seat occupied leftOccupied"></div>
+                                                <span class="body-2">Occupied seat</span>
+                                            </v-layout>
                                         </v-flex>
-                                    </v-layout>
-                                    <v-layout row>
-                                        <v-flex xs12>
-                                            <div class="text-xs-center">
-                                                <template v-if="editedSeats.SelectedSeat !== -1">
-                                                    <v-btn v-if="editedSeats.Seats[editedSeats.SelectedSeat].Disabled" @click="editSeatStatus" large>Enable</v-btn>
-                                                    <v-btn v-else large @click="editSeatStatus">Disable</v-btn>
-                                                </template>
-                                            </div>
+                                        <v-flex xs5>
+                                            <v-layout row-wrap>
+                                                <h5 class="headline">Edit seat:</h5>
+                                            </v-layout>
+                                            <v-layout row-wrap>
+                                                <v-flex xs12>
+                                                    <v-text-field label="Seat number" outline v-model="editedSeats.Number" @change="changeSeat" readonly></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row-wrap>
+                                                <v-flex xs12>
+                                                    <v-select :items="seatClass" label="Seat class" outline v-model="editedSeats.Class" @change="changeSeat"></v-select>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row>
+                                                <v-flex xs12>
+                                                    <div class="text-xs-center">
+                                                        <template v-if="editedSeats.SelectedSeat !== -1">
+                                                            <v-btn v-if="editedSeats.Seats[editedSeats.SelectedSeat].Disabled" @click="editSeatStatus" large>Enable</v-btn>
+                                                            <v-btn v-else large @click="editSeatStatus">Disable</v-btn>
+                                                        </template>
+                                                    </div>
+                                                </v-flex>
+                                            </v-layout>
                                         </v-flex>
-                                    </v-layout>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </v-card-text>
+                                        </v-layout>
+                                </v-container>
+                            </v-card-text>
+                        </v-tab-item>
+                    </v-tabs-items>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
@@ -144,14 +224,33 @@
     import AirlineAdminNavbar from "../../components/AirlineAdmin/AirlineAdminNavbar";
     import axios from 'axios';
     import moment from 'moment';
+    import SeatMap from "./SeatMap";
     export default {
         name: "PriceList",
-        components: {AirlineAdminNavbar},
+        components: {SeatMap, AirlineAdminNavbar},
+        predicate : (a, b) => {
+            const map = {};
+            map["FIRST"] = 1;
+            map["BUSINESS"] = 2;
+            map["ECONOMIC"] = 3;
+
+            if (map[a.Class] < map[b.Class]) {
+                return -1;
+            }
+
+            if (map[a.Class] > map[b.Class]) {
+                return 1;
+            }
+
+            return 0;
+        },
         data(){
             return{
                 rules:{
                     required: value => !!value || 'Required.'
                 },
+                tab:"addSeat",
+                newSeatClass:"",
                 dialog: false,
                 seatNumber: 0,
                 idx: 0,
@@ -294,57 +393,10 @@
                 }else if(this.idx === 1){
                     this.dialogSeat = true;
                     this.editedSeats.RowWidth = item.Airplane.RowWidth;
-                    this.editedSeats.Seats = item.Airplane.Seats;
-                    const predicate = (a, b) => {
-                        const map = {};
-                        map["FIRST"] = 1;
-                        map["BUSINESS"] = 2;
-                        map["ECONOMIC"] = 3;
-
-                        if (map[a.Class] < map[b.Class]) {
-                            return -1;
-                        }
-
-                        if (map[a.Class] > map[b.Class]) {
-                            return 1;
-                        }
-
-                        return 0;
-                    };
-                    this.editedSeats.Seats.sort(predicate);
+                    this.editedSeats.Seats = Object.assign(this.editedSeats.Seats, {});
+                    this.editedSeats.Seats = JSON.parse(JSON.stringify(item.Airplane.Seats));
                 }
 
-            },
-            chooseSeat(index){
-                this.editedSeats.Number = this.editedSeats.Seats[index].Number;
-                this.editedSeats.Class = this.editedSeats.Seats[index].Class;
-                this.editedSeats.SelectedSeat = index;
-            },
-            seatClassBinding(index){
-                let seatClass = this.editedSeats.Seats[index].Class;
-                let disabled = this.editedSeats.Seats[index].Disabled;
-                let retval = "";
-                if(disabled){
-                    retval += "disabled";
-                }else{
-                    switch(seatClass){
-                        case "BUSINESS":
-                            retval = "business";
-                            break;
-                        case "ECONOMIC":
-                            retval = "economic";
-                            break;
-                        case "FIRST":
-                            retval = "first";
-                            break;
-                        default:
-                            retval = "";
-                    }
-                }
-                if (index === this.editedSeats.SelectedSeat){
-                    retval += " selected"
-                }
-                return retval;
             },
             changeSeat(){
                 if(this.editedSeats.SelectedSeat === -1){
@@ -352,16 +404,14 @@
                 }
                 this.editedSeats.Seats[this.editedSeats.SelectedSeat].Number = this.editedSeats.Number;
                 this.editedSeats.Seats[this.editedSeats.SelectedSeat].Class = this.editedSeats.Class;
+                this.editedSeats.Seats.sort(predicate);
             },
-            close(){
+            close() {
                 this.dialogSeat = false;
                 this.dialog = false;
-
-                setTimeout(()=>{
-                    this.editedItem = Object.assign({}, this.defaultItem);
-                    this.editedSeats = Object.assign({}, this.defaultSeats);
-                    this.editedIndex = -1;
-                    }, 300);
+                this.editedItem = Object.assign({}, this.defaultItem);
+                this.editedSeats = JSON.parse(JSON.stringify(this.defaultSeats));
+                this.editedIndex = -1;
             },
             save(){
                 if (idx === 1) {
@@ -389,6 +439,20 @@
                 }
                 this.close()
             },
+            addSeat(){
+                if(!this.newSeatClass){
+                    return;
+                }
+                let Seat = {
+                    Number: this.editedSeats.Seats.length,
+                    Class: this.newSeatClass,
+                    Disabled: false,
+                    QuickReserve: false,
+                    ReservationID: 0
+                };
+                this.editedSeats.Seats.push(Seat);
+                this.editedSeats.Seats.sort(this.$options.predicate);
+            },
             saveSeats(){
                 Object.assign(this.flights[this.editedIndex].Airplane.Seats, this.editedSeats.Seats);
                 let flight = {
@@ -404,14 +468,6 @@
                     });
                 this.close();
             }
-        },
-        watch:{
-            dialog(val){
-                val || this.close()
-            },
-            dialogSeat(val){
-                val || this.close()
-            },
         },
         computed:{
             flightsToShow() {

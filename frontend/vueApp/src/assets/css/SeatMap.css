@@ -7,6 +7,7 @@
     text-align: center;
     border: 1px solid black;
     display: inline-block;
+
 }
 
 .seat:hover{
@@ -35,8 +36,17 @@
     font-weight: bold;
     cursor: not-allowed;
 }
+
+.legendBlock{
+    margin-left: 50px;
+}
+
+.leftOccupied{}
+.leftOccupied:after{
+    left: 0;
+}
 .selected{
-    border: 2px solid pink;
+    border: 3px solid pink;
 }
 
 .economic{
@@ -55,10 +65,6 @@
     padding-top: 20px;
     width: auto;
     display:inline-block;
-}
-
-.row{
-    justify-content: center;
 }
 
 .passage{
