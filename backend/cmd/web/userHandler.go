@@ -189,6 +189,24 @@ func (app *Application) UpdateAdminProfile(w http.ResponseWriter, r *http.Reques
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+	case "SystemAdmin":
+		admin, err := app.Store.GetSystemAdmin(email)
+		if err != nil {
+			app.ErrorLog.Printf("Could not retrive system admin")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		err = app.Store.UpdateSystemAdmin(admin.ID, profile)
+		if err != nil {
+			app.ErrorLog.Printf("Could not update system profile")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		err = json.NewEncoder(w).Encode(admin.Profile)
+		if err != nil {
+			app.ErrorLog.Printf("Cannot encode hotel admin profile into JSON object")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	default:
 		app.ErrorLog.Printf("Invalid user type")
 		w.WriteHeader(http.StatusExpectationFailed)

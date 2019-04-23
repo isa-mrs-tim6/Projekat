@@ -142,7 +142,7 @@ export default new Router({
       component: LoginUser
     },
     {
-      path: '/admin/login',
+      path: '/admin_login',
       component: LoginAdmin
     }
   ]

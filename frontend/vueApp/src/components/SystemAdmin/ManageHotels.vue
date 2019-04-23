@@ -1,45 +1,71 @@
 <template>
-    <v-container grid-list-xl text-xs-center>
-        <v-layout align-center justify-center column wrap fill-height>
-            <v-flex style="width: 75vw">
-                <Hotels style="margin-bottom: 2vh" v-bind:hotels="hotels"/>
-                <v-flex style="width: 35vw; margin-left: 20vw">
-                    <v-form ref="form" class="align-center justify-center">
-                        <v-text-field
-                                v-model="Name"
-                                label="Name"
-                                :rules="[rules.required]"
-                                required
-                        ></v-text-field>
-                        <v-text-field
-                                v-model="Address"
-                                label="Address"
-                                :rules="[rules.required]"
-                                required
-                        ></v-text-field>
-                        <v-text-field
-                                v-model="Latitude"
-                                label="Latitude"
-                                :rules="[rules.required, rules.numeric]"
-                                required
-                        ></v-text-field>
-                        <v-text-field
-                                v-model="Longitude"
-                                label="Longitude"
-                                :rules="[rules.required, rules.numeric]"
-                                required
-                        ></v-text-field>
-                        <v-text-field
-                                v-model="Description"
-                                label="Description"
-                                :rules="[rules.required]"
-                                required
-                        ></v-text-field>
-
-                        <v-btn style="float: left" @click="addHotel">submit</v-btn>
-                        <v-btn style="float: right" @click="clear">clear</v-btn>
-                    </v-form>
-                </v-flex>
+    <v-container grid-list-xl text-xs-center style="height: 100vh;">
+        <v-layout align-center justify-center row wrap fill-height>
+            <v-flex xs12>
+                <v-card min-height="100%" class="flexcard">
+                    <v-card-title primary-title>
+                        <div class="headline font-weight-medium">Add new hotels</div>
+                    </v-card-title>
+                    <v-card-text class="grow">
+                        <v-layout align-center justify-center row wrap fill-height>
+                            <v-flex>
+                                <v-form ref="form" class="align-center justify-center">
+                                    <v-text-field
+                                            v-model="Name"
+                                            label="Name"
+                                            :rules="[rules.required]"
+                                            prepend-icon="business"
+                                            class="body-2"
+                                            required
+                                    ></v-text-field>
+                                    <v-text-field
+                                            v-model="Address"
+                                            label="Address"
+                                            prepend-icon="location_on"
+                                            class="body-2"
+                                            :rules="[rules.required]"
+                                            required
+                                    ></v-text-field>
+                                    <v-flex>
+                                        <v-layout row wrap fill-height>
+                                            <v-text-field
+                                                    v-model="Latitude"
+                                                    label="Latitude"
+                                                    class="body-2"
+                                                    prepend-icon="satellite"
+                                                    :rules="[rules.required, rules.numeric]"
+                                                    required
+                                            ></v-text-field>
+                                            <v-text-field
+                                                    v-model="Longitude"
+                                                    label="Longitude"
+                                                    class="body-2"
+                                                    prepend-icon="satellite"
+                                                    :rules="[rules.required, rules.numeric]"
+                                                    required
+                                            ></v-text-field>
+                                        </v-layout>
+                                    </v-flex>
+                                    <v-text-field
+                                            v-model="Description"
+                                            label="Description"
+                                            prepend-icon="message"
+                                            class="body-2"
+                                            :rules="[rules.required]"
+                                            required
+                                    ></v-text-field>
+                                </v-form>
+                            </v-flex>
+                            <v-flex xs8>
+                                <Hotels v-bind:hotels="hotels"/>
+                            </v-flex>
+                        </v-layout>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="primary" @click="addHotel">submit</v-btn>
+                        <v-btn @click="clear">clear</v-btn>
+                    </v-card-actions>
+                </v-card>
             </v-flex>
         </v-layout>
     </v-container>
@@ -97,5 +123,8 @@
 </script>
 
 <style scoped>
-
+    .flexcard {
+        display: flex;
+        flex-direction: column;
+    }
 </style>
