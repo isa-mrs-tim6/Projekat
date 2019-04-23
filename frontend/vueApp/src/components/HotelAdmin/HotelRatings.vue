@@ -1,14 +1,18 @@
 <template>
-    <v-container>
-        <v-layout column align-center>
-            <h1>{{name}}</h1>
+    <v-container grid-list-xl text-xs-center style="height: 100vh;">
+        <v-layout column align-center fill-height>
+            <v-card>
+                <v-card-title>
+                    <h1 class="display-2">{{name}}</h1>
+                </v-card-title>
+            </v-card>
             <v-rating
                     v-model="rating"
                     background-color="indigo lighten-3"
                     empty-icon="$vuetify.icons.ratingFull"
                     readonly
                     half-increments
-                    color="indigo"
+                    color="orange"
                     size="48"
             ></v-rating>
             <RoomRatings style="width: 75vw" v-bind:rooms="rooms"></RoomRatings>

@@ -4,6 +4,7 @@
                 :headers="headers"
                 :items="airlines"
                 class="elevation-1"
+                style="height: 100%"
         >
             <template v-slot:items="airlines">
                 <td>{{airlines.item.Name}}</td>

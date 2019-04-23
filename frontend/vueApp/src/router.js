@@ -26,6 +26,7 @@ import RACAdminProfile from "./views/RACAdmin/RACAdminProfile";
 import RACProfile from "./views/RACAdmin/RACProfile";
 import RACOffices from "./views/RACAdmin/RACOffices";
 import RACVehicles from "./views/RACAdmin/RACVehicles";
+import AirlineAdminProfile from "./views/AirlineAdmin/AirlineAdminProfile";
 
 Vue.use(Router);
 
@@ -85,24 +86,28 @@ export default new Router({
       component: User
     },
     {
-      path: '/airlineAdmin',
+      path: '/airlineAdmin/airline_profile',
       component: AirlineAdmin
     },
     {
-      path:'/airlineAdmin/flight/edit',
+      path:'/airlineAdmin/flight_edit',
       component: EditFlight
     },
     {
-      path: '/airlineAdmin/flight/add',
+      path: '/airlineAdmin/flight_add',
       component: AddFlight
     },
     {
-      path: '/airlineAdmin/destination/add',
+      path: '/airlineAdmin/destination_add',
       component: Destination
     },
     {
       path: '/airlineAdmin/destination/:id',
       component: UpdateDestination
+    },
+    {
+      path: '/airlineAdmin/admin_profile',
+      component: AirlineAdminProfile
     },
     {
       path: '/racAdmin/admin_profile',
@@ -137,7 +142,7 @@ export default new Router({
       component: LoginUser
     },
     {
-      path: '/admin/login',
+      path: '/admin_login',
       component: LoginAdmin
     }
   ]

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         <AirlineAdminNavbar></AirlineAdminNavbar>
         <v-form>
             <v-container>
@@ -64,3 +64,7 @@
         },
     }
 </script>
+
+<style scoped>
+    @import '../../assets/css/AirlineAdmin.css';
+</style>

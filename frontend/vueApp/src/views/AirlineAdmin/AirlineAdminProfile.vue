@@ -1,19 +1,18 @@
 <template>
     <div id="main">
-        <SystemAdminNavDrawer/>
-        <ManageAirlines/>
+        <AirlineAdminNavDrawer></AirlineAdminNavDrawer>
+        <AdminProfile></AdminProfile>
     </div>
 </template>
 
 <script>
-    import SystemAdminNavDrawer from "../../components/SystemAdmin/SystemAdminNavDrawerr";
-    import ManageAirlines from "../../components/SystemAdmin/ManageAirlines";
+    import AirlineAdminNavDrawer from "../../components/AirlineAdmin/AirlineAdminNavDrawer";
+    import AdminProfile from "../../components/AdminProfile";
     import axios from 'axios';
-
     export default {
-        name: "SystemAdminAirlines",
-        components: {ManageAirlines, SystemAdminNavDrawer},
-        mounted(){
+        name: "AirlineAdminProfile",
+        components: {AdminProfile, AirlineAdminNavDrawer},
+        mounter(){
             this.checkFirstPass();
         },
         methods: {
@@ -22,16 +21,16 @@
                     .then(
                         res =>{
                             if(res.data === false){
-                                alert("Please update your password before accessing this feature");
-                                this.$router.replace("admin_profile");
+                                alert("Please update your password");
                             }
                         }
                     )
             }
         },
+
     }
 </script>
 
 <style scoped>
-    @import '../../assets/css/SystemAdmin.css';
+    @import '../../assets/css/AirlineAdmin.css';
 </style>

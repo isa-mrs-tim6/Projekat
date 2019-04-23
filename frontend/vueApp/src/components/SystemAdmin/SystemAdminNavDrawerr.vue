@@ -1,5 +1,5 @@
 <template>
-    <NavigationDrawer height="100%" v-bind:title="title" v-bind:items="items"/>
+    <NavigationDrawer v-bind:title="title" v-bind:items="items"/>
 </template>
 
 <script>

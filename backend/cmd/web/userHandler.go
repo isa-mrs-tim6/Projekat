@@ -80,7 +80,18 @@ func (app *Application) GetAdminProfile(w http.ResponseWriter, r *http.Request) 
 
 	switch accountType {
 	case "AirlineAdmin":
-		// TODO
+		admin, err := app.Store.GetAirlineAdmin(email)
+		if err != nil {
+			app.ErrorLog.Printf("Could not retrive airline admin")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		err = json.NewEncoder(w).Encode(admin.Profile)
+		if err != nil {
+			app.ErrorLog.Printf("Cannot encode user profile into JSON object")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	case "HotelAdmin":
 		admin, err := app.Store.GetHotelAdmin(email)
 		if err != nil {
@@ -170,6 +181,24 @@ func (app *Application) UpdateAdminProfile(w http.ResponseWriter, r *http.Reques
 		err = app.Store.UpdateRACAdmin(admin.ID, profile)
 		if err != nil {
 			app.ErrorLog.Printf("Could not update rac admin profile")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		err = json.NewEncoder(w).Encode(admin.Profile)
+		if err != nil {
+			app.ErrorLog.Printf("Cannot encode hotel admin profile into JSON object")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	case "SystemAdmin":
+		admin, err := app.Store.GetSystemAdmin(email)
+		if err != nil {
+			app.ErrorLog.Printf("Could not retrive system admin")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		err = app.Store.UpdateSystemAdmin(admin.ID, profile)
+		if err != nil {
+			app.ErrorLog.Printf("Could not update system profile")
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 		err = json.NewEncoder(w).Encode(admin.Profile)
