@@ -157,7 +157,7 @@ func (app *Application) UpdateVehicle(w http.ResponseWriter, r *http.Request) {
 
 	err = app.Store.UpdateVehicle(params.ID, newVehicle)
 	if err != nil {
-		app.ErrorLog.Println("Could not update location in database")
+		app.ErrorLog.Println("Could not update vehicle in database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
@@ -172,10 +172,43 @@ func (app *Application) DeleteVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.Store.DeleteLocation(params.ID)
+	err = app.Store.DeleteVehicle(params.ID)
 	if err != nil {
-		app.ErrorLog.Println("Could not delete location from database")
+		app.ErrorLog.Println("Could not delete vehicle from database")
 		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func (app *Application) AddVehicle(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetRACAdmin(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrive rac admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	var params models.VehicleParams
+	err = json.NewDecoder(r.Body).Decode(&params)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var newVehicle models.Vehicle
+
+	newVehicle.Name = params.Name
+	newVehicle.Capacity = params.Capacity
+	newVehicle.Type = params.Type
+	newVehicle.PricePerDay = params.PricePerDay
+	newVehicle.Discount = params.Discount
+	newVehicle.RentACarCompanyID = user.RentACarCompanyID
+
+	err = app.Store.AddVehicle(newVehicle)
+	if err != nil {
+		app.ErrorLog.Println("Could not add new vehicle to database")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 }
 

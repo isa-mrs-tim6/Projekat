@@ -67,7 +67,7 @@
                             ></v-text-field>
                             <v-text-field
                                     v-model="addedItem.PricePerDay"
-                                    label="Type"
+                                    label="Price Per Day"
                                     :rules="[rules.required]"
                                     required
                             ></v-text-field>
@@ -108,10 +108,11 @@
                             <v-flex xs6>
                                 <v-text-field
                                         v-model="editedItem.PricePerDay"
-                                        label="Type"
+                                        label="Price Per Day"
                                         :rules="[rules.required]"
                                         required
-                                ></v-text-field>                            </v-flex>
+                                ></v-text-field>
+                            </v-flex>
                         </v-layout>
                         <v-layout row-wrap>
                             <v-flex xs6>
@@ -156,7 +157,7 @@
                     Capacity: '',
                     Type: '',
                     PricePerDay: '',
-                    Discount: ''
+                    Discount: false
                 },
                 editedItem:{
                     ID: '',
@@ -164,7 +165,7 @@
                     Capacity: '',
                     Type: '',
                     PricePerDay: '',
-                    Discount: ''
+                    Discount: false
                 },
                 defaultItem:{
                     ID: '',
@@ -172,7 +173,7 @@
                     Capacity: '',
                     Type: '',
                     PricePerDay: '',
-                    Discount: ''
+                    Discount: false
                 },
                 editedIndex: -1,
                 headers:[
@@ -195,8 +196,7 @@
                     },
                     {
                         text: 'Discount',
-                        value: "Discount",
-                        sortable: false
+                        value: "Discount"
                     },
                     {
                         text: 'Action',
@@ -218,9 +218,9 @@
                 let vehicle = {
                     ID: this.editedItem.ID,
                     Name: this.editedItem.Name,
-                    Capacity: this.editedItem.Capacity,
+                    Capacity: parseInt(this.editedItem.Capacity),
                     Type: this.editedItem.Type,
-                    PricePerDay: this.editedItem.PricePerDay,
+                    PricePerDay: parseFloat(this.editedItem.PricePerDay),
                     Discount: this.editedItem.Discount
                 };
                 Object.assign(this.vehicles[this.editedIndex], this.editedItem);
@@ -230,7 +230,8 @@
                             .then(res => {
                                 this.vehicles = res.data;
                             });
-                    });
+                    })
+                    .catch(err => alert("Vehicle has active reservations and cannot be deleted"));
             },
             addVehicle(e){
                 e.preventDefault();
@@ -238,9 +239,13 @@
                     return;
                 }
                 let vehicle = {
-
+                    Name: this.addedItem.Name,
+                    Capacity: parseInt(this.addedItem.Capacity),
+                    Type: this.addedItem.Type,
+                    PricePerDay: parseFloat(this.addedItem.Capacity),
+                    Discount: this.addedItem.Discount
                 };
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/addVehicle', location)
+                axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/addVehicle', vehicle)
                     .then(res =>
                         axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getCompanyVehicles')
                             .then(res => this.vehicles = res.data)
@@ -255,7 +260,22 @@
                 return true;
             },
             checkInput(){
-                return true;
+                if(!this.editedItem.Name || !this.editedItem.Capacity || !this.editedItem.Type ||
+                    !this.editedItem.PricePerDay){
+                    return false;
+                }
+                let ind = false;
+                let number = parseInt(this.editedItem.Capacity);
+                if(isNaN(number)){
+                    this.editedItem.Capacity = "";
+                    ind = true;
+                }
+                number = parseFloat(this.editedItem.PricePerDay);
+                if(isNaN(number)){
+                    this.editedItem.PricePerDay = "";
+                    ind = true;
+                }
+                return ind !== true;
             },
             editItem (item) {
                 this.editedIndex = this.vehicles.indexOf(item);
@@ -276,19 +296,20 @@
                 let vehicle = {
                     ID: this.editedItem.ID,
                     Name: this.editedItem.Name,
-                    Capacity: this.editedItem.Capacity,
+                    Capacity: parseInt(this.editedItem.Capacity),
                     Type: this.editedItem.Type,
-                    PricePerDay: this.editedItem.PricePerDay,
+                    PricePerDay: parseFloat(this.editedItem.PricePerDay),
                     Discount: this.editedItem.Discount
                 };
-                Object.assign(this.vehicles[this.editedIndex], this.editedItem);
                 axios.create({withCredentials:true}).post("http://localhost:8000/api/rentACarCompany/updateVehicle", vehicle)
                     .then(res=>{
                         axios.create({withCredentials: true}).get("http://localhost:8000/api/rentACarCompany/getCompanyVehicles")
                             .then(res => {
+                                Object.assign(this.vehicles[this.editedIndex], this.editedItem);
                                 this.vehicles = res.data;
                             });
-                    });
+                    })
+                    .catch(err => alert("Vehicle has active reservations and cannot be edited"));
                 this.close()
             }
         },
