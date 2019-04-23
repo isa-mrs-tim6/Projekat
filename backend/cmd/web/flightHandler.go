@@ -11,13 +11,13 @@ import (
 func (app *Application) GetAirplanes(w http.ResponseWriter, r *http.Request) {
 	airplanes, err := app.Store.GetAirplanes()
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive list of airplanes")
+		app.ErrorLog.Println("Could not retrive list of airplanes")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	err = json.NewEncoder(w).Encode(airplanes)
 	if err != nil {
-		app.ErrorLog.Printf("Cannot encode airplanes into JSON object")
+		app.ErrorLog.Println("Cannot encode airplanes into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -36,43 +36,43 @@ func (app *Application) UpdatePriceList(w http.ResponseWriter, r *http.Request) 
 
 	priceECONOMY, err := strconv.ParseFloat(flightDTO.PriceECONOMY, 64)
 	if err != nil {
-		app.ErrorLog.Printf("Economy class price is not a valid")
+		app.ErrorLog.Println("Economy class price is not a valid")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	priceBUSINESS, err := strconv.ParseFloat(flightDTO.PriceBUSINESS, 64)
 	if err != nil {
-		app.ErrorLog.Printf("Business class price is not a valid")
+		app.ErrorLog.Println("Business class price is not a valid")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	priceFIRSTCLASS, err := strconv.ParseFloat(flightDTO.PriceFIRSTCLASS, 64)
 	if err != nil {
-		app.ErrorLog.Printf("First class price is not a valid")
+		app.ErrorLog.Println("First class price is not a valid")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	smallSuitcase, err:= strconv.ParseFloat(flightDTO.SmallSuitcase, 64)
 	if err != nil {
-		app.ErrorLog.Printf("Small suitacase price is not a valid")
+		app.ErrorLog.Println("Small suitacase price is not a valid")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	bigSuitcase, err:= strconv.ParseFloat(flightDTO.BigSuitcase, 64)
 	if err != nil {
-		app.ErrorLog.Printf("Big suitacase price is not a valid")
+		app.ErrorLog.Println("Big suitacase price is not a valid")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	id, err:= strconv.ParseUint(flightDTO.FlightID, 10, 32)
 	if err != nil {
-		app.ErrorLog.Printf(flightDTO.FlightID + " is not a valid ID")
+		app.ErrorLog.Println(flightDTO.FlightID + " is not a valid ID")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	flight, err = app.Store.GetFlight(uint(id))
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive flight")
+		app.ErrorLog.Println("Could not retrive flight")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -85,7 +85,7 @@ func (app *Application) UpdatePriceList(w http.ResponseWriter, r *http.Request) 
 
 	err = app.Store.UpdateFlight(uint(id),flight)
 	if err != nil {
-		app.ErrorLog.Printf("Could not update flight in database")
+		app.ErrorLog.Println("Could not update flight in database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
@@ -107,29 +107,29 @@ func (app *Application) UpdateSeats(w http.ResponseWriter, r *http.Request) {
 	}
 	flight, err = app.Store.GetFlight(uint(id))
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive flight")
+		app.ErrorLog.Println("Could not retrive flight")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	flight.Airplane.Seats = flightDTO.AirplaneObject.Seats;
 	err = app.Store.UpdateFlight(uint(flight.ID),flight)
 	if err != nil {
-		app.ErrorLog.Printf("Could not update flight in database")
+		app.ErrorLog.Println("Could not update flight in database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
 
-func (app *Application) GetCompanysAirplanes(w http.ResponseWriter, r *http.Request) {
+func (app *Application) GetCompanyAirplanes(w http.ResponseWriter, r *http.Request) {
 	email := getEmail(r)
 	user, err := app.Store.GetAirlineAdmin(email)
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive airline admin")
+		app.ErrorLog.Println("Could not retrive airline admin")
 	}
 	airplanes, err := app.Store.GetCompanyAirplanes(user.AirlineID)
 
 	err = json.NewEncoder(w).Encode(airplanes)
 	if err != nil {
-		app.ErrorLog.Printf("Cannot encode airplanes into JSON object")
+		app.ErrorLog.Println("Cannot encode airplanes into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -139,16 +139,16 @@ func(app *Application) GetCompanyFlights(w http.ResponseWriter, r *http.Request)
 	email := getEmail(r)
 	user, err := app.Store.GetAirlineAdmin(email)
 	if err != nil{
-		app.ErrorLog.Printf("Could not retrive airline admin")
+		app.ErrorLog.Println("Could not retrive airline admin")
 	}
 	flights, err := app.Store.GetCompanyFlights(user.AirlineID)
 	if err != nil{
-		app.ErrorLog.Printf("Could not retrive flights")
+		app.ErrorLog.Println("Could not retrive flights")
 	}
 
 	err = json.NewEncoder(w).Encode(flights)
 	if err != nil{
-		app.ErrorLog.Printf("Cannot encode flights into JSON object")
+		app.ErrorLog.Println("Cannot encode flights into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
@@ -197,11 +197,11 @@ func (app *Application) CreateFlight(w http.ResponseWriter, r *http.Request) {
 	email := getEmail(r)
 	user, err := app.Store.GetAirlineAdmin(email)
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive airline admin")
+		app.ErrorLog.Println("Could not retrive airline admin")
 	}
 	airplane, err := app.Store.GetAirplane(user.AirlineID, flightDto.Airplane)
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive airplane")
+		app.ErrorLog.Println("Could not retrive airplane")
 	}
 
 	DeepCopy(airplane, &flight.Airplane)
@@ -209,21 +209,21 @@ func (app *Application) CreateFlight(w http.ResponseWriter, r *http.Request) {
 
 	origin, err := app.Store.FindDestination(user.AirlineID, flightDto.Origin)
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive destination")
+		app.ErrorLog.Println("Could not retrive destination")
 	}
 	flight.Origin = &origin
 	flight.OriginID = flight.Origin.ID
 
 	destination, err := app.Store.FindDestination(user.AirlineID, flightDto.Destination)
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive destination")
+		app.ErrorLog.Println("Could not retrive destination")
 	}
 	flight.Destination = &destination
 	flight.DestinationID = flight.Destination.ID
 	flight.AirlineID = user.AirlineID
 	err = app.Store.CreateFlight(&flight)
 	if err != nil {
-		app.ErrorLog.Printf("Could not add destination to database")
+		app.ErrorLog.Println("Could not add destination to database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 

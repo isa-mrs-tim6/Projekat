@@ -14,7 +14,7 @@ import Destination from "./views/AirlineAdmin/Destination";
 import UpdateDestination from "./views/AirlineAdmin/UpdateDestination";
 import LoginAdmin from "./views/LoginAdmin";
 import AddFlight from "./views/AirlineAdmin/AddFlight";
-import PriceList from "./views/AirlineAdmin/PriceList";
+import PriceList from "./views/AirlineAdmin/EditFlight";
 
 Vue.use(Router);
 
@@ -42,7 +42,7 @@ export default new Router({
       component: AirlineAdmin
     },
     {
-      path:'/airlineAdmin/priceList',
+      path:'/airlineAdmin/flight/edit',
       component: PriceList
     },
     {

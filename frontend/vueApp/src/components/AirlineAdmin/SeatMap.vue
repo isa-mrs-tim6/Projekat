@@ -14,11 +14,11 @@
 </template>
 
 <script>
-    import AirlineAdminNavbar from "../../components/AirlineAdmin/AirlineAdminNavbar";
+    import AirlineAdminNavbar from "./AirlineAdminNavbar";
     export default {
         name: "SeatMap",
         components: {AirlineAdminNavbar},
-        props:['editedSeats'],
+        props:['editedSeats','tab'],
         data(){
             return{
                 Flights:[]
@@ -52,6 +52,9 @@
                 return retval;
             },
             chooseSeat(index){
+                if(this.tab === "addSeat"){
+                    return;
+                }
                 this.editedSeats.Number = this.editedSeats.Seats[index].Number;
                 this.editedSeats.Class = this.editedSeats.Seats[index].Class;
                 this.editedSeats.SelectedSeat = index;
