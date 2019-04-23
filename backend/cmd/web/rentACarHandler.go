@@ -36,7 +36,7 @@ func (app *Application) CreateRentACarCompany(w http.ResponseWriter, r *http.Req
 
 	err = app.Store.CreateRentACarCompany(&rac)
 	if err != nil {
-		app.ErrorLog.Println("Could not add ren-a-car company to database")
+		app.ErrorLog.Println("Could not add rent-a-car company to database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
