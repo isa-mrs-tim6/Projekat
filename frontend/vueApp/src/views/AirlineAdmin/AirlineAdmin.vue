@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         <airline-admin-nav-drawer></airline-admin-nav-drawer>
 
         <v-container grid-list-xl text-xs-center style="height: 100vh;">
@@ -90,6 +90,7 @@
     }
 </script>
 <style scoped>
+    @import '../../assets/css/AirlineAdmin.css';
     .flexcard {
         display: flex;
         flex-direction: column;

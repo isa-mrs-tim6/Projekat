@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         <AirlineAdminNavDrawer></AirlineAdminNavDrawer>
         <AdminProfile></AdminProfile>
     </div>
@@ -32,5 +32,5 @@
 </script>
 
 <style scoped>
-
+    @import '../../assets/css/AirlineAdmin.css';
 </style>

@@ -47,8 +47,8 @@
                                         </v-layout>
                                     </v-flex>
                                     <v-text-field
-                                            v-model="Description"
-                                            label="Description"
+                                            v-model="Promo"
+                                            label="Promo"
                                             prepend-icon="message"
                                             class="body-2"
                                             :rules="[rules.required]"
