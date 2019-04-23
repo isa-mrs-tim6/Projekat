@@ -32,6 +32,11 @@ type Location struct {
 	RentACarCompanyID uint
 }
 
+type LocationParams struct {
+	ID uint
+	Address
+}
+
 type RentACarCompanyProfile struct {
 	Name string
 	Address

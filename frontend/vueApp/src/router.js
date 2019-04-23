@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import User from "./views/User";
-import RacAdmin from "./views/RacAdmin";
 import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
 import AirlineAdmin from "./views/AirlineAdmin/AirlineAdmin";
@@ -23,6 +22,10 @@ import SystemAdminAirlines from "./views/SystemAdmin/SystemAdminAirlines";
 import SystemAdminHotels from "./views/SystemAdmin/SystemAdminHotels";
 import SystemAdminRentACars from "./views/SystemAdmin/SystemAdminRentACars";
 import SystemAdminProfile from "./views/SystemAdmin/SystemAdminProfile";
+import RACAdminProfile from "./views/RACAdmin/RACAdminProfile";
+import RACProfile from "./views/RACAdmin/RACProfile";
+import RACOffices from "./views/RACAdmin/RACOffices";
+import RACVehicles from "./views/RACAdmin/RACVehicles";
 
 Vue.use(Router);
 
@@ -102,8 +105,20 @@ export default new Router({
       component: UpdateDestination
     },
     {
-      path: '/racAdmin',
-      component: RacAdmin
+      path: '/racAdmin/admin_profile',
+      component: RACAdminProfile
+    },
+    {
+      path: '/racAdmin/rac_profile',
+      component: RACProfile
+    },
+    {
+      path: '/racAdmin/offices',
+      component: RACOffices
+    },
+    {
+      path: '/racAdmin/vehicles',
+      component: RACVehicles
     },
     {
       path: '/vehiclesSearch/:id',

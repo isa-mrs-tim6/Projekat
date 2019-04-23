@@ -44,7 +44,7 @@
                                     this.$router.replace("../../hotelAdmin/admin_profile");
                                     break;
                                 case "Rent-A-CarAdmin":
-                                    this.$router.replace("../../racAdmin");
+                                    this.$router.replace("../../racAdmin/admin_profile");
                                     break;
                                 case "SystemAdmin":
                                     this.$router.replace("../../systemAdmin/admin_profile");

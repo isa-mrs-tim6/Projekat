@@ -1,36 +1,40 @@
 <template>
-    <div>
-        <form>
-            <v-text-field
-                    v-model="racProfile.Name"
-                    label="Name"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="racProfile.Address"
-                    label="Address"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="racProfile.Latitude"
-                    label="Latitude"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="racProfile.Longitude"
-                    label="Longitude"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="racProfile.Promo"
-                    label="Promo"
-                    required
-            ></v-text-field>
+    <v-container grid-list-xl text-xs-center>
+        <v-layout align-center justify-center column wrap fill-height>
+            <v-flex style="width: 40vw">
+                <form>
+                    <v-text-field
+                            v-model="racProfile.Name"
+                            label="Name"
+                            required
+                    ></v-text-field>
+                    <v-text-field
+                            v-model="racProfile.Address"
+                            label="Address"
+                            required
+                    ></v-text-field>
+                    <v-text-field
+                            v-model="racProfile.Latitude"
+                            label="Latitude"
+                            required
+                    ></v-text-field>
+                    <v-text-field
+                            v-model="racProfile.Longitude"
+                            label="Longitude"
+                            required
+                    ></v-text-field>
+                    <v-text-field
+                            v-model="racProfile.Promo"
+                            label="Promo"
+                            required
+                    ></v-text-field>
 
-            <v-btn @click="update">update</v-btn>
-            <v-btn @click="revert">revert</v-btn>
-        </form>
-    </div>
+                    <v-btn @click="update">update</v-btn>
+                    <v-btn @click="revert">revert</v-btn>
+                </form>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
