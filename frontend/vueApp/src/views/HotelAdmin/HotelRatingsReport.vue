@@ -63,5 +63,7 @@
 </script>
 
 <style scoped>
-    @import '../../assets/css/HotelAdmin.css';
+    #main {
+        background-image: linear-gradient(to left top, #ac0c0c, #b41812, #bb2218, #c32a1d, #cb3223, #d23928, #d8402c, #df4631, #e74d37, #ee543c, #f65a42, #fe6148);
+    }
 </style>

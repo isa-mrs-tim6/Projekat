@@ -1,5 +1,5 @@
 <template>
-    <div id="main">
+    <div>
     <HotelAdminNavDrawer height="100%"/>
     <HotelFinance v-bind:reservations="Reservations"></HotelFinance>
 </div>
@@ -60,5 +60,4 @@
 </script>
 
 <style scoped>
-    @import '../../assets/css/HotelAdmin.css';
 </style>
