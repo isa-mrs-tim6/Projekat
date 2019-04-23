@@ -100,7 +100,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/airplane/getAirplanes", app.GetAirplanes).Methods("GET")
 	router.HandleFunc("/api/airplane/getCompanyAirplanes", app.GetCompanyAirplanes).Methods("GET")
 
-	//Pricelist API
+	//PriceList API
 	router.HandleFunc("/api/priceList/update", app.UpdatePriceList).Methods("POST", "OPTIONS")
 
 	// AIRLINE API
