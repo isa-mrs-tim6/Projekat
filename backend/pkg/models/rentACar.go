@@ -16,6 +16,15 @@ type Vehicle struct {
 	Discount          bool
 }
 
+type VehicleParams struct {
+	ID          uint
+	Name        string
+	Capacity    uint
+	Type        string
+	PricePerDay float64
+	Discount    bool
+}
+
 type FindVehicleParams struct {
 	Name      string
 	Capacity  uint

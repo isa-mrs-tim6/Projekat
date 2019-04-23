@@ -76,6 +76,32 @@ func (db *Store) FindVehicles(id uint, params models.FindVehicleParams) ([]model
 	return retVal, nil
 }
 
+func (db *Store) GetCompanyVehicles(id uint) ([]models.Vehicle, error) {
+	var retVal []models.Vehicle
+	if err := db.Set("gorm:auto_preload", true).Where("rent_a_car_company_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) UpdateVehicle(id uint, newVehicle models.Vehicle) error {
+	var retVal models.Vehicle
+	if err := db.First(&retVal, id).Error; err != nil {
+		return err
+	}
+
+	retVal.Name = newVehicle.Name
+	retVal.Capacity = newVehicle.Capacity
+	retVal.Type = newVehicle.Type
+	retVal.PricePerDay = newVehicle.PricePerDay
+	retVal.Discount = newVehicle.Discount
+
+	if err := db.Save(&retVal).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (db *Store) GetCompanyLocations(id uint) ([]models.Location, error) {
 	var retVal []models.Location
 	if err := db.Set("gorm:auto_preload", true).Where("rent_a_car_company_id = ?", id).Find(&retVal).Error; err != nil {
