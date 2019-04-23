@@ -82,3 +82,34 @@ func (db *Store) LoginAdmin(credentials models.Credentials) (string, error) {
 
 	return "", nil
 }
+
+func (db *Store) CheckFirstPassChanged(email string, accountType string) (bool, error) {
+
+	switch accountType {
+	case "SystemAdmin":
+		var retVal models.SystemAdmin
+		if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
+			return false, err
+		}
+		return retVal.FirstPassChanged, nil
+	case "AirlineAdmin":
+		var retVal models.AirlineAdmin
+		if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
+			return false, err
+		}
+		return retVal.FirstPassChanged, nil
+	case "HotelAdmin":
+		var retVal models.HotelAdmin
+		if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
+			return false, err
+		}
+		return retVal.FirstPassChanged, nil
+	case "Rent-A-CarAdmin":
+		var retVal models.RentACarAdmin
+		if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
+			return false, err
+		}
+		return retVal.FirstPassChanged, nil
+	}
+	return false, nil
+}

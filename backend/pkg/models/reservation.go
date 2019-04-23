@@ -41,8 +41,9 @@ type RentACarReservation struct {
 type HotelReservation struct {
 	gorm.Model
 	Occupation
-	HotelID uint
-	Rooms   []Room `gorm:"foreignkey:ReservationID"`
-	Rating  uint
-	Price   float64
+	HotelID     uint
+	Rooms       []Room       `gorm:"many2many:room_reservations;"`
+	Ratings     []RoomRating `gorm:"foreignkey:ReservationID"`
+	HotelRating uint
+	Price       float64
 }

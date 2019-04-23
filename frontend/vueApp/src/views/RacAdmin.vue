@@ -1,80 +1,52 @@
 <template>
     <div>
-        <RacAdminNavbar></RacAdminNavbar>
-        <form>
-            <v-text-field
-                    v-model="racProfile.Name"
-                    label="Name"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="racProfile.Address"
-                    label="Address"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="racProfile.Latitude"
-                    label="Latitude"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="racProfile.Longitude"
-                    label="Longitude"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="racProfile.Promo"
-                    label="Promo"
-                    required
-            ></v-text-field>
-
-            <v-btn @click="update">update</v-btn>
-            <v-btn @click="revert">revert</v-btn>
-        </form>
+        <v-toolbar>
+            <v-toolbar-side-icon></v-toolbar-side-icon>
+            <v-toolbar-title>Rent-a-car Admin Panel</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items class="hidden-sm-and-down">
+                <v-btn @click="manageRacProfile" flat>Company Profile</v-btn>
+                <v-btn @click="manageProfile" flat>Admin Profile</v-btn>
+            </v-toolbar-items>
+        </v-toolbar>
+        <component v-bind:is="currentTabComponent"></component>
     </div>
 </template>
 
 <script>
-    import RacAdminNavbar from "../components/RacAdminNavbar";
-    import axios from 'axios';
+    import ManageRacProfile from "../components/RACAdmin/ManageRacProfile";
+    import AdminProfile from "../components/AdminProfile";
+    import axios from "axios";
 
     export default {
         name: "RacAdmin",
-        components: {RacAdminNavbar},
+        components: {ManageRacProfile, AdminProfile},
         data() {
             return {
-                backupRACProfile: '',
-                racProfile: '',
+                currentTabComponent: "ManageRacProfile",
             }
         },
-        mounted() {
-            axios.get('http://localhost:8000/api/rentACarCompany/'+this.$route.params.id+'/getProfile')
-                .then(res => {
-                        this.racProfile = res.data;
-                        this.backupRACProfile = JSON.parse(JSON.stringify(this.racProfile))
-                    }
-                )
-                .catch(err => console.log(err));
+        mounted(){
+            this.checkFirstPass();
         },
         methods: {
-            update(e) {
-                e.preventDefault();
-                if (isNaN(Number(this.racProfile.Longitude)) && isNaN(Number(this.racProfile.Latitude))){
-                    alert("Enter a number for Longitude and Latitude");
-                }else if(isNaN(Number(this.racProfile.Longitude))){
-                    alert("Enter a number for Longitude");
-                }else if(isNaN(Number(this.racProfile.Latitude))){
-                    alert("Enter a number for Latitude");
-                }else{
-                    this.racProfile.Latitude = Number(this.racProfile.Latitude);
-                    this.racProfile.Longitude = Number(this.racProfile.Longitude);
-                    axios.post('http://localhost:8000/api/rentACarCompany/'+this.$route.params.id+'/updateProfile', this.racProfile)
-                        .then(res => this.backupRACProfile = JSON.parse(JSON.stringify(this.racProfile)))
-                        .catch(err => console.log(err));
-                }
+            manageRacProfile(){
+                this.currentTabComponent = "ManageRacProfile";
+                this.checkFirstPass();
             },
-            revert () {
-                this.racProfile = JSON.parse(JSON.stringify(this.backupRACProfile))
+            manageProfile(){
+                this.currentTabComponent = "AdminProfile";
+            },
+            checkFirstPass(){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/admin/checkFirstPass")
+                    .then(
+                        res =>{
+                            if(res.data === false){
+                                alert("Please update your password");
+                                this.manageProfile();
+                            }
+                        }
+                    )
             }
         },
     }

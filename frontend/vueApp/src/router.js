@@ -1,10 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import SystemAdmin from "./views/SystemAdmin";
-import HotelAdmin from "./views/HotelAdmin";
 import User from "./views/User";
-import RacAdmin from "./views/RacAdmin";
 import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
 import AirlineAdmin from "./views/AirlineAdmin/AirlineAdmin";
@@ -14,7 +11,21 @@ import Destination from "./views/AirlineAdmin/Destination";
 import UpdateDestination from "./views/AirlineAdmin/UpdateDestination";
 import LoginAdmin from "./views/LoginAdmin";
 import AddFlight from "./views/AirlineAdmin/AddFlight";
-import PriceList from "./views/AirlineAdmin/EditFlight";
+import EditFlight from "./views/AirlineAdmin/EditFlight";
+import HotelFinancialReport from "./views/HotelAdmin/HotelFinancialReport";
+import HotelAdminProfile from "./views/HotelAdmin/HotelAdminProfile";
+import HotelRooms from "./views/HotelAdmin/HotelRooms";
+import HotelProfile from "./views/HotelAdmin/HotelProfile";
+import HotelRatingsReport from "./views/HotelAdmin/HotelRatingsReport";
+import SystemAdminAccounts from "./views/SystemAdmin/SystemAdminAccounts";
+import SystemAdminAirlines from "./views/SystemAdmin/SystemAdminAirlines";
+import SystemAdminHotels from "./views/SystemAdmin/SystemAdminHotels";
+import SystemAdminRentACars from "./views/SystemAdmin/SystemAdminRentACars";
+import SystemAdminProfile from "./views/SystemAdmin/SystemAdminProfile";
+import RACAdminProfile from "./views/RACAdmin/RACAdminProfile";
+import RACProfile from "./views/RACAdmin/RACProfile";
+import RACOffices from "./views/RACAdmin/RACOffices";
+import RACVehicles from "./views/RACAdmin/RACVehicles";
 
 Vue.use(Router);
 
@@ -27,11 +38,47 @@ export default new Router({
     },
     {
       path: '/systemAdmin',
-      component: SystemAdmin
+      component: SystemAdminProfile
     },
     {
-      path: '/hotelAdmin/',
-      component: HotelAdmin
+      path: '/systemAdmin/accounts',
+      component: SystemAdminAccounts
+    },
+    {
+      path: '/systemAdmin/airlines',
+      component: SystemAdminAirlines
+    },
+    {
+      path: '/systemAdmin/hotels',
+      component: SystemAdminHotels
+    },
+    {
+      path: '/systemAdmin/rent_a_cars',
+      component: SystemAdminRentACars
+    },
+    {
+      path: '/systemAdmin/admin_profile',
+      component: SystemAdminProfile
+    },
+    {
+      path: '/hotelAdmin/ratings',
+      component: HotelRatingsReport
+    },
+    {
+      path: '/hotelAdmin/finances',
+      component: HotelFinancialReport
+    },
+    {
+      path: '/hotelAdmin/rooms',
+      component: HotelRooms
+    },
+    {
+      path: '/hotelAdmin/hotel_profile',
+      component: HotelProfile
+    },
+    {
+      path: '/hotelAdmin/admin_profile',
+      component: HotelAdminProfile
     },
     {
       path: '/user',
@@ -43,7 +90,7 @@ export default new Router({
     },
     {
       path:'/airlineAdmin/flight/edit',
-      component: PriceList
+      component: EditFlight
     },
     {
       path: '/airlineAdmin/flight/add',
@@ -58,8 +105,20 @@ export default new Router({
       component: UpdateDestination
     },
     {
-      path: '/racAdmin/:id',
-      component: RacAdmin
+      path: '/racAdmin/admin_profile',
+      component: RACAdminProfile
+    },
+    {
+      path: '/racAdmin/rac_profile',
+      component: RACProfile
+    },
+    {
+      path: '/racAdmin/offices',
+      component: RACOffices
+    },
+    {
+      path: '/racAdmin/vehicles',
+      component: RACVehicles
     },
     {
       path: '/vehiclesSearch/:id',

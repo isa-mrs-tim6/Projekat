@@ -30,6 +30,7 @@ type AirlineAdmin struct {
 	gorm.Model
 	Profile
 	RegistrationComplete bool
+	FirstPassChanged     bool
 	AirlineID            uint
 }
 
@@ -37,6 +38,7 @@ type HotelAdmin struct {
 	gorm.Model
 	Profile
 	RegistrationComplete bool
+	FirstPassChanged     bool
 	HotelID              uint
 }
 
@@ -44,6 +46,7 @@ type RentACarAdmin struct {
 	gorm.Model
 	Profile
 	RegistrationComplete bool
+	FirstPassChanged     bool
 	RentACarCompanyID    uint
 }
 
@@ -51,4 +54,5 @@ type SystemAdmin struct {
 	gorm.Model
 	Profile
 	RegistrationComplete bool
+	FirstPassChanged     bool
 }

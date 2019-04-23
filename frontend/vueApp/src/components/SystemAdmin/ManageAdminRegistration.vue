@@ -43,7 +43,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    import axios from 'axios/index';
     export default {
         name: "Registration",
         data(){
@@ -63,7 +63,7 @@
                 items: [
                     'System Admin',
                     'Airline Admin',
-                    'Hotel Admin',
+                    'HotelAdmin Admin',
                     'Rent-A-Car Admin'
                 ],
             }
@@ -82,7 +82,7 @@
                 };
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/admin/register', credentials)
                     .then(res => {if (res.status === 201) alert("Registration successful")})
-                    .catch(err => {console.log(err); alert("Registration unsuccessful")});
+                    .catch(err => alert("Registration unsuccessful"));
             },
             clear () {
                 this.email = '';

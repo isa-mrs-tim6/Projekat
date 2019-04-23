@@ -106,3 +106,22 @@ func (app *Application) LoginAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (app *Application) CheckFirstPass(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	accountType := getAccountType(r)
+
+	changed, err := app.Store.CheckFirstPassChanged(email, accountType)
+	if err != nil {
+		app.ErrorLog.Printf("That email does not exist")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(changed)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode boolean into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}

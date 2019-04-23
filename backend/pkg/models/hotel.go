@@ -4,11 +4,24 @@ import "github.com/jinzhu/gorm"
 
 type Room struct {
 	gorm.Model
-	Number        int
-	Price         float64
-	Capacity      uint
-	HotelID       uint
+	Number       int
+	Price        float64
+	Capacity     uint
+	HotelID      uint
+	Reservations []*HotelReservation `gorm:"many2many:room_reservations;"`
+	Ratings      []RoomRating        `gorm:"foreignkey:RoomReferer"`
+	QuickReserve bool
+}
+
+type RoomRating struct {
+	RoomID        uint
 	ReservationID uint
+	Rating        int
+}
+
+type RoomRatingDAO struct {
+	Room   Room
+	Rating int
 }
 
 type Feature struct {
