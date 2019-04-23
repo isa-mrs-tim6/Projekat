@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id = "main">
         <airline-admin-nav-drawer></airline-admin-nav-drawer>
     <div>
         <v-container grid-list-xl text-xs-center style="height: 100vh;">
