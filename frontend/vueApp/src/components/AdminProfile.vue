@@ -35,6 +35,7 @@
                 </v-form>
             </v-flex>
         </v-layout>
+        <v-snackbar v-model="SuccessSnackbar" :timeout=4000 :top="true" color="success">Successfully updated admin profile</v-snackbar>
     </v-container>
 </template>
 
@@ -44,6 +45,7 @@
         name: "AdminProfile",
         data(){
             return{
+                SuccessSnackbar: false,
                 Name:"",
                 Surname:"",
                 Email:"",
@@ -94,6 +96,7 @@
                     newUserProfile.Password = this.Password;
                 }
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/admin/updateProfile", newUserProfile)
+                    .then(res => this.SuccessSnackbar = true);
             }
         }
     }

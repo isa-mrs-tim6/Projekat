@@ -132,6 +132,8 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-snackbar v-model="SuccessSnackbar" :timeout=2000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
+        <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </v-container>
 </template>
 
@@ -141,6 +143,10 @@
         name: "ManageVehicles",
         data () {
             return {
+                SuccessSnackbar: false,
+                SuccessSnackbarText: '',
+                ErrorSnackbar: false,
+                ErrorSnackbarText: '',
                 rules:{
                     required: value => !!value || 'Required.'
                 },
@@ -230,12 +236,19 @@
                             .then(res => {
                                 this.vehicles = res.data;
                             });
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Vehicle successfully deleted'
                     })
-                    .catch(err => alert("Vehicle has active reservations and cannot be deleted"));
+                    .catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'Vehicle has active reservations and cannot be deleted';
+                    });
             },
             addVehicle(e){
                 e.preventDefault();
                 if (!this.checkAddInput()){
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Cannot add vehicle';
                     return;
                 }
                 let vehicle = {
@@ -246,18 +259,39 @@
                     Discount: this.addedItem.Discount
                 };
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/addVehicle', vehicle)
-                    .then(res =>
+                    .then(res =>{
                         axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getCompanyVehicles')
-                            .then(res => this.vehicles = res.data)
-                            .catch(err => alert("Could not retrieve company vehicles"))
-                            .catch(err => alert("Error adding new vehicle")));
+                            .then(res => this.vehicles = res.data);
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Vehicle successfully added';
+                    })
+                    .catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'Cannot add vehicle'
+                    });
+
                 this.clear();
             },
             clear() {
                 this.$refs.form.reset();
             },
             checkAddInput(){
-                return true;
+                if(!this.addedItem.Name || !this.addedItem.Capacity || !this.addedItem.Type ||
+                    !this.addedItem.PricePerDay){
+                    return false;
+                }
+                let ind = false;
+                let number = parseInt(this.addedItem.Capacity);
+                if(isNaN(number)){
+                    this.addedItem.Capacity = "";
+                    ind = true;
+                }
+                number = parseFloat(this.addedItem.PricePerDay);
+                if(isNaN(number)){
+                    this.addedItem.PricePerDay = "";
+                    ind = true;
+                }
+                return ind !== true;
             },
             checkInput(){
                 if(!this.editedItem.Name || !this.editedItem.Capacity || !this.editedItem.Type ||
@@ -291,6 +325,8 @@
             },
             save(){
                 if (!this.checkInput()){
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Cannot edit vehicle';
                     return;
                 }
                 let vehicle = {
@@ -308,8 +344,13 @@
                                 Object.assign(this.vehicles[this.editedIndex], this.editedItem);
                                 this.vehicles = res.data;
                             });
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Vehicle successfully edited'
                     })
-                    .catch(err => alert("Vehicle has active reservations and cannot be edited"));
+                    .catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'Vehicle has active reservations and cannot be edited'
+                    });
                 this.close()
             }
         },

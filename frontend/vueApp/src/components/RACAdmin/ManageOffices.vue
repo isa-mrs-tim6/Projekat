@@ -9,7 +9,9 @@
             <v-flex xs9 mr-3>
                 <h2>Filters:</h2>
                 <v-layout row-wrap>
-                    <v-text-field v-model="filter.address" label="Address"></v-text-field>
+                    <v-flex xs3>
+                        <v-text-field v-model="filter.address" label="Address"></v-text-field>
+                    </v-flex>
                 </v-layout>
                 <h2>Offices:</h2>
                 <v-layout row-wrap>
@@ -54,7 +56,6 @@
                 </v-form>
             </v-flex>
         </v-layout>
-
         <v-dialog v-model="dialog" persistent max-width="500px">
             <v-card>
                 <v-card-title>
@@ -86,6 +87,8 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-snackbar v-model="SuccessSnackbar" :timeout=2000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
+        <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </v-container>
 </template>
 
@@ -95,6 +98,10 @@
         name: "ManageOffices",
         data () {
             return {
+                SuccessSnackbar: false,
+                SuccessSnackbarText: '',
+                ErrorSnackbar: false,
+                ErrorSnackbarText: '',
                 rules:{
                     required: value => !!value || 'Required.'
                 },
@@ -164,11 +171,19 @@
                             .then(res => {
                                 this.offices = res.data;
                             });
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Office successfully deleted';
+                    })
+                    .catch(err =>{
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'Cannot delete office';
                     });
             },
             addLocation(e){
                 e.preventDefault();
                 if (!this.checkAddInput()){
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Cannot add office';
                     return;
                 }
                 let location = {
@@ -177,11 +192,16 @@
                     Latitude: parseFloat(this.addedItem.Latitude)
                 };
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/addLocation', location)
-                    .then(res =>
+                    .then(res =>{
                         axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getCompanyLocations')
-                            .then(res => this.offices = res.data)
-                            .catch(err => alert("Could not retrieve company offices"))
-                            .catch(err => alert("Error adding new office")));
+                            .then(res => this.offices = res.data);
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Office successfully added';
+                    })
+                    .catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'Cannot add office';
+                    });
                 this.clear();
             },
             clear() {
@@ -235,6 +255,8 @@
             },
             save(){
                 if (!this.checkInput()){
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Cannot edit office';
                     return;
                 }
                 let office = {
@@ -250,6 +272,12 @@
                             .then(res => {
                                 this.offices = res.data;
                             });
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Office successfully edited';
+                    })
+                    .catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'Cannot edit office';
                     });
                 this.close()
             }
