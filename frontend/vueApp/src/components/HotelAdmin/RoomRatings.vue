@@ -7,7 +7,7 @@
                 item-key="ID"
         >
             <template v-slot:items="rooms">
-                <td class="text-xs-center">{{rooms.item.Room.Number}}</td>
+                <td class="text-xs-center body-2">{{rooms.item.Room.Number}}</td>
                 <td class="text-xs-center">
                     <v-rating
                             v-model="rooms.item.Rating"

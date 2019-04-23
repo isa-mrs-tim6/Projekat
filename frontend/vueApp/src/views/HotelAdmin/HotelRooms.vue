@@ -1,20 +1,8 @@
 <template>
-    <v-container id="main" style="height: 100vh; max-height: 100%;" fluid>
-        <v-layout style="height: 100vh; max-height: 100%;" row>
-            <v-flex
-                    shrink
-                    pa-1
-            >
-                <HotelAdminNavDrawer/>
-            </v-flex>
-            <v-flex
-                    grow
-                    pa-1
-            >
-                <ManageRooms/>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <div>
+        <HotelAdminNavDrawer/>
+        <ManageRooms/>
+    </div>
 </template>
 
 <script>

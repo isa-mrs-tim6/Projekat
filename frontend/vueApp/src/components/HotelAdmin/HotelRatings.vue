@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-layout column align-center>
-            <h1>{{name}}</h1>
+            <h1 class="display-2">{{name}}</h1>
             <v-rating
                     v-model="rating"
                     background-color="indigo lighten-3"

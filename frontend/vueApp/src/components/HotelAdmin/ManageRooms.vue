@@ -1,33 +1,53 @@
 <template>
-    <v-container grid-list-xl text-xs-center>
-        <v-layout align-center justify-center column wrap fill-height>
-            <v-flex style="width: 75vw">
-                <Rooms style="margin-bottom: 2vh" @update-room="updateRoom" ref="roomReference" v-bind:rooms="Rooms"/>
-                <v-btn style="margin-top: 1vh; float: left" @click="deleteRooms">delete</v-btn>
-                <v-flex style="width: 35vw; margin-left: 20vw; margin-top: 10vh">
-                    <v-form ref="form" class="align-center justify-center">
-                        <v-text-field
-                                v-model="Capacity"
-                                label="Capacity"
-                                :rules="[rules.required, rules.numeric]"
-                                required
-                        ></v-text-field>
-                        <v-text-field
-                                v-model="Price"
-                                label="Price"
-                                :rules="[rules.required, rules.numeric]"
-                                required
-                        ></v-text-field>
-                        <v-text-field
-                                v-model="AddNum"
-                                label="Number of rooms"
-                                :rules="[rules.required, rules.numeric]"
-                                required
-                        ></v-text-field>
-                        <v-btn style="float: left" @click="addRooms">submit</v-btn>
-                        <v-btn style="float: right" @click="clear">clear</v-btn>
-                    </v-form>
-                </v-flex>
+    <v-container grid-list-xl text-xs-center style="height: 100vh;">
+        <v-layout align-center justify-center row wrap fill-height>
+            <v-flex xs12>
+                <v-card min-height="100%" class="flexcard">
+                    <v-card-title primary-title>
+                        <div class="headline font-weight-medium">Add new rooms</div>
+                    </v-card-title>
+                    <v-card-text class="grow">
+                        <v-layout align-center justify-center row wrap fill-height>
+                            <v-flex xs4>
+                                <v-form ref="form" class="align-center justify-center">
+                                    <v-text-field
+                                            v-model="Capacity"
+                                            label="Capacity"
+                                            prepend-icon="group"
+                                            :rules="[rules.required, rules.numeric]"
+                                            class="body-2"
+                                            required
+                                    ></v-text-field>
+                                    <v-text-field
+                                            v-model="Price"
+                                            label="Price"
+                                            prepend-icon="euro_symbol"
+                                            :rules="[rules.required, rules.numeric]"
+                                            class="body-2"
+                                            required
+                                    ></v-text-field>
+                                    <v-text-field
+                                            v-model="AddNum"
+                                            label="Number of rooms"
+                                            prepend-icon="meeting_room"
+                                            :rules="[rules.required, rules.numeric]"
+                                            class="body-2"
+                                            required
+                                    ></v-text-field>
+                                </v-form>
+                            </v-flex>
+                            <v-flex xs8>
+                                <Rooms @update-room="updateRoom" ref="roomReference" v-bind:rooms="Rooms"/>
+                            </v-flex>
+                        </v-layout>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="primary" @click="addRooms">submit</v-btn>
+                        <v-btn @click="clear">clear</v-btn>
+                        <v-spacer/>
+                        <v-btn color="error" @click="deleteRooms">delete selected</v-btn>
+                    </v-card-actions>
+                </v-card>
             </v-flex>
         </v-layout>
     </v-container>
