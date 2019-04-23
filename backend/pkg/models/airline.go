@@ -10,6 +10,7 @@ type Seat struct {
 	gorm.Model
 	Number        uint
 	Class         string
+	Disabled bool
 	AirplaneID    uint
 	ReservationID uint
 	QuickReserve  bool
@@ -18,6 +19,7 @@ type Seat struct {
 type Airplane struct {
 	gorm.Model
 	Name      string
+	RowWidth uint
 	Seats     []Seat `gorm:"foreignkey:AirplaneID"`
 	AirlineID uint
 }
@@ -80,6 +82,7 @@ type FlightDto struct {
 	SmallSuitcase string
 	BigSuitcase	string
 	Airplane        string
+	AirplaneObject Airplane
 }
 
 type AirlineProfile struct {

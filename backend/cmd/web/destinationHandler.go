@@ -11,30 +11,30 @@ import (
 func (app *Application) GetDestinations(w http.ResponseWriter, r *http.Request) {
 	destinations, err := app.Store.GetDestinations()
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive destination")
+		app.ErrorLog.Println("Could not retrive destinations")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(destinations)
 	if err != nil {
-		app.ErrorLog.Printf("Cannot encode destination into JSON object")
+		app.ErrorLog.Println("Cannot encode destination into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
 
-func (app *Application) GetCompanysDestinations(w http.ResponseWriter, r *http.Request) {
+func (app *Application) GetCompanyDestinations(w http.ResponseWriter, r *http.Request) {
 	email := getEmail(r)
 	user, err := app.Store.GetAirlineAdmin(email)
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive airline admin")
+		app.ErrorLog.Println("Could not retrive airline admin")
 	}
 	destinations, err := app.Store.GetCompanyDestinations(user.AirlineID)
 
 	err = json.NewEncoder(w).Encode(destinations)
 	if err != nil {
-		app.ErrorLog.Printf("Cannot encode destinations into JSON object")
+		app.ErrorLog.Println("Cannot encode destinations into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -52,14 +52,14 @@ func (app *Application) GetDestination(w http.ResponseWriter, r *http.Request) {
 
 	destination, err := app.Store.GetDestination(uint(id))
 	if err != nil {
-		app.ErrorLog.Printf("Could not retrive destination")
+		app.ErrorLog.Println("Could not retrive destination")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(destination)
 	if err != nil {
-		app.ErrorLog.Printf("Cannot encode destination into JSON object")
+		app.ErrorLog.Println("Cannot encode destination into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -85,7 +85,7 @@ func (app *Application) UpdateDestination(w http.ResponseWriter, r *http.Request
 
 	err = app.Store.UpdateDestination(uint(id), destination)
 	if err != nil {
-		app.ErrorLog.Printf("Could not add destination to database")
+		app.ErrorLog.Println("Could not add destination to database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
@@ -102,7 +102,7 @@ func (app *Application) CreateDestination(w http.ResponseWriter, r *http.Request
 
 	err = app.Store.CreateDestination(&destination)
 	if err != nil {
-		app.ErrorLog.Printf("Could not add destination to database")
+		app.ErrorLog.Println("Could not add destination to database")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
