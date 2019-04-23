@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         <airline-admin-nav-drawer></airline-admin-nav-drawer>
         <v-container grid-list-xl text-xs-center style="height: 100vh;">
             <v-layout align-center justify-center column wrap fill-height>
@@ -105,6 +105,9 @@
 </script>
 
 <style scoped>
+    #main {
+        background-image: linear-gradient(to right bottom, #142eae, #005bca, #007ed2, #009ccd, #0bb7c7, #47c0c6, #67c8c6, #81d0c7, #6ecac4, #58c4c3, #3cbdc2, #00b7c1);
+    }
     .flexcard {
         display: flex;
         flex-direction: column;

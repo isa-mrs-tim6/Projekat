@@ -1,20 +1,8 @@
 <template>
-    <v-container id="main" style="height: 100vh; max-height: 100%;" fluid>
-        <v-layout style="height: 100vh; max-height: 100%;" row>
-            <v-flex
-                    shrink
-                    pa-1
-            >
-                <RACAdminNavDrawer height="100%"/>
-            </v-flex>
-            <v-flex
-                    grow
-                    pa-1
-            >
-                <AdminProfile height="100%"/>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <div id="main">
+        <RACAdminNavDrawer/>
+        <AdminProfile/>
+    </div>
 </template>
 
 <script>
@@ -45,6 +33,6 @@
 
 <style scoped>
     #main {
-        background-image: linear-gradient(to right top, #ffffff, #fafafb, #f5f5f6, #eff0f2, #eaebee, #e7eaee, #e4e9ee, #e1e8ee, #dfebf1, #deeef3, #ddf1f3, #ddf4f2);
+        background-image: linear-gradient(to right bottom, #02bb04, #00b824, #00b535, #00b141, #00ae4c, #00ab55, #00a75e, #00a465, #00a06d, #009b73, #009778, #00927c);
     }
 </style>

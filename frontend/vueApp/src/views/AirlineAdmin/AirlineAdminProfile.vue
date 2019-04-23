@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         <AirlineAdminNavDrawer></AirlineAdminNavDrawer>
         <AdminProfile></AdminProfile>
     </div>
@@ -32,5 +32,7 @@
 </script>
 
 <style scoped>
-
+    #main {
+        background-image: linear-gradient(to right bottom, #142eae, #005bca, #007ed2, #009ccd, #0bb7c7, #47c0c6, #67c8c6, #81d0c7, #6ecac4, #58c4c3, #3cbdc2, #00b7c1);
+    }
 </style>
