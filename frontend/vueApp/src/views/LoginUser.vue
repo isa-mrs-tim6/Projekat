@@ -1,5 +1,6 @@
 <template>
     <v-container fluid fill-height>
+        <nav-bar-pre-login></nav-bar-pre-login>
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md4>
                 <v-card class="elevation-12">
@@ -36,8 +37,10 @@
 
 <script>
     import axios from 'axios';
+    import NavBarPreLogin from "../components/NavBarPreLogin";
     export default {
         name: "LoginUser",
+        components: {NavBarPreLogin},
         data() {
             return {
                 Email:"",

@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import User from "./views/User";
+import UserFlights from "./views/UserFlights";
+import UserHotels from "./views/UserHotels";
+import UserCars from "./views/UserCars";
 import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
 import AirlineAdmin from "./views/AirlineAdmin/AirlineAdmin";
@@ -82,7 +84,15 @@ export default new Router({
     },
     {
       path: '/user',
-      component: User
+      component: UserFlights
+    },
+    {
+      path: "/user_hotels",
+      component: UserHotels
+    },
+    {
+      path: "/user_cars",
+      component: UserCars
     },
     {
       path: '/airlineAdmin',
