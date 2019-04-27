@@ -25,16 +25,9 @@ func (app *Application) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) GetUserProfile(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+	email := getEmail(r)
 
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
-	if err != nil {
-		app.ErrorLog.Printf(vars["id"] + "is not a valid ID")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	userProfile, err := app.Store.GetUserProfile(uint(id))
+	userProfile, err := app.Store.GetUserProfile(email)
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive user profile")
 		w.WriteHeader(http.StatusInternalServerError)

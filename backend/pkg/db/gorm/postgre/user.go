@@ -23,9 +23,9 @@ func (db *Store) UpdateUser(id uint, newProfile models.Profile) error {
 	return nil
 }
 
-func (db *Store) GetUserProfile(id uint) (models.Profile, error) {
+func (db *Store) GetUserProfile(email string) (models.Profile, error) {
 	var retVal models.User
-	if err := db.First(&retVal, id).Error; err != nil {
+	if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
 		return retVal.Profile, err
 	}
 	return retVal.Profile, nil

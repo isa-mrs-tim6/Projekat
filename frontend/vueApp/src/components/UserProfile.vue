@@ -1,5 +1,6 @@
 <template>
     <div>
+        <UserNavBar></UserNavBar>
         <v-form>
             <v-container>
                 <v-flex xs12 sm2>
@@ -21,8 +22,10 @@
 
 <script>
     import axios from 'axios';
+    import UserNavBar from "./UserNavBar";
     export default {
         name: "UserProfile",
+        components: {UserNavBar},
         data(){
             return{
                 Name:"",
@@ -33,14 +36,10 @@
                 OldPassword:"",
                 Address:"",
                 Phone:"",
-                ID:1
             }
         },
-        created(){
-            this.ID = Math.floor(Math.random() * (5 - 1)) + 1;
-        },
-        beforeMount() {
-            axios.get("http://localhost:8000/api/user/"+this.ID+"/getProfile")
+        beforeCreate() {
+            axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getProfile")
                 .then(res =>{
                     this.Name = res.data.Name;
                     this.Surname = res.data.Surname;
@@ -57,14 +56,14 @@
                     alert("Password and confirm password does not match");
                     return;
                 }
-                var newUserProfile={
+                let newUserProfile={
                     Name: this.Name,
                     Surname: this.Surname,
                     Email: this.Email,
                     Address: this.Address,
                     Phone: this.Phone,
                     Password: this.OldPassword
-                }
+                };
                 if(this.Password !== "") {
                     newUserProfile.Password = this.Password;
                 }

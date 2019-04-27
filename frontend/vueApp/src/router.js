@@ -28,6 +28,7 @@ import RACAdminProfile from "./views/RACAdmin/RACAdminProfile";
 import RACProfile from "./views/RACAdmin/RACProfile";
 import RACOffices from "./views/RACAdmin/RACOffices";
 import RACVehicles from "./views/RACAdmin/RACVehicles";
+import UserProfile from "./components/UserProfile";
 
 Vue.use(Router);
 
@@ -93,6 +94,10 @@ export default new Router({
     {
       path: "/user_cars",
       component: UserCars
+    },
+    {
+      path: "/userProfile",
+      component: UserProfile
     },
     {
       path: '/airlineAdmin',

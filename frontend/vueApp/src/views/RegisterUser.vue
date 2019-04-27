@@ -1,6 +1,6 @@
 <template>
     <div>
-        <NavBarPreLogin></NavBarPreLogin>
+        <UserNavBar></UserNavBar>
         <form>
             <v-text-field
                     v-model="Name"
@@ -45,11 +45,11 @@
 </template>
 
 <script>
-    import NavBarPreLogin from "../components/NavBarPreLogin";
+    import UserNavBar from "../components/UserNavBar";
     import axios from 'axios';
     export default {
         name: "RegisterUser",
-        components: {NavBarPreLogin},
+        components: {UserNavBar},
         data() {
             return {
                 Name:"",
