@@ -27,6 +27,7 @@ import RACProfile from "./views/RACAdmin/RACProfile";
 import RACOffices from "./views/RACAdmin/RACOffices";
 import RACVehicles from "./views/RACAdmin/RACVehicles";
 import AirlineAdminProfile from "./views/AirlineAdmin/AirlineAdminProfile";
+import SystemAdminReservationRewards from "./views/SystemAdmin/SystemAdminReservationRewards";
 
 Vue.use(Router);
 
@@ -40,6 +41,10 @@ export default new Router({
     {
       path: '/systemAdmin',
       component: SystemAdminProfile
+    },
+    {
+      path: '/systemAdmin/rewards',
+      component: SystemAdminReservationRewards
     },
     {
       path: '/systemAdmin/accounts',
