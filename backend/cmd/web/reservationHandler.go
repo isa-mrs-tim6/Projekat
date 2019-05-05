@@ -8,14 +8,14 @@ import (
 )
 
 func (app *Application) GetRewards(w http.ResponseWriter, r *http.Request) {
-	hotels, err := app.Store.GetReservationRewards()
+	rewards, err := app.Store.GetReservationRewards()
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive reservation rewards")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(hotels)
+	err = json.NewEncoder(w).Encode(rewards)
 	if err != nil {
 		app.ErrorLog.Printf("Cannot encode reservation rewards into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
