@@ -10,6 +10,11 @@ type Occupation struct {
 	End       time.Time
 }
 
+type ReservationReward struct {
+	RequiredNumber uint
+	PriceScale     float64
+}
+
 type Reservation struct {
 	gorm.Model
 	Holders               []*User           `gorm:"many2many:user_reservations;"`
