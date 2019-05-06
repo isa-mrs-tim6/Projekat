@@ -1,22 +1,26 @@
 <template>
-    <v-toolbar fixed app dark v-if="this.isLogIn === false">
-        <v-toolbar-title>Title</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn class="button" flat @click="goFlights">Flights</v-btn>
-        <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
-        <v-btn class="button" flat @click="goCars">Cars</v-btn>
-        <v-btn class="button" flat @click="goLogin">Login</v-btn>
-        <v-btn class="button" flat @click="goRegister">Register</v-btn>
-    </v-toolbar>
-    <v-toolbar fixed app dark v-else>
-        <v-toolbar-title>Title</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn class="button" flat @click="goFlights">Flights</v-btn>
-        <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
-        <v-btn class="button" flat @click="goCars">Cars</v-btn>
-        <v-btn class="button" flat @click="goProfile">Profile</v-btn>
-        <v-btn class="button" flat @click="goLogout">Log out</v-btn>
-    </v-toolbar>
+    <div v-if="this.isLogIn === false">
+        <v-toolbar fixed app dark >
+            <v-toolbar-title>Title</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn class="button" flat @click="goFlights">Flights</v-btn>
+            <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
+            <v-btn class="button" flat @click="goCars">Cars</v-btn>
+            <v-btn class="button" flat @click="goLogin">Login</v-btn>
+            <v-btn class="button" flat @click="goRegister">Register</v-btn>
+        </v-toolbar>
+    </div>
+    <div v-else>
+        <v-toolbar  fixed app dark >
+            <v-toolbar-title>Title</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn class="button" flat @click="goFlights">Flights</v-btn>
+            <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
+            <v-btn class="button" flat @click="goCars">Cars</v-btn>
+            <v-btn class="button" flat @click="goProfile">Profile</v-btn>
+            <v-btn class="button" flat @click="goLogout">Log out</v-btn>
+        </v-toolbar>
+    </div>
 </template>
 
 <script>

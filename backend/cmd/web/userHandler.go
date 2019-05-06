@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"net/http"
-	"strconv"
+	"time"
 )
 
 func (app *Application) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -43,28 +43,47 @@ func (app *Application) GetUserProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) UpdateUserProfile(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	var userProfile models.Profile
+	var params models.ProfileParams
 
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
-	if err != nil {
-		app.ErrorLog.Printf(vars["id"] + "is not a valid ID")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	oldEmail := getEmail(r)
 
-	err = json.NewDecoder(r.Body).Decode(&userProfile)
+	err := json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
 		app.ErrorLog.Println("Could not decode JSON")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	err = app.Store.UpdateUser(uint(id), userProfile)
+	err = app.Store.UpdateUser(oldEmail, params)
 	if err != nil {
 		app.ErrorLog.Printf("Could not update user profile")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+
+	expirationTime := time.Now().Add(24 * time.Hour)
+	claims := &Claims{
+		Email: params.Email,
+		Type:  "User",
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// Create the JWT string
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		// If there is an error in creating the JWT return an internal server error
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Path:    "/",
+		Expires: expirationTime,
+	})
 }
 
 func (app *Application) GetAdminProfile(w http.ResponseWriter, r *http.Request) {

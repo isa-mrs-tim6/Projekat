@@ -76,7 +76,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/user/login", app.LoginUser).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/user/getUsers", Validate(app.GetUser, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/getProfile", Validate(app.GetUserProfile, []string{"User"})).Methods("GET")
-	router.HandleFunc("/api/user/{id}/updateProfile", app.UpdateUserProfile).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/user/updateProfile", Validate(app.UpdateUserProfile, []string{"User"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/user/register", app.RegisterUser).Methods("POST", "OPTIONS")
 
 	// ADMIN API
@@ -139,7 +139,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/rentACarCompany/getRentACarCompanies", app.GetRentACarCompanies).Methods("GET")
 	router.HandleFunc("/api/rentACarCompany/getProfile", app.GetRentACarCompanyProfile).Methods("GET")
 	router.HandleFunc("/api/rentACarCompany/updateProfile", app.UpdateRentACarCompanyProfile).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/rentACarCompany/{id}/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/rentACarCompany/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/addRentACarCompany", Validate(app.CreateRentACarCompany, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 
 	// STATIC FILE HANDLER

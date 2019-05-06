@@ -1,10 +1,10 @@
 <template>
     <div>
         <UserNavBar></UserNavBar>
-        <v-layout justify-center style="margin-top: 200px">
+        <v-layout justify-center style="margin-top: 150px">
             <v-flex xs9 style="height: 100%;">
-                <div v-bind:isLogIn="isLogIn" style="height: 75px; background-color: lightgray">Ovde ide komponenta za pretragu letova/hotela/vozila</div>
-                <ResultGrid v-bind:items="items" v-bind:title="title" style="margin-top: 150px"></ResultGrid>
+                <VehiclesSearch v-bind:isLogIn="isLogIn"></VehiclesSearch>
+                <ResultGrid v-bind:items="items" v-bind:title="title"></ResultGrid>
             </v-flex>
         </v-layout>
     </div>
@@ -14,10 +14,11 @@
     import ResultGrid from "../components/ResultGrid";
     import axios from "axios";
     import UserNavBar from "../components/UserNavBar";
+    import VehiclesSearch from "./VehiclesSearch";
 
     export default {
         name: "UserCars",
-        components: {UserNavBar, ResultGrid},
+        components: {VehiclesSearch, UserNavBar, ResultGrid},
         data() {
             return {
                 items: [],

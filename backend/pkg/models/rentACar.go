@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
-	"time"
 )
 
 type Vehicle struct {
@@ -31,8 +30,8 @@ type FindVehicleParams struct {
 	Type      string
 	PriceLow  float64
 	PriceHigh float64
-	StartDate time.Time
-	EndDate   time.Time
+	StartDate string
+	EndDate   string
 }
 
 type Location struct {

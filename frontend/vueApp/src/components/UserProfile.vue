@@ -31,6 +31,7 @@
                 Name:"",
                 Surname:"",
                 Email:"",
+                OldEmail: "",
                 Password:"",
                 ConfirmedPassword:"",
                 OldPassword:"",
@@ -44,6 +45,7 @@
                     this.Name = res.data.Name;
                     this.Surname = res.data.Surname;
                     this.Email = res.data.Email;
+                    this.OldEmail = res.data.Email;
                     this.Address = res.data.Address;
                     this.Phone = res.data.Phone;
                     this.OldPassword = res.data.Password;
@@ -59,6 +61,7 @@
                 let newUserProfile={
                     Name: this.Name,
                     Surname: this.Surname,
+                    OldEmail: this.OldEmail,
                     Email: this.Email,
                     Address: this.Address,
                     Phone: this.Phone,
@@ -67,7 +70,7 @@
                 if(this.Password !== "") {
                     newUserProfile.Password = this.Password;
                 }
-                axios.post("http://localhost:8000/api/user/" + this.ID + "/updateProfile", newUserProfile)
+                axios.create({withCredentials: true}).post("http://localhost:8000/api/user/updateProfile", newUserProfile)
             }
         }
     }

@@ -10,12 +10,14 @@ func (db *Store) GetUsers() ([]models.User, error) {
 	return retVal, nil
 }
 
-func (db *Store) UpdateUser(id uint, newProfile models.Profile) error {
+func (db *Store) UpdateUser(oldEmail string, params models.ProfileParams) error {
 	var retVal models.User
-	if err := db.First(&retVal, id).Error; err != nil {
+
+	if err := db.Where("email = ?", oldEmail).First(&retVal).Error; err != nil {
 		return err
 	}
-	retVal.Profile = newProfile
+
+	retVal.Profile = params.Profile
 
 	if err := db.Save(&retVal).Error; err != nil {
 		return err
