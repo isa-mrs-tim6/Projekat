@@ -395,9 +395,9 @@ func addModels(db *gorm.DB) {
 			&hotelAdmin2,
 		},
 		Features: []models.Feature{
-			{Description: "H1_FEATURE1", Price: 50},
-			{Description: "H1_FEATURE2", Price: 75},
-			{Description: "H1_FEATURE3", Price: 90},
+			{Name: "H1_FEATURE1", Icon: "add_circle_outline", Description: "H1_FEATURE1_DESC", Price: 50},
+			{Name: "H1_FEATURE2", Icon: "add_circle_outline", Description: "H1_FEATURE2_DESC", Price: 75},
+			{Name: "H1_FEATURE3", Icon: "add_circle_outline", Description: "H1_FEATURE3_DESC", Price: 90},
 		},
 		Rooms: []models.Room{
 			{Number: 1, Capacity: 2, Price: 250, QuickReserve: false},
@@ -419,9 +419,9 @@ func addModels(db *gorm.DB) {
 			&hotelAdmin3,
 		},
 		Features: []models.Feature{
-			{Description: "H2_FEATURE1", Price: 40},
-			{Description: "H2_FEATURE2", Price: 55},
-			{Description: "H2_FEATURE3", Price: 60},
+			{Name: "H2_FEATURE1", Icon: "add_circle_outline", Description: "H2_FEATURE1_DESC", Price: 40},
+			{Name: "H2_FEATURE2", Icon: "add_circle_outline", Description: "H2_FEATURE2_DESC", Price: 55},
+			{Name: "H2_FEATURE3", Icon: "add_circle_outline", Description: "H2_FEATURE3_DESC", Price: 60},
 		},
 		Rooms: []models.Room{
 			{Number: 1, Capacity: 2, Price: 150, QuickReserve: true},

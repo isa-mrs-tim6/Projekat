@@ -139,3 +139,23 @@ func (db *Store) UpdateRoom(room models.Room) error {
 	}
 	return nil
 }
+
+func (db *Store) GetHotelFeatures(id uint) ([]models.Feature, error) {
+	var retVal []models.Feature
+	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) AddHotelFeature(feature models.Feature) {
+	db.Create(&feature)
+}
+
+func (db *Store) UpdateHotelFeature(feature models.Feature) {
+	db.Model(&feature).Where("id = ?", feature.ID).Update(feature)
+}
+
+func (db *Store) DeleteHotelFeature(feature models.Feature) {
+	db.Where("id = ?", feature.ID).Delete(&feature)
+}
