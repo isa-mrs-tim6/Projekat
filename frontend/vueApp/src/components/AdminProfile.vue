@@ -1,7 +1,7 @@
 <template>
-    <v-container grid-list-xl text-xs-center>
+    <v-container grid-list-xl text-xs-center style="height: 100vh;">
         <v-layout align-center justify-center column wrap fill-height>
-            <v-flex style="width: 40vw">
+            <v-flex style="width: 60vw">
                 <v-card min-height="100%" class="flexcard">
                     <v-card-title primary-title>
                         <div class="headline font-weight-medium">Admin account</div>
@@ -118,5 +118,8 @@
 </script>
 
 <style scoped>
-
+    .flexcard {
+        display: flex;
+        flex-direction: column;
+    }
 </style>

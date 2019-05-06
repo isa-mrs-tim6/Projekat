@@ -1,19 +1,18 @@
 <template>
     <div id="main">
-        <RACAdminNavDrawer/>
-        <AdminProfile/>
+        <AirlineAdminNavDrawer></AirlineAdminNavDrawer>
+        <AdminProfile></AdminProfile>
     </div>
 </template>
 
 <script>
-    import RACAdminNavDrawer from "../../components/RACAdmin/RACAdminNavDrawer";
+    import AirlineAdminNavDrawer from "../../components/AirlineAdmin/AirlineAdminNavDrawer";
     import AdminProfile from "../../components/AdminProfile";
     import axios from 'axios';
-
     export default {
-        name: "RACAdminProfile",
-        components: {RACAdminNavDrawer, AdminProfile},
-        mounted(){
+        name: "AirlineAdminProfile",
+        components: {AdminProfile, AirlineAdminNavDrawer},
+        mounter(){
             this.checkFirstPass();
         },
         methods: {
@@ -28,11 +27,12 @@
                     )
             }
         },
+
     }
 </script>
 
 <style scoped>
     #main {
-        background-image: linear-gradient(to right bottom, #02bb04, #00b824, #00b535, #00b141, #00ae4c, #00ab55, #00a75e, #00a465, #00a06d, #009b73, #009778, #00927c);
+        background-image: linear-gradient(to right bottom, #142eae, #005bca, #007ed2, #009ccd, #0bb7c7, #47c0c6, #67c8c6, #81d0c7, #6ecac4, #58c4c3, #3cbdc2, #00b7c1);
     }
 </style>

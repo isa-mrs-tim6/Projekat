@@ -1,37 +1,61 @@
 <template>
-    <v-container grid-list-xl text-xs-center>
+    <v-container grid-list-xl text-xs-center style="height: 100vh;">
         <v-layout align-center justify-center column wrap fill-height>
-            <v-flex style="width: 40vw">
-                <v-form>
-                    <v-text-field
-                            v-model="hotelProfile.Name"
-                            label="Name"
-                            required
-                    ></v-text-field>
-                    <v-text-field
-                            v-model="hotelProfile.Address"
-                            label="Address"
-                            required
-                    ></v-text-field>
-                    <v-text-field
-                            v-model="hotelProfile.Latitude"
-                            label="Latitude"
-                            required
-                    ></v-text-field>
-                    <v-text-field
-                            v-model="hotelProfile.Longitude"
-                            label="Longitude"
-                            required
-                    ></v-text-field>
-                    <v-text-field
-                            v-model="hotelProfile.Description"
-                            label="Description"
-                            required
-                    ></v-text-field>
-
-                    <v-btn style="float: left;" @click="update">update</v-btn>
-                    <v-btn style="float: right;" @click="revert">revert</v-btn>
-                </v-form>
+            <v-flex style="width: 60vw">
+                <v-card min-height="100%" class="flexcard">
+                    <v-card-title primary-title>
+                        <div class="headline font-weight-medium">Hotel profile</div>
+                    </v-card-title>
+                    <v-card-text class="grow">
+                        <v-form ref="form" class="align-center justify-center">
+                            <v-text-field
+                                    v-model="hotelProfile.Name"
+                                    label="Name"
+                                    required
+                                    prepend-icon="business"
+                                    class="body-2"
+                            ></v-text-field>
+                            <v-text-field
+                                    v-model="hotelProfile.Address"
+                                    label="Address"
+                                    required
+                                    prepend-icon="location_on"
+                                    class="body-2"
+                            ></v-text-field>
+                            <v-flex>
+                                <v-layout row wrap fill-height>
+                                    <v-text-field
+                                            v-model="hotelProfile.Latitude"
+                                            label="Latitude"
+                                            required
+                                            class="body-2"
+                                            prepend-icon="satellite"
+                                            :rules="[rules.required, rules.numeric]"
+                                    ></v-text-field>
+                                    <v-text-field
+                                            v-model="hotelProfile.Longitude"
+                                            label="Longitude"
+                                            required
+                                            class="body-2"
+                                            prepend-icon="satellite"
+                                            :rules="[rules.required, rules.numeric]"
+                                    ></v-text-field>
+                                </v-layout>
+                            </v-flex>
+                            <v-text-field
+                                    v-model="hotelProfile.Description"
+                                    label="Description"
+                                    prepend-icon="message"
+                                    class="body-2"
+                                    required
+                            ></v-text-field>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="primary" @click="update">update</v-btn>
+                        <v-btn @click="revert">revert</v-btn>
+                    </v-card-actions>
+                </v-card>
             </v-flex>
         </v-layout>
     </v-container>
@@ -46,6 +70,10 @@
             return {
                 backupHotelProfile: '',
                 hotelProfile: '',
+                rules: {
+                    required: value => !!value || 'Required.',
+                    numeric: value => !isNaN(value) || 'Numeric',
+                },
             }
         },
         mounted() {
@@ -82,5 +110,8 @@
 </script>
 
 <style scoped>
-
+    .flexcard {
+        display: flex;
+        flex-direction: column;
+    }
 </style>

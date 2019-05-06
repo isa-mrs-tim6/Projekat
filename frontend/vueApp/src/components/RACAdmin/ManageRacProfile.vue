@@ -1,5 +1,5 @@
 <template>
-    <v-container grid-list-xl text-xs-center>
+    <v-container grid-list-xl text-xs-center style="height: 100vh;">
         <v-layout align-center justify-center column wrap fill-height>
             <v-card min-height="100%" class="flexcard" style="padding: 5px">
                 <v-card-title primary-title>

@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container style="height: 100vh;">
         <v-card min-height="100%" class="flexcard" style="padding: 5px">
             <v-card-title primary-title>
                     <div class="headline font-weight-medium">Manage Vehicles:</div>

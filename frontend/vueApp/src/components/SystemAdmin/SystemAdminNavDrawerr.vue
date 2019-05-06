@@ -15,6 +15,7 @@
                     { title: 'Airlines', icon: 'flight', route: 'airlines' },
                     { title: 'Hotels', icon: 'hotel', route: 'hotels' },
                     { title: 'Rent-a-Cars', icon: 'directions_car', route: 'rent_a_cars' },
+                    { title: 'Reservation Rewards', icon: 'loyalty', route: 'rewards'},
                     { title: 'Admin Profile', icon: 'portrait', route: 'admin_profile' },
                 ],
             }

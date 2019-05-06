@@ -28,7 +28,7 @@ func initTables(db *gorm.DB) {
 		&models.RentACarAdmin{}, &models.RentACarCompany{}, &models.Location{}, &models.Vehicle{},
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
-		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{},
+		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{},
 		"user_reservations", "vehicle_reservations", "room_reservations")
 	fmt.Printf("DATABASE: Finished dropping, time taken: %f seconds\n", time.Since(timeDroppingTables).Seconds())
 
@@ -40,7 +40,7 @@ func initTables(db *gorm.DB) {
 		&models.RentACarAdmin{}, &models.RentACarCompany{}, &models.Location{}, &models.Vehicle{},
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
-		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{})
+		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{})
 	fmt.Printf("DATABASE: Finished automigration, time taken: %f seconds\n", time.Since(timeAutoMigration).Seconds())
 }
 
@@ -934,6 +934,25 @@ func addModels(db *gorm.DB) {
 	db.Create(&reservation8)
 	db.Create(&reservation9)
 	db.Create(&reservation10)
+
+	reward := models.ReservationReward{
+		RequiredNumber: 5,
+		PriceScale:     0.95,
+	}
+
+	reward2 := models.ReservationReward{
+		RequiredNumber: 10,
+		PriceScale:     0.90,
+	}
+
+	reward3 := models.ReservationReward{
+		RequiredNumber: 20,
+		PriceScale:     0.80,
+	}
+
+	db.Create(&reward)
+	db.Create(&reward2)
+	db.Create(&reward3)
 
 	fmt.Printf("DATABASE: Finished adding models, time taken: %f seconds\n", time.Since(timeStart).Seconds())
 }
