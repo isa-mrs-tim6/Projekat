@@ -28,6 +28,8 @@ type Feature struct {
 	gorm.Model
 	Price       float64
 	Description string
+	Name        string
+	Icon        string
 	HotelID     uint
 }
 
