@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import User from "./views/User";
+import UserFlights from "./views/UserFlights";
+import UserHotels from "./views/UserHotels";
+import UserCars from "./views/UserCars";
 import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
 import AirlineAdmin from "./views/AirlineAdmin/AirlineAdmin";
@@ -28,6 +30,7 @@ import RACOffices from "./views/RACAdmin/RACOffices";
 import RACVehicles from "./views/RACAdmin/RACVehicles";
 import AirlineAdminProfile from "./views/AirlineAdmin/AirlineAdminProfile";
 import SystemAdminReservationRewards from "./views/SystemAdmin/SystemAdminReservationRewards";
+import UserProfile from "./components/UserProfile";
 
 Vue.use(Router);
 
@@ -88,7 +91,19 @@ export default new Router({
     },
     {
       path: '/user',
-      component: User
+      component: UserFlights
+    },
+    {
+      path: "/user_hotels",
+      component: UserHotels
+    },
+    {
+      path: "/user_cars",
+      component: UserCars
+    },
+    {
+      path: "/userProfile",
+      component: UserProfile
     },
     {
       path: '/airlineAdmin/airline_profile',
