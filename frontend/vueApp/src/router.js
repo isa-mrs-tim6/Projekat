@@ -17,6 +17,7 @@ import HotelAdminProfile from "./views/HotelAdmin/HotelAdminProfile";
 import HotelRooms from "./views/HotelAdmin/HotelRooms";
 import HotelProfile from "./views/HotelAdmin/HotelProfile";
 import HotelRatingsReport from "./views/HotelAdmin/HotelRatingsReport";
+import HotelFeatures from "./views/HotelAdmin/HotelFeatures"
 import SystemAdminAccounts from "./views/SystemAdmin/SystemAdminAccounts";
 import SystemAdminAirlines from "./views/SystemAdmin/SystemAdminAirlines";
 import SystemAdminHotels from "./views/SystemAdmin/SystemAdminHotels";
@@ -73,6 +74,10 @@ export default new Router({
     {
       path: '/hotelAdmin/finances',
       component: HotelFinancialReport
+    },
+    {
+      path: '/hotelAdmin/features',
+      component: HotelFeatures
     },
     {
       path: '/hotelAdmin/rooms',
