@@ -30,6 +30,8 @@ import RACOffices from "./views/RACAdmin/RACOffices";
 import RACVehicles from "./views/RACAdmin/RACVehicles";
 import AirlineAdminProfile from "./views/AirlineAdmin/AirlineAdminProfile";
 import SystemAdminReservationRewards from "./views/SystemAdmin/SystemAdminReservationRewards";
+import FlightSearch from "./components/User/FlightSearch";
+import FlightSearchResults from "./views/User/FlightSearchResults";
 import UserProfile from "./components/UserProfile";
 
 Vue.use(Router);
@@ -40,6 +42,10 @@ export default new Router({
     {
       path: '/',
       component: Home
+    },
+    {
+      path: '/sr',
+      component: FlightSearch
     },
     {
       path: '/systemAdmin',
@@ -152,6 +158,11 @@ export default new Router({
     {
       path: '/confirmRegistration/:type/:email/',
       component: RegistrationSuccess
+    },
+    {
+      path: '/flightSearch',
+      component: FlightSearchResults,
+      name: 'fSearch'
     },
     {
       path: '/register',

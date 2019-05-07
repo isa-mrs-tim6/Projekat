@@ -144,6 +144,10 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/rentACarCompany/findVehicles", app.FindVehicles).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/addRentACarCompany", Validate(app.CreateRentACarCompany, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 
+	//SEARCH API
+	router.HandleFunc("/api/search/oneWay", app.OneWaySearch).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/search/multi", app.MultiSearch).Methods("POST", "OPTIONS")
+
 	// STATIC FILE HANDLER
 	staticFileDirectory := http.Dir("./ui/")
 	staticFileHandler := http.StripPrefix("/", http.FileServer(staticFileDirectory))
