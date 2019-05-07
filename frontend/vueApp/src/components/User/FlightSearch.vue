@@ -77,7 +77,7 @@
                         </v-card>
                     </v-menu>
                 </v-flex>
-                <v-flex xs4><v-btn>Search</v-btn></v-flex>
+                <v-flex xs4><v-btn @click="oneWaySearch">Search</v-btn></v-flex>
             </v-layout>
         </div>
         <div v-else-if='selectedSearchType === "round"'>
@@ -161,7 +161,7 @@
                         </v-card>
                     </v-menu>
                 </v-flex>
-                <v-flex xs4><v-btn>Search</v-btn></v-flex>
+                <v-flex xs4><v-btn @click="roundSearch">Search</v-btn></v-flex>
             </v-layout>
         </div>
         <div v-else-if='selectedSearchType === "multi"'>
@@ -177,7 +177,7 @@
             </div>
             <v-layout row-wrap justify-start>
                 <v-flex xs2>
-                    <v-btn small @click="addRow">Add</v-btn>
+                    <v-btn small @click="addRow" v-if="this.multi.layovers.length < 4">Add</v-btn>
                 </v-flex>
                 <v-flex xs2 mr-3>
                     <v-btn small @click="deleteRow">Remove</v-btn>
@@ -241,10 +241,10 @@
                         </v-card>
                     </v-menu>
                 </v-flex>
-                <v-flex xs><v-btn>Search</v-btn></v-flex>
+                <v-flex xs><v-btn @click="multiSearch">Search</v-btn></v-flex>
             </v-layout>
         </div>
-
+        <v-snackbar v-model="Error2Snackbar" :timeout=4000 :top="true" color="error">All fields must be filled</v-snackbar>
     </div>
 </template>
 
@@ -253,6 +253,7 @@
         name: "FlightSearch",
         data(){
             return{
+                Error2Snackbar: false,
                 selectedSearchType: "one-way",
                 selectedCabinClass: "economic",
                 oneWay: {
@@ -290,6 +291,7 @@
                     departureMenu: false,
                     passengers: 1,
                     seatClass: "economic",
+                    departureDate: ""
                 }
 
             }
@@ -332,6 +334,9 @@
                 return retVal;
             },
             addRow() {
+                if(this.multi.layovers.length > 4){
+                    return;
+                }
                 this.multi.layovers.push({
                     from: "",
                     to: ""
@@ -343,6 +348,73 @@
                 }else{
                     this.multi.layovers.splice(-1, 1)
                 }
+            },
+            oneWaySearch(){
+                if(!this.oneWay.from || !this.oneWay.to || !this.oneWay.date){
+                    this.Error2Snackbar = true;
+                    return;
+                }
+                this.$router.push({
+                    name:'fSearch',
+                    query:{
+                        from: this.oneWay.from,
+                        to: this.oneWay.to,
+                        date: this.oneWay.date,
+                        seatClass: this.oneWay.seatClass,
+                        passengers: this.oneWay.passengers
+                    }})
+            },
+            roundSearch(){
+                if(!this.round.from || !this.round.to || !this.round.departureDate || !this.round.returnDate){
+                    this.Error2Snackbar = true;
+                    return;
+                }
+                this.$router.push({
+                    name:'fSearch',
+                    query:{
+                        from: this.round.from,
+                        to: this.round.to,
+                        departureDate: this.round.departureDate,
+                        returnDate: this.round.returnDate,
+                        seatClass: this.round.seatClass,
+                        passengers: this.round.passengers
+                    }})
+            },
+            multiSearch(){
+                if(!this.multi.layovers[0].from || !this.multi.layovers[this.multi.layovers.length - 1].to){
+                    this.Error2Snackbar = true;
+                    return;
+                }
+                if(!this.multi.layovers[0].to || !this.multi.layovers[this.multi.layovers.length - 1].from){
+                    this.Error2Snackbar = true;
+                    return;
+                }
+                if(!this.multi.departureDate){
+                    this.Error2Snackbar = true;
+                    return;
+                }
+                var fromDestination = this.multi.layovers[0].from;
+                var toDestination = this.multi.layovers[this.multi.layovers.length - 1].to;
+                var layovers = this.multi.layovers[0].to + ";" + this.multi.layovers[this.multi.layovers.length - 1].from;
+                for (var i = 1; i < this.multi.layovers.length - 1; i++){
+                    if(!this.multi.layovers[i].from || !this.multi.layovers[i].to){
+                        this.Error2Snackbar = true;
+                        return;
+                    }
+                    layovers += ";" + this.multi.layovers[i].from + ";";
+                    layovers += this.multi.layovers[i].to;
+                }
+                this.$router.push({
+                    name:'fSearch',
+                    query:{
+                        from: fromDestination,
+                        to: toDestination,
+                        layovers: layovers,
+                        departureDate: this.multi.departureDate,
+                        passengers: this.multi.passengers,
+                        seatClass: this.multi.seatClass
+                    }
+                })
             },
         },
         computed:{

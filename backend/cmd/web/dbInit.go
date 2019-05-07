@@ -288,10 +288,29 @@ func addModels(db *gorm.DB) {
 						Coordinate: models.Coordinate{Latitude: -21.124, Longitude: 512.24}}},
 				},
 			},
+			{
+				PriceList: models.PriceList{
+					PriceECONOMY: 300, PriceBUSINESS: 600, PriceFIRSTCLASS: 900,
+					SmallSuitcase: 100, BigSuitcase: 300,
+				},
+				Duration:  time.Hour * 5,
+				Distance:  780,
+				Departure: time.Date(2019, 5, 10, 9, 15, 0, 0, time.Local),
+				Landing:   time.Date(2019, 5, 11, 14, 15, 0, 0, time.Local),
+				Layovers: []models.Layovers{
+					{Address: models.Address{
+						Address:    "F1_L1_ADDRESS 1",
+						Coordinate: models.Coordinate{Latitude: 13, Longitude: 52.414}}},
+					{Address: models.Address{
+						Address:    "F1_L2_ADDRESS 2",
+						Coordinate: models.Coordinate{Latitude: -51.124, Longitude: 5.24}}},
+				},
+			},
 		},
 	}
 	DeepCopy(&airline.Airplanes[0], &airline.Flights[0].Airplane)
 	DeepCopy(&airline.Airplanes[1], &airline.Flights[1].Airplane)
+	DeepCopy(&airline.Airplanes[0], &airline.Flights[2].Airplane)
 
 	airline.Flights[1].Airplane.Seats[0].QuickReserve = true
 	airline.Flights[1].Airplane.Seats[2].QuickReserve = true
@@ -301,6 +320,8 @@ func addModels(db *gorm.DB) {
 	airline.Flights[0].Destination = &airline.Destinations[1]
 	airline.Flights[1].Origin = &airline.Destinations[1]
 	airline.Flights[1].Destination = &airline.Destinations[2]
+	airline.Flights[2].Origin = &airline.Destinations[1]
+	airline.Flights[2].Destination = &airline.Destinations[0]
 
 	airline2 := models.Airline{
 		AirlineProfile: models.AirlineProfile{

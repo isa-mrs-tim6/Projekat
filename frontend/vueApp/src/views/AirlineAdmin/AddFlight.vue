@@ -123,14 +123,13 @@
 </template>
 
 <script>
-    import AirlineAdminNavbar from "../../components/AirlineAdmin/AirlineAdminNavbar";
     import axios from 'axios';
     import moment from 'moment';
     import AirlineAdminNavDrawer from "../../components/AirlineAdmin/AirlineAdminNavDrawer";
 
     export default {
         name: "AddFlight",
-        components: {AirlineAdminNavDrawer, AirlineAdminNavbar},
+        components: {AirlineAdminNavDrawer},
         data() {
             return {
                 mask: 'time',
@@ -295,8 +294,8 @@
                     Origin: this.flight.from,
                     Destination: this.flight.to,
                     Airplane: this.flight.airplane,
-                    Departure: dpTime.toString(),
-                    Landing: ldTime.toString(),
+                    Departure: dpTime.valueOf().toString(),
+                    Landing: ldTime.valueOf().toString(),
                     Duration: this.flight.travelTime,
                     Distance: this.flight.travelDistance,
                     Layovers: this.layovers,
