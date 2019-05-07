@@ -29,6 +29,41 @@ func (db *Store) CreateRentACarCompany(rac *models.RentACarCompany) error {
 	return nil
 }
 
+func (db *Store) GetRACReservations(id uint) ([]models.RentACarReservation, error) {
+	var retVal []models.RentACarReservation
+	if err := db.Set("gorm:auto_preload", true).Where("company_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) GetVehicleRatings(id uint) ([]models.VehicleRatingsDAO, error) {
+	var retVal []models.VehicleRatingsDAO
+	var vehicles []models.Vehicle
+	if err := db.Set("gorm:auto_preload", true).Where("rent_a_car_company_id = ?", id).Find(&vehicles).Error; err != nil {
+		return nil, err
+	}
+
+	for _, v := range vehicles {
+		var ratings []models.VehicleRating
+		if err := db.Where("vehicle_id = ?", v.ID).Find(&ratings).Error; err != nil {
+			return nil, err
+		}
+		sumRating := 0
+		lenRating := 1
+		if len(ratings) > 0 {
+			lenRating = len(ratings)
+		}
+
+		for _, rating := range ratings {
+			sumRating += rating.Rating
+		}
+		retVal = append(retVal, models.VehicleRatingsDAO{Vehicle: v, Rating: sumRating / lenRating})
+	}
+
+	return retVal, nil
+}
+
 func (db *Store) GetRentACarCompanyProfile(id uint) (models.RentACarCompanyProfile, error) {
 	var retVal models.RentACarCompany
 	if err := db.First(&retVal, id).Error; err != nil {

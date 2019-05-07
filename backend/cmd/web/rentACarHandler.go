@@ -117,13 +117,57 @@ func (app *Application) GetCompanyVehicles(w http.ResponseWriter, r *http.Reques
 	email := getEmail(r)
 	user, err := app.Store.GetRACAdmin(email)
 	if err != nil {
-		app.ErrorLog.Println("Could not retrive rent-a-car admin")
+		app.ErrorLog.Println("Could not retrieve rent-a-car admin")
 	}
 	locations, err := app.Store.GetCompanyVehicles(user.RentACarCompanyID)
 
 	err = json.NewEncoder(w).Encode(locations)
 	if err != nil {
 		app.ErrorLog.Println("Cannot encode vehicles into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetVehicleRatings(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetRACAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive rac admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	rooms, err := app.Store.GetVehicleRatings(user.RentACarCompanyID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive vehicles and their ratings")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(rooms)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode vehicles and their ratings into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetRACReservations(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetRACAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive rac admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	rooms, err := app.Store.GetRACReservations(user.RentACarCompanyID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive rac reservations")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(rooms)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode rac reservations into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

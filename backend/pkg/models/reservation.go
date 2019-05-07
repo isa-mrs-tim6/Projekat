@@ -37,10 +37,12 @@ type FlightReservation struct {
 type RentACarReservation struct {
 	gorm.Model
 	Occupation
-	Location string
-	Vehicles []*Vehicle `gorm:"many2many:vehicle_reservations;"`
-	Price    float64
-	Rating   uint
+	Location  string
+	Vehicles  []*Vehicle      `gorm:"many2many:vehicle_reservations;"`
+	Ratings   []VehicleRating `gorm:"foreignkey:ReservationID"`
+	Price     float64
+	Rating    uint
+	CompanyID uint
 }
 
 type HotelReservation struct {

@@ -33,6 +33,7 @@ import SystemAdminReservationRewards from "./views/SystemAdmin/SystemAdminReserv
 import FlightSearch from "./components/User/FlightSearch";
 import FlightSearchResults from "./views/User/FlightSearchResults";
 import UserProfile from "./components/UserProfile";
+import RACRatingsReport from "./views/RACAdmin/RACRatingsReport";
 
 Vue.use(Router);
 
@@ -150,6 +151,14 @@ export default new Router({
     {
       path: '/racAdmin/vehicles',
       component: RACVehicles
+    },
+    {
+      path: '/racAdmin/ratings',
+      component: RACRatingsReport
+    },
+    {
+      path: '/racAdmin/finances',
+      component: RACFinancialReport
     },
     {
       path: '/vehiclesSearch/:id',
