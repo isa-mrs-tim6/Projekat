@@ -1,50 +1,55 @@
 <template>
-    <form>
-        <v-text-field
-                v-model="Name"
-                label="Name"
-                required
-        ></v-text-field>
-        <v-text-field
-                v-model="Surname"
-                label="Surname"
-                required
-        ></v-text-field>
-        <v-text-field
-                v-model="Email"
-                label="Email"
-                required
-        ></v-text-field>
-        <v-text-field
-                v-model="Password"
-                label="Password"
-                type="password"
-                required
-        ></v-text-field>
-        <v-text-field
-                v-model="ConfirmedPassword"
-                label="Confirm password"
-                type="password"
-                required
-        ></v-text-field>
-        <v-text-field
-                v-model="Address"
-                label="Address"
-                required
-        ></v-text-field>
-        <v-text-field
-                v-model="Phone"
-                label="Phone"
-                required
-        ></v-text-field>
-        <v-btn @click="registerUser">Register</v-btn>
-    </form>
+    <div>
+        <UserNavBar></UserNavBar>
+        <form>
+            <v-text-field
+                    v-model="Name"
+                    label="Name"
+                    required
+            ></v-text-field>
+            <v-text-field
+                    v-model="Surname"
+                    label="Surname"
+                    required
+            ></v-text-field>
+            <v-text-field
+                    v-model="Email"
+                    label="Email"
+                    required
+            ></v-text-field>
+            <v-text-field
+                    v-model="Password"
+                    label="Password"
+                    type="password"
+                    required
+            ></v-text-field>
+            <v-text-field
+                    v-model="ConfirmedPassword"
+                    label="Confirm password"
+                    type="password"
+                    required
+            ></v-text-field>
+            <v-text-field
+                    v-model="Address"
+                    label="Address"
+                    required
+            ></v-text-field>
+            <v-text-field
+                    v-model="Phone"
+                    label="Phone"
+                    required
+            ></v-text-field>
+            <v-btn @click="registerUser">Register</v-btn>
+        </form>
+    </div>
 </template>
 
 <script>
+    import UserNavBar from "../components/UserNavBar";
     import axios from 'axios';
     export default {
         name: "RegisterUser",
+        components: {UserNavBar},
         data() {
             return {
                 Name:"",

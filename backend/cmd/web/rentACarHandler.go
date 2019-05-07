@@ -2,10 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"net/http"
-	"strconv"
 )
 
 func (app *Application) GetRentACarCompanies(w http.ResponseWriter, r *http.Request) {
@@ -91,24 +89,17 @@ func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *h
 }
 
 func (app *Application) FindVehicles(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
 	var params models.FindVehicleParams
 	var vehicles []models.Vehicle
 
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
-	if err != nil {
-		app.ErrorLog.Println(vars["id"] + "is not a valid ID")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	err = json.NewDecoder(r.Body).Decode(&params)
+	err := json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
 		app.ErrorLog.Println("Could not decode JSON")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	vehicles, err = app.Store.FindVehicles(uint(id), params)
+	vehicles, err = app.Store.FindVehicles(params)
 	if err != nil {
 		app.ErrorLog.Println("error while searching for vehicles")
 		w.WriteHeader(http.StatusInternalServerError)
