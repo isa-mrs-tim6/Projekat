@@ -89,6 +89,7 @@ func (app *Application) Routes() *mux.Router {
 	//
 
 	// RESERVATION API
+	router.HandleFunc("/api/airline/getAirlineReservations", Validate(app.GetAirlineReservations, []string{"AirlineAdmin"})).Methods("GET")
 	router.HandleFunc("/api/hotel/getHotelReservations", Validate(app.GetHotelReservations, []string{"HotelAdmin"})).Methods("GET")
 	router.HandleFunc("/api/reservations/rewards", Validate(app.GetRewards, []string{"SystemAdmin", "User"})).Methods("GET")
 	router.HandleFunc("/api/reservations/rewards", Validate(app.UpdateRewards, []string{"SystemAdmin"})).Methods("PUT", "OPTIONS")
@@ -110,6 +111,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/airline/getProfile", app.GetAirlineProfiles).Methods("GET")
 	router.HandleFunc("/api/airline/updateProfile", app.UpdateAirlineProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/airline/addAirline", Validate(app.CreateAirline, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/airline/getFlightRatings", Validate(app.GetFlightRatings, []string{"AirlineAdmin"})).Methods("GET")
 
 	//DESTINATION API
 	router.HandleFunc("/api/destination/getDestinations", app.GetDestinations).Methods("GET")

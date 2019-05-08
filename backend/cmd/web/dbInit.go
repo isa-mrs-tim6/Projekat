@@ -28,7 +28,7 @@ func initTables(db *gorm.DB) {
 		&models.RentACarAdmin{}, &models.RentACarCompany{}, &models.Location{}, &models.Vehicle{},
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
-		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{},
+		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{}, &models.FlightRating{},
 		"user_reservations", "vehicle_reservations", "room_reservations")
 	fmt.Printf("DATABASE: Finished dropping, time taken: %f seconds\n", time.Since(timeDroppingTables).Seconds())
 
@@ -40,7 +40,7 @@ func initTables(db *gorm.DB) {
 		&models.RentACarAdmin{}, &models.RentACarCompany{}, &models.Location{}, &models.Vehicle{},
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
-		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{})
+		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{}, &models.FlightRating{},)
 	fmt.Printf("DATABASE: Finished automigration, time taken: %f seconds\n", time.Since(timeAutoMigration).Seconds())
 }
 
@@ -581,6 +581,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 250,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline.Flights[0].Airplane.Seats[0],
 			},
@@ -620,6 +621,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 350,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline.Flights[1].Airplane.Seats[1],
 				airline.Flights[1].Airplane.Seats[2],
@@ -648,6 +650,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 250,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline2.Flights[0].Airplane.Seats[1],
 			},
@@ -672,6 +675,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 250,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline2.Flights[0].Airplane.Seats[1],
 			},
@@ -711,6 +715,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 250,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline2.Flights[0].Airplane.Seats[1],
 			},
@@ -750,6 +755,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 250,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline2.Flights[0].Airplane.Seats[1],
 			},
@@ -789,6 +795,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 250,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline2.Flights[0].Airplane.Seats[1],
 			},
@@ -830,6 +837,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 250,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline2.Flights[0].Airplane.Seats[1],
 			},
@@ -871,6 +879,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 250,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline2.Flights[0].Airplane.Seats[1],
 			},
@@ -912,6 +921,7 @@ func addModels(db *gorm.DB) {
 		},
 		ReservationFlight: models.FlightReservation{
 			Price: 250,
+			Rating: 4,
 			Seats: []models.Seat{
 				airline2.Flights[0].Airplane.Seats[1],
 			},
