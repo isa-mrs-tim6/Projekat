@@ -34,6 +34,7 @@ import FlightSearch from "./components/User/FlightSearch";
 import FlightSearchResults from "./views/User/FlightSearchResults";
 import UserProfile from "./components/UserProfile";
 import RACRatingsReport from "./views/RACAdmin/RACRatingsReport";
+import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
 
 Vue.use(Router);
 

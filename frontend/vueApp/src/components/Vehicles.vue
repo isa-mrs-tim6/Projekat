@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card style="margin: 5px" dark v-for="item in vehicles">
+        <v-card style="margin: 5px" dark v-for="item in vehicles" :key="item.Name">
             <v-card-text>
                 <v-layout row wrap>
                     <template>

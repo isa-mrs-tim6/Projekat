@@ -6,6 +6,7 @@
                 <v-layout row wrap>
                     <v-flex
                             v-for="item in items"
+                            :key="item.Name"
                             xs4
                     >
                         <template>
