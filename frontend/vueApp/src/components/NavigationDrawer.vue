@@ -2,13 +2,11 @@
     <v-navigation-drawer
             v-model="drawer"
             :mini-variant.sync="mini"
-            hide-overlay
-            stateless
+            permanent
             app
-            absolute
     >
         <v-toolbar flat class="transparent">
-            <v-list class="pa-0">
+            <v-list>
                 <v-list-tile avatar>
                     <v-list-tile-avatar>
                         <v-btn
