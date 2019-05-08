@@ -11,6 +11,8 @@
             return{
                 title: "Rent-a-car Admin Dashboard",
                 items: [
+                    { title: 'Ratings', icon: 'star', route: 'ratings' },
+                    { title: 'Finances', icon: 'assessment', route: 'finances' },
                     { title: 'Manage Vehicles', icon: 'directions_car', route: 'vehicles' },
                     { title: 'Manage Offices', icon: 'store', route: 'offices' },
                     { title: 'Company Profile', icon: 'business', route: 'rac_profile' },

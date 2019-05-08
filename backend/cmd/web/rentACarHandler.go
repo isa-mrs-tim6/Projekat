@@ -2,10 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"net/http"
-	"strconv"
 )
 
 func (app *Application) GetRentACarCompanies(w http.ResponseWriter, r *http.Request) {
@@ -91,24 +89,17 @@ func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *h
 }
 
 func (app *Application) FindVehicles(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
 	var params models.FindVehicleParams
 	var vehicles []models.Vehicle
 
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
-	if err != nil {
-		app.ErrorLog.Println(vars["id"] + "is not a valid ID")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	err = json.NewDecoder(r.Body).Decode(&params)
+	err := json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
 		app.ErrorLog.Println("Could not decode JSON")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	vehicles, err = app.Store.FindVehicles(uint(id), params)
+	vehicles, err = app.Store.FindVehicles(params)
 	if err != nil {
 		app.ErrorLog.Println("error while searching for vehicles")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -126,13 +117,57 @@ func (app *Application) GetCompanyVehicles(w http.ResponseWriter, r *http.Reques
 	email := getEmail(r)
 	user, err := app.Store.GetRACAdmin(email)
 	if err != nil {
-		app.ErrorLog.Println("Could not retrive rent-a-car admin")
+		app.ErrorLog.Println("Could not retrieve rent-a-car admin")
 	}
 	locations, err := app.Store.GetCompanyVehicles(user.RentACarCompanyID)
 
 	err = json.NewEncoder(w).Encode(locations)
 	if err != nil {
 		app.ErrorLog.Println("Cannot encode vehicles into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetVehicleRatings(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetRACAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive rac admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	rooms, err := app.Store.GetVehicleRatings(user.RentACarCompanyID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive vehicles and their ratings")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(rooms)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode vehicles and their ratings into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetRACReservations(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetRACAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive rac admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	rooms, err := app.Store.GetRACReservations(user.RentACarCompanyID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive rac reservations")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(rooms)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode rac reservations into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

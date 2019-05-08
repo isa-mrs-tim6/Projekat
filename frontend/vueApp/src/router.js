@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import User from "./views/User";
+import UserFlights from "./views/UserFlights";
+import UserHotels from "./views/UserHotels";
+import UserCars from "./views/UserCars";
 import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
 import AirlineAdmin from "./views/AirlineAdmin/AirlineAdmin";
@@ -29,6 +31,11 @@ import RACOffices from "./views/RACAdmin/RACOffices";
 import RACVehicles from "./views/RACAdmin/RACVehicles";
 import AirlineAdminProfile from "./views/AirlineAdmin/AirlineAdminProfile";
 import SystemAdminReservationRewards from "./views/SystemAdmin/SystemAdminReservationRewards";
+import FlightSearch from "./components/User/FlightSearch";
+import FlightSearchResults from "./views/User/FlightSearchResults";
+import UserProfile from "./components/UserProfile";
+import RACRatingsReport from "./views/RACAdmin/RACRatingsReport";
+import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
 
 Vue.use(Router);
 
@@ -38,6 +45,10 @@ export default new Router({
     {
       path: '/',
       component: Home
+    },
+    {
+      path: '/sr',
+      component: FlightSearch
     },
     {
       path: '/systemAdmin',
@@ -93,7 +104,19 @@ export default new Router({
     },
     {
       path: '/user',
-      component: User
+      component: UserFlights
+    },
+    {
+      path: "/user_hotels",
+      component: UserHotels
+    },
+    {
+      path: "/user_cars",
+      component: UserCars
+    },
+    {
+      path: "/userProfile",
+      component: UserProfile
     },
     {
       path: '/airlineAdmin/airline_profile',
@@ -136,12 +159,25 @@ export default new Router({
       component: RACVehicles
     },
     {
+      path: '/racAdmin/ratings',
+      component: RACRatingsReport
+    },
+    {
+      path: '/racAdmin/finances',
+      component: RACFinancialReport
+    },
+    {
       path: '/vehiclesSearch/:id',
       component: VehiclesSearch
     },
     {
       path: '/confirmRegistration/:type/:email/',
       component: RegistrationSuccess
+    },
+    {
+      path: '/flightSearch',
+      component: FlightSearchResults,
+      name: 'fSearch'
     },
     {
       path: '/register',

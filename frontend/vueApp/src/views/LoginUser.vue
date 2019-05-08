@@ -1,5 +1,6 @@
 <template>
     <v-container fluid fill-height>
+        <user-nav-bar></user-nav-bar>
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md4>
                 <v-card class="elevation-12">
@@ -36,8 +37,10 @@
 
 <script>
     import axios from 'axios';
+    import UserNavBar from "../components/UserNavBar";
     export default {
         name: "LoginUser",
+        components: {UserNavBar},
         data() {
             return {
                 Email:"",

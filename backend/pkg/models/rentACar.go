@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
-	"time"
 )
 
 type Vehicle struct {
@@ -14,6 +13,7 @@ type Vehicle struct {
 	RentACarCompanyID uint
 	Reservations      []*RentACarReservation `gorm:"many2many:vehicle_reservations;"`
 	Discount          bool
+	Ratings           []VehicleRating `gorm:"foreignkey:VehicleReferer"`
 }
 
 type VehicleParams struct {
@@ -31,8 +31,19 @@ type FindVehicleParams struct {
 	Type      string
 	PriceLow  float64
 	PriceHigh float64
-	StartDate time.Time
-	EndDate   time.Time
+	StartDate string
+	EndDate   string
+}
+
+type VehicleRating struct {
+	VehicleID     uint
+	ReservationID uint
+	Rating        int
+}
+
+type VehicleRatingsDAO struct {
+	Vehicle Vehicle
+	Rating  int
 }
 
 type Location struct {

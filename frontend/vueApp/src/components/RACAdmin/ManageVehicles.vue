@@ -306,12 +306,12 @@
                 }
                 let ind = false;
                 let number = parseInt(this.editedItem.Capacity);
-                if(isNaN(number)){
+                if(isNaN(number) || number < 0){
                     this.editedItem.Capacity = "";
                     ind = true;
                 }
                 number = parseFloat(this.editedItem.PricePerDay);
-                if(isNaN(number)){
+                if(isNaN(number || number < 0)){
                     this.editedItem.PricePerDay = "";
                     ind = true;
                 }

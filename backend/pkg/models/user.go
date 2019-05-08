@@ -19,6 +19,11 @@ type Profile struct {
 	Phone   string
 }
 
+type ProfileParams struct {
+	OldEmail string
+	Profile
+}
+
 type User struct {
 	gorm.Model
 	Profile
