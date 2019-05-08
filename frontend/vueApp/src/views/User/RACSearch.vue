@@ -39,7 +39,8 @@
         },
         methods: {
             searchVehicles(index){
-                this.$router.push({ path: `/vehiclesSearch/${this.items[index].ID}` })
+                let location = 1;
+                this.$router.push({ path: `/vehiclesSearch/${this.items[index].ID}_${location}` })
             }
         },
         beforeCreate() {

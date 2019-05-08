@@ -25,8 +25,17 @@ type VehicleParams struct {
 	Discount    bool
 }
 
+type VehicleReservationParams struct {
+	VehicleID  uint
+	LocationID uint
+	CompanyID  uint
+	Price      float64
+	StartDate  string
+	EndDate    string
+}
+
 type FindVehicleParams struct {
-	Name      string
+	ID        uint
 	Capacity  uint
 	Type      string
 	PriceLow  float64

@@ -37,12 +37,19 @@ type FlightReservation struct {
 type RentACarReservation struct {
 	gorm.Model
 	Occupation
-	Location  string
-	Vehicles  []*Vehicle      `gorm:"many2many:vehicle_reservations;"`
-	Ratings   []VehicleRating `gorm:"foreignkey:ReservationID"`
-	Price     float64
-	Rating    uint
-	CompanyID uint
+	Location   string
+	Vehicles   []*Vehicle      `gorm:"many2many:vehicle_reservations;"`
+	Ratings    []VehicleRating `gorm:"foreignkey:ReservationID"`
+	Price      float64
+	Rating     uint
+	CompanyID  uint
+	Expiring   bool
+	ExpireTime time.Time
+}
+
+func (r *RentACarReservation) BeforeCreate(scope *gorm.Scope) (err error) {
+	scope.DB().Where("expiring = true and expire_time < ?", time.Now()).Delete(RentACarReservation{})
+	return
 }
 
 type HotelReservation struct {

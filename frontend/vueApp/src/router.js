@@ -172,7 +172,7 @@ export default new Router({
       component: RACSearch
     },
     {
-      path: '/vehiclesSearch/:id',
+      path: '/vehiclesSearch/:id/:locID',
       component: VehiclesSearch
     },
     {
