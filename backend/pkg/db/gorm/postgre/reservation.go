@@ -49,10 +49,9 @@ func (db *Store) ReserveVehicle(params models.VehicleReservationParams) error {
 	reservation.Occupation.Beginning = startDate
 	reservation.Occupation.End = endDate
 
-	reservation.Expiring = true
-
-	if err := db.Create(&reservation).Update("expire_time", reservation.CreatedAt.Add(time.Minute*10)).Error; err != nil {
+	if err := db.Create(&reservation).Error; err != nil {
 		return err
 	}
+
 	return nil
 }

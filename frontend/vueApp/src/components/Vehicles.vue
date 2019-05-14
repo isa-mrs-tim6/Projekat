@@ -76,7 +76,7 @@
                 };
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/reserveVehicle', res)
                     .then(res =>{
-                        alert("Reservation complete. Expires in 10 minutes");
+                        alert("Reservation complete.");
                         this.$router.go();
                     })
             }
