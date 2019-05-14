@@ -10,7 +10,6 @@
 </template>
 
 <script>
-    import ResultGrid from "../components/ResultGrid";
     import axios from "axios";
     import UserNavBar from "../components/UserNavBar";
     import VehiclesSearch from "./VehiclesSearch";
@@ -18,7 +17,7 @@
 
     export default {
         name: "UserCars",
-        components: {RACSearch, VehiclesSearch, UserNavBar, ResultGrid},
+        components: {RACSearch, VehiclesSearch, UserNavBar},
         data() {
             return {
                 items: [],

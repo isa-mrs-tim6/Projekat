@@ -11,7 +11,7 @@
                         <v-flex xs9>
                             <v-layout row>
                                 <v-flex xs8 class="center">
-                                    Name: {{item.Vehicle.Name}}
+                                    {{item.Vehicle.Name}}
                                 </v-flex>
                                 <v-spacer></v-spacer>
                                 <v-flex xs3 style="text-align: right;">
@@ -21,13 +21,23 @@
                             <v-layout row>
                                 <v-flex xs6 class="center">
                                     Type: {{item.Vehicle.Type}}<br/>
-                                    Capacity: {{item.Vehicle.Capacity}}<v-icon large>person</v-icon>
+                                    Capacity: {{item.Vehicle.Capacity}}<v-icon large>person</v-icon><br/>
+                                    Rating: <v-rating
+                                        v-model="item.Rating"
+                                        background-color="indigo lighten-3"
+                                        empty-icon="$vuetify.icons.ratingFull"
+                                        readonly
+                                        half-increments
+                                        color="orange"
+                                        style="display:inline;"
+                                    ></v-rating>
                                 </v-flex>
                                 <v-spacer></v-spacer>
                                 <v-flex xs3 class="center price">
                                     Total:<br/>
                                     <v-icon large>attach_money</v-icon>
                                     {{item.Vehicle.PricePerDay}}
+
                                 </v-flex>
                             </v-layout>
                         </v-flex>
