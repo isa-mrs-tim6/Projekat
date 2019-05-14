@@ -142,7 +142,7 @@ export default new Router({
       component: AirlineRatings
     },
     {
-      path: '/hotelAdmin/finances',
+      path: '/airlineAdmin/finances',
       component: AirlineFinancialReport
     },
     {

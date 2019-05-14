@@ -16,3 +16,13 @@ func (db *Store) UpdateReservationRewards(rewards []models.ReservationReward) {
 		db.Create(v)
 	}
 }
+
+func (db *Store) GetReservationGraphData(id uint) ([]models.ReservationGraphData, error) {
+	var retVal []models.ReservationGraphData
+	if err := db.Table("flight_reservations").Select("flight_reservations.id, flight_reservations.price, flights.departure").
+		Joins("JOIN flights ON flights.id = flight_reservations.flight_id").Where("flights.airline_id = ?",id).Scan(&retVal).
+		Error; err != nil {
+		return nil, err
+	}
+	return retVal, nil
+}

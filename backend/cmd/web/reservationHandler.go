@@ -35,3 +35,24 @@ func (app *Application) UpdateRewards(w http.ResponseWriter, r *http.Request) {
 	}
 	app.Store.UpdateReservationRewards(rewards)
 }
+
+func (app *Application) GetAirlineGraphData(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrive airline admin")
+	}
+	data, err := app.Store.GetReservationGraphData(user.ID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive reservation data")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}

@@ -1,25 +1,25 @@
 <template>
     <div id="main">
         <AirlineAdminNavDrawer></AirlineAdminNavDrawer>
-        <HotelFinance :reservations="Reservations"></HotelFinance>
+        <AirlineFinance :graphData="graphData"></AirlineFinance>
     </div>
 </template>
 
 <script>
     import axios from "axios"
-    import HotelFinance from "../../components/HotelAdmin/HotelFinance";
+    import AirlineFinance from "../../components/AirlineAdmin/AirlineFinance";
     import AirlineAdminNavDrawer from "../../components/AirlineAdmin/AirlineAdminNavDrawer";
 
     export default {
         name: "AirlineFinancialReport",
-        components: {AirlineAdminNavDrawer, HotelFinance},
+        components: {AirlineAdminNavDrawer, AirlineFinance},
         data: () => ({
-            Reservations: [],
+            graphData: [],
         }),
         created(){
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/airline/getAirlineReservations')
+            axios.create({withCredentials: true}).get('http://localhost:8000/api/airline/getGraphData')
                 .then(res => {
-                    this.Reservations = res.data;
+                    this.graphData = res.data;
                 });
         },
         mounted(){
