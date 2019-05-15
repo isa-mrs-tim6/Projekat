@@ -15,7 +15,7 @@ type HotelDBInterface interface {
 
 func (db *Store) GetHotels() ([]models.Hotel, error) {
 	var retVal []models.Hotel
-	if err := db.Set("gorm:auto_preload", true).Find(&retVal).Error; err != nil {
+	if err := db.Find(&retVal).Error; err != nil {
 		return retVal, err
 	}
 	return retVal, nil
@@ -60,6 +60,7 @@ func (db *Store) GetRooms(id uint) ([]models.Room, error) {
 func (db *Store) GetRoomRatings(id uint) ([]models.RoomRatingDAO, error) {
 	var retVal []models.RoomRatingDAO
 	var rooms []models.Room
+	db.LogMode(true)
 	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&rooms).Error; err != nil {
 		return nil, err
 	}
@@ -86,7 +87,8 @@ func (db *Store) GetRoomRatings(id uint) ([]models.RoomRatingDAO, error) {
 
 func (db *Store) GetHotelReservations(id uint) ([]models.HotelReservation, error) {
 	var retVal []models.HotelReservation
-	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&retVal).Error; err != nil {
+	db.LogMode(true)
+	if err := db.Preload("Rooms").Preload("Ratings").Where("hotel_id = ?", id).Find(&retVal).Error; err != nil {
 		return retVal, err
 	}
 	return retVal, nil
@@ -94,7 +96,9 @@ func (db *Store) GetHotelReservations(id uint) ([]models.HotelReservation, error
 
 func (db *Store) AddRooms(id uint, rooms []models.Room) error {
 	var retVal models.Hotel
-	if err := db.Set("gorm:auto_preload", true).First(&retVal, id).Error; err != nil {
+	retVal.ID = id
+	db.LogMode(true)
+	if err := db.Preload("Rooms").Find(&retVal).Error; err != nil {
 		return err
 	}
 	newRooms := append(retVal.Rooms, rooms...)
@@ -138,4 +142,24 @@ func (db *Store) UpdateRoom(room models.Room) error {
 		return err
 	}
 	return nil
+}
+
+func (db *Store) GetHotelFeatures(id uint) ([]models.Feature, error) {
+	var retVal []models.Feature
+	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) AddHotelFeature(feature models.Feature) {
+	db.Create(&feature)
+}
+
+func (db *Store) UpdateHotelFeature(feature models.Feature) {
+	db.Model(&feature).Where("id = ?", feature.ID).Update(feature)
+}
+
+func (db *Store) DeleteHotelFeature(feature models.Feature) {
+	db.Where("id = ?", feature.ID).Delete(&feature)
 }

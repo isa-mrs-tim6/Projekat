@@ -8,8 +8,6 @@ type Room struct {
 	Price        float64
 	Capacity     uint
 	HotelID      uint
-	Reservations []*HotelReservation `gorm:"many2many:room_reservations;"`
-	Ratings      []RoomRating        `gorm:"foreignkey:RoomReferer"`
 	QuickReserve bool
 }
 
@@ -28,6 +26,8 @@ type Feature struct {
 	gorm.Model
 	Price       float64
 	Description string
+	Name        string
+	Icon        string
 	HotelID     uint
 }
 
@@ -42,6 +42,4 @@ type Hotel struct {
 	HotelProfile
 	Rooms        []Room             `gorm:"foreignkey:HotelID"`
 	Features     []Feature          `gorm:"foreignkey:HotelID"`
-	Admins       []*HotelAdmin      `gorm:"foreignkey:HotelID"`
-	Reservations []HotelReservation `gorm:"foreignkey:HotelID"`
 }

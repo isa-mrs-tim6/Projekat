@@ -218,3 +218,92 @@ func (app *Application) UpdateRoom(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
+
+func (app *Application) GetHotelFeatures(w http.ResponseWriter, r *http.Request) {
+	var hotelID uint
+	if getAccountType(r) == "HotelAdmin" {
+		// The request came from a hotel admin
+		// No hotel ID was sent as request payload
+		email := getEmail(r)
+		user, err := app.Store.GetHotelAdmin(email)
+		if err != nil {
+			app.ErrorLog.Printf("Could not retrive hotel admin")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		hotelID = user.HotelID
+	} else {
+		// The request came from a regular user
+		// Hotel ID was sent as request payload
+		err := json.NewDecoder(r.Body).Decode(&hotelID)
+		if err != nil {
+			app.ErrorLog.Println("Could not decode JSON")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	}
+
+	features, err := app.Store.GetHotelFeatures(hotelID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive hotel features")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(features)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode hotel features into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) AddHotelFeature(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetHotelAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive hotel admin")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var feature models.Feature
+	if err := json.NewDecoder(r.Body).Decode(&feature); err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if feature.Price < 0 {
+		app.ErrorLog.Println("Invalid request")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	feature.HotelID = user.HotelID
+
+	app.Store.AddHotelFeature(feature)
+}
+
+func (app *Application) UpdateHotelFeature(w http.ResponseWriter, r *http.Request) {
+	var feature models.Feature
+	if err := json.NewDecoder(r.Body).Decode(&feature); err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if feature.Price < 0 {
+		app.ErrorLog.Println("Invalid request")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	app.Store.UpdateHotelFeature(feature)
+}
+
+func (app *Application) DeleteHotelFeature(w http.ResponseWriter, r *http.Request) {
+	var feature models.Feature
+	if err := json.NewDecoder(r.Body).Decode(&feature); err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	app.Store.DeleteHotelFeature(feature)
+}

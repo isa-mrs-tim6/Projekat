@@ -19,6 +19,7 @@ import HotelAdminProfile from "./views/HotelAdmin/HotelAdminProfile";
 import HotelRooms from "./views/HotelAdmin/HotelRooms";
 import HotelProfile from "./views/HotelAdmin/HotelProfile";
 import HotelRatingsReport from "./views/HotelAdmin/HotelRatingsReport";
+import HotelFeatures from "./views/HotelAdmin/HotelFeatures"
 import SystemAdminAccounts from "./views/SystemAdmin/SystemAdminAccounts";
 import SystemAdminAirlines from "./views/SystemAdmin/SystemAdminAirlines";
 import SystemAdminHotels from "./views/SystemAdmin/SystemAdminHotels";
@@ -35,6 +36,9 @@ import FlightSearchResults from "./views/User/FlightSearchResults";
 import UserProfile from "./components/UserProfile";
 import AirlineRatings from "./views/AirlineAdmin/AirlineRatingsReport";
 import AirlineFinancialReport from "./views/AirlineAdmin/AirlineFinancialReport";
+import RACRatingsReport from "./views/RACAdmin/RACRatingsReport";
+import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
+import RACSearch from "./views/User/RACSearch";
 
 Vue.use(Router);
 
@@ -84,6 +88,10 @@ export default new Router({
     {
       path: '/hotelAdmin/finances',
       component: HotelFinancialReport
+    },
+    {
+      path: '/hotelAdmin/features',
+      component: HotelFeatures
     },
     {
       path: '/hotelAdmin/rooms',
@@ -162,7 +170,19 @@ export default new Router({
       component: RACVehicles
     },
     {
-      path: '/vehiclesSearch/:id',
+      path: '/racAdmin/ratings',
+      component: RACRatingsReport
+    },
+    {
+      path: '/racAdmin/finances',
+      component: RACFinancialReport
+    },
+    {
+      path: '/racSearch',
+      component: RACSearch
+    },
+    {
+      path: '/vehiclesSearch/:id/:locID',
       component: VehiclesSearch
     },
     {

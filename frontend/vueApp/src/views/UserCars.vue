@@ -3,22 +3,21 @@
         <UserNavBar></UserNavBar>
         <v-layout justify-center style="margin-top: 150px">
             <v-flex xs9 style="height: 100%;">
-                <VehiclesSearch v-bind:isLogIn="isLogIn"></VehiclesSearch>
-                <ResultGrid v-bind:items="items" v-bind:title="title"></ResultGrid>
+                <RACSearch></RACSearch>
             </v-flex>
         </v-layout>
     </div>
 </template>
 
 <script>
-    import ResultGrid from "../components/ResultGrid";
     import axios from "axios";
     import UserNavBar from "../components/UserNavBar";
     import VehiclesSearch from "./VehiclesSearch";
+    import RACSearch from "./User/RACSearch";
 
     export default {
         name: "UserCars",
-        components: {VehiclesSearch, UserNavBar, ResultGrid},
+        components: {RACSearch, VehiclesSearch, UserNavBar},
         data() {
             return {
                 items: [],

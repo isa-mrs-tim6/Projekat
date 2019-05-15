@@ -3,6 +3,7 @@ package postgre
 import (
 	"errors"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
+	"math"
 	"strconv"
 	"time"
 )
@@ -27,6 +28,41 @@ func (db *Store) CreateRentACarCompany(rac *models.RentACarCompany) error {
 		return err
 	}
 	return nil
+}
+
+func (db *Store) GetRACReservations(id uint) ([]models.RentACarReservation, error) {
+	var retVal []models.RentACarReservation
+	if err := db.Set("gorm:auto_preload", true).Where("company_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) GetVehicleRatings(id uint) ([]models.VehicleRatingsDAO, error) {
+	var retVal []models.VehicleRatingsDAO
+	var vehicles []models.Vehicle
+	if err := db.Set("gorm:auto_preload", true).Where("rent_a_car_company_id = ?", id).Find(&vehicles).Error; err != nil {
+		return nil, err
+	}
+
+	for _, v := range vehicles {
+		var reservations []models.RentACarReservation
+		if err := db.Where("vehicle_id = ?", v.ID).Find(&reservations).Error; err != nil {
+			return nil, err
+		}
+		sumRating := 0
+		lenRating := 1
+		if len(reservations) > 0 {
+			lenRating = len(reservations)
+		}
+
+		for _, res := range reservations {
+			sumRating += int(res.VehicleRating)
+		}
+		retVal = append(retVal, models.VehicleRatingsDAO{Vehicle: v, Rating: sumRating / lenRating})
+	}
+
+	return retVal, nil
 }
 
 func (db *Store) GetRentACarCompanyProfile(id uint) (models.RentACarCompanyProfile, error) {
@@ -56,9 +92,9 @@ func (db *Store) UpdateRentACarCompanyProfile(id uint, newProfile models.RentACa
 	return nil
 }
 
-func (db *Store) FindVehicles(params models.FindVehicleParams) ([]models.Vehicle, error) {
+func (db *Store) FindVehicles(params models.FindVehicleParams) ([]models.VehicleRatingsDAO, error) {
 	var retVal []models.Vehicle
-	var vehicles []models.Vehicle
+	var vehicles []models.VehicleRatingsDAO
 
 	start, _ := strconv.ParseInt(params.StartDate, 10, 64)
 	end, _ := strconv.ParseInt(params.EndDate, 10, 64)
@@ -67,7 +103,7 @@ func (db *Store) FindVehicles(params models.FindVehicleParams) ([]models.Vehicle
 	endDate := time.Unix(0, end*int64(time.Millisecond))
 
 	if err := db.Set("gorm:auto_preload", true).
-		Where("name ILIKE ?", "%"+params.Name+"%").
+		Where("rent_a_car_company_id = ?", params.ID).
 		Where("type ILIKE ?", "%"+params.Type+"%").
 		Where("capacity >= ?", params.Capacity).
 		Where("price_per_day BETWEEN ? and ?", params.PriceLow, params.PriceHigh).
@@ -77,7 +113,11 @@ func (db *Store) FindVehicles(params models.FindVehicleParams) ([]models.Vehicle
 
 	for _, vehicle := range retVal {
 		taken := false
-		for _, res := range vehicle.Reservations {
+		var reservations []models.RentACarReservation
+		if err := db.Where("vehicle_id = ?", vehicle.ID).Find(&reservations).Error; err != nil {
+			return nil, err
+		}
+		for _, res := range reservations {
 			if !(res.Occupation.Beginning.After(endDate) ||
 				res.Occupation.End.Before(startDate)) {
 				taken = true
@@ -85,7 +125,21 @@ func (db *Store) FindVehicles(params models.FindVehicleParams) ([]models.Vehicle
 			}
 		}
 		if !taken {
-			vehicles = append(vehicles, vehicle)
+			var ratings []models.VehicleRating
+			if err := db.Where("vehicle_id = ?", vehicle.ID).Find(&ratings).Error; err != nil {
+				return nil, err
+			}
+			sumRating := 0
+			lenRating := 1
+			if len(ratings) > 0 {
+				lenRating = len(ratings)
+			}
+
+			for _, rating := range ratings {
+				sumRating += rating.Rating
+			}
+			vehicle.PricePerDay *= math.Ceil(endDate.Sub(startDate).Hours() / 24.0)
+			vehicles = append(vehicles, models.VehicleRatingsDAO{Vehicle: vehicle, Rating: sumRating / lenRating})
 		}
 	}
 

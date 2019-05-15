@@ -45,6 +45,15 @@ type Layovers struct {
 	FlightID uint
 }
 
+type FeatureAirline struct {
+	gorm.Model
+	Price       float64
+	Description string
+	Name        string
+	Icon        string
+	AirlineID     uint
+}
+
 type Flight struct {
 	gorm.Model
 	Origin                     *Destination
@@ -61,7 +70,6 @@ type Flight struct {
 	Ratings      []FlightRating
 	AirplaneID                 uint
 	AirlineID                  uint
-	Reservations               []FlightReservation `gorm:"foreignkey:FlightID"`
 }
 
 type FlightRating struct {
@@ -110,4 +118,5 @@ type Airline struct {
 	Airplanes    []Airplane      `gorm:"foreignkey:AirlineID"`
 	Admins       []*AirlineAdmin `gorm:"foreignkey:AirlineID"`
 	Destinations []Destination   `gorm:"foreignkey:AirlineID"`
+	AirlineFeatures     []FeatureAirline       `gorm:"foreignkey:AirlineID"`
 }
