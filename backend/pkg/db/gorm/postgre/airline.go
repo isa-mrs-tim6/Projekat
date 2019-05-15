@@ -39,3 +39,40 @@ func (db *Store) UpdateAirline(id uint, newProfile models.AirlineProfile) error 
 	}
 	return nil
 }
+
+func (db *Store) GetFlightRatings(id uint) ([]models.FlightRatingDAO, error) {
+	var retVal []models.FlightRatingDAO
+	var flights []models.Flight
+	if err := db.Set("gorm:auto_preload", true).Where("airline_id = ?", id).Find(&flights).Error; err != nil {
+		return nil, err
+	}
+
+	for _, flight := range flights {
+		var reservations []models.FlightReservation
+		if err := db.Where("flight_id = ?", flight.ID).Find(&reservations).Error; err != nil {
+			return nil, err
+		}
+		sumRating := 0
+		lenRating := 1
+		if len(reservations) > 0 {
+			lenRating = len(reservations)
+		}
+
+		for _, reservation := range reservations {
+			sumRating += int(reservation.FlightRating)
+		}
+		retVal = append(retVal, models.FlightRatingDAO{Flight: flight, Rating: sumRating / lenRating})
+	}
+
+	return retVal, nil
+}
+
+func (db *Store) GetAirlineReservations(id uint) ([]models.FlightReservation, error) {
+	var retVal []models.FlightReservation
+	if err := db.Set("gorm:auto_preload", true).
+		Joins("JOIN flights on flight_reservations.flight_id=flights.id").
+		Where("airline_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}

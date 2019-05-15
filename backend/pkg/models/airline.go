@@ -67,8 +67,20 @@ type Flight struct {
 	PriceList
 	Layovers                   []Layovers `gorm:"foreignkey:FlightID"`
 	Airplane                   Airplane `gorm:"foreignkey:AirplaneID"`
+	Ratings      []FlightRating
 	AirplaneID                 uint
 	AirlineID                  uint
+}
+
+type FlightRating struct {
+	FlightID        uint
+	ReservationID uint
+	Rating        int
+}
+
+type FlightRatingDAO struct {
+	Flight   Flight
+	Rating int
 }
 
 type LayoverDto struct {

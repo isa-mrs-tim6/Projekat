@@ -34,6 +34,8 @@ import SystemAdminReservationRewards from "./views/SystemAdmin/SystemAdminReserv
 import FlightSearch from "./components/User/FlightSearch";
 import FlightSearchResults from "./views/User/FlightSearchResults";
 import UserProfile from "./components/UserProfile";
+import AirlineRatings from "./views/AirlineAdmin/AirlineRatingsReport";
+import AirlineFinancialReport from "./views/AirlineAdmin/AirlineFinancialReport";
 import RACRatingsReport from "./views/RACAdmin/RACRatingsReport";
 import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
 import RACSearch from "./views/User/RACSearch";
@@ -142,6 +144,14 @@ export default new Router({
     {
       path: '/airlineAdmin/admin_profile',
       component: AirlineAdminProfile
+    },
+    {
+      path: '/airlineAdmin/ratings',
+      component: AirlineRatings
+    },
+    {
+      path: '/airlineAdmin/finances',
+      component: AirlineFinancialReport
     },
     {
       path: '/racAdmin/admin_profile',

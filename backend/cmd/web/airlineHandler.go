@@ -82,3 +82,47 @@ func (app *Application) UpdateAirlineProfile(w http.ResponseWriter, r *http.Requ
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
+
+func (app *Application) GetFlightRatings(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive airline admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	flights, err := app.Store.GetFlightRatings(user.AirlineID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive flights and their ratings")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(flights)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode flights and their ratings into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetAirlineReservations(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive airline admin")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	reservations, err := app.Store.GetAirlineReservations(user.AirlineID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive airline reservations")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(reservations)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode airline reservations into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}

@@ -15,6 +15,12 @@ type ReservationReward struct {
 	PriceScale     float64
 }
 
+type ReservationGraphData struct{
+	Id uint
+	Departure time.Time
+	Price float64
+}
+
 type Reservation struct {
 	gorm.Model
 	Passenger
