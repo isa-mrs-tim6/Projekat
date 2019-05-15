@@ -58,7 +58,8 @@ func (db *Store) CreateFlight(flight *models.Flight) error {
 
 func (db *Store) GetCompanyFlights(id uint) ([]models.Flight, error) {
 	var retVal []models.Flight
-	if err := db.Set("gorm:auto_preload", true).Where("airline_id = ?", id).Find(&retVal).Error; err != nil {
+	if err := db.Preload("Origin").Preload("Destination").Preload("Airplane").
+		Preload("Airplane.Seats").Where("airline_id = ?", id).Find(&retVal).Error; err != nil {
 		return retVal, err
 	}
 	return retVal, nil

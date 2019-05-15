@@ -17,7 +17,8 @@ type ReservationReward struct {
 
 type Reservation struct {
 	gorm.Model
-	Holders               []*User           `gorm:"many2many:user_reservations;"`
+	Passenger
+	MasterRef uint
 	ReservationFlight     FlightReservation `gorm:"foreignkey:ReservationFlightID"`
 	ReservationFlightID   uint
 	ReservationRentACar   RentACarReservation `gorm:"foreignkey:ReservationRentACarID"`
@@ -28,29 +29,37 @@ type Reservation struct {
 
 type FlightReservation struct {
 	gorm.Model
+	Flight *Flight `gorm:"foreignkey:FlightID"`
 	FlightID uint
-	Seats    []Seat `gorm:"foreignkey:ReservationID"`
+	Seat    *Seat `gorm:"foreignkey:ReservationID"`
 	Price    float64
-	Rating   uint
+	Features     []*FeatureAirline `gorm:"many2many:flight_reservation_feature;"`
+	CompanyRating   uint
+	FlightRating uint
 }
 
 type RentACarReservation struct {
 	gorm.Model
 	Occupation
 	Location  string
-	Vehicles  []*Vehicle      `gorm:"many2many:vehicle_reservations;"`
-	Ratings   []VehicleRating `gorm:"foreignkey:ReservationID"`
-	Price     float64
-	Rating    uint
+	RentACarCompany RentACarCompany `gorm:"foreignkey:CompanyID"`
 	CompanyID uint
+	Vehicle  Vehicle `gorm:"foreignkey:VehicleID"`
+	VehicleID uint
+	Price    float64
+	CompanyRating   uint
+	VehicleRating uint
 }
 
 type HotelReservation struct {
 	gorm.Model
 	Occupation
+	Hotel Hotel `gorm:"foreignkey:HotelID"`
 	HotelID     uint
 	Rooms       []Room       `gorm:"many2many:room_reservations;"`
 	Ratings     []RoomRating `gorm:"foreignkey:ReservationID"`
+	Features     []*Feature `gorm:"many2many:room_reservation_feature;"`
 	HotelRating uint
 	Price       float64
+	CompanyRating   uint
 }

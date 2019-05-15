@@ -36,7 +36,7 @@ func (db *Store) ReserveVehicle(params models.VehicleReservationParams) error {
 		return err
 	}
 
-	reservation.Vehicles = append(reservation.Vehicles, &vehicle)
+	reservation.Vehicle = vehicle
 	reservation.Price = params.Price
 	reservation.Location = location.Address.Address
 

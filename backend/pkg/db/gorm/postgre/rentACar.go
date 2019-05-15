@@ -46,18 +46,18 @@ func (db *Store) GetVehicleRatings(id uint) ([]models.VehicleRatingsDAO, error) 
 	}
 
 	for _, v := range vehicles {
-		var ratings []models.VehicleRating
-		if err := db.Where("vehicle_id = ?", v.ID).Find(&ratings).Error; err != nil {
+		var reservations []models.RentACarReservation
+		if err := db.Where("vehicle_id = ?", v.ID).Find(&reservations).Error; err != nil {
 			return nil, err
 		}
 		sumRating := 0
 		lenRating := 1
-		if len(ratings) > 0 {
-			lenRating = len(ratings)
+		if len(reservations) > 0 {
+			lenRating = len(reservations)
 		}
 
-		for _, rating := range ratings {
-			sumRating += rating.Rating
+		for _, res := range reservations {
+			sumRating += int(res.VehicleRating)
 		}
 		retVal = append(retVal, models.VehicleRatingsDAO{Vehicle: v, Rating: sumRating / lenRating})
 	}
@@ -113,7 +113,11 @@ func (db *Store) FindVehicles(params models.FindVehicleParams) ([]models.Vehicle
 
 	for _, vehicle := range retVal {
 		taken := false
-		for _, res := range vehicle.Reservations {
+		var reservations []models.RentACarReservation
+		if err := db.Where("vehicle_id = ?", vehicle.ID).Find(&reservations).Error; err != nil {
+			return nil, err
+		}
+		for _, res := range reservations {
 			if !(res.Occupation.Beginning.After(endDate) ||
 				res.Occupation.End.Before(startDate)) {
 				taken = true
