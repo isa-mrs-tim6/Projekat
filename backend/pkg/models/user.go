@@ -10,6 +10,12 @@ type Credentials struct {
 type UserInfo struct {
 	Name    string
 	Surname string
+	Passport string
+}
+
+type Passenger struct {
+	UserID uint
+	UserInfo
 }
 
 type Profile struct {
@@ -28,7 +34,7 @@ type User struct {
 	gorm.Model
 	Profile
 	RegistrationComplete bool
-	Reservations         []*Reservation `gorm:"many2many:user_reservations;"`
+	Reservations         []*Reservation `gorm:"foreignkey:UserID"`
 }
 
 type AirlineAdmin struct {
