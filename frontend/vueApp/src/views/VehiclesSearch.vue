@@ -2,28 +2,20 @@
     <v-container fluid pa-0>
         <v-layout row>
             <v-card dark style="width: 100%;">
+                <v-card-title>
+                    <h2>Search Vehicles:</h2>
+                </v-card-title>
                 <v-card-text>
                     <form>
                         <v-layout>
-                            <v-flex xs3>
-                                <v-text-field
-                                        v-model="Name"
-                                        label="Name"
-                                        required
-                                ></v-text-field>
-                            </v-flex>
-                            <v-spacer></v-spacer>
-                            <v-flex xs1>
+                            <v-flex xs2 ma-1>
                                 <v-text-field
                                         v-model="Capacity"
                                         label="Capacity"
                                         type="number"
                                         :min="0"
                                         required
-                                >0</v-text-field>
-                            </v-flex>
-                            <v-spacer></v-spacer>
-                            <v-flex xs2>
+                                ></v-text-field>
                                 <v-text-field
                                         v-model="Type"
                                         label="Type"
@@ -31,7 +23,7 @@
                                 ></v-text-field>
                             </v-flex>
                             <v-spacer></v-spacer>
-                            <v-flex xs2>
+                            <v-flex xs2 ma-1>
                                 <v-menu v-model="menuStart" :close-on-content-click="false" lazy transition="scale-transition"
                                         offset-y full-width max-width="290px" min-width="290px">
                                     <template v-slot:activator="{ on }">
@@ -39,9 +31,6 @@
                                     </template>
                                     <v-date-picker v-model="StartDate" no-title scrollable @input="menuStart = false"></v-date-picker>
                                 </v-menu>
-                            </v-flex>
-                            <v-spacer></v-spacer>
-                            <v-flex xs2>
                                 <v-menu v-model="menuEnd" :close-on-content-click="false" lazy transition="scale-transition"
                                         offset-y full-width max-width="290px" min-width="290px">
                                     <template v-slot:activator="{ on }">
@@ -50,45 +39,49 @@
                                     <v-date-picker v-model="EndDate" no-title scrollable @input="menuEnd = false"></v-date-picker>
                                 </v-menu>
                             </v-flex>
-                            <v-flex xs1>
-                                <v-btn @click="findVehicles">submit</v-btn>
+                            <v-spacer></v-spacer>
+                            <v-flex xs7 ma-1>
+                                <v-layout row>
+                                    <v-subheader style="padding-top: 12px">Price Per Day: </v-subheader>
+                                    <v-flex shrink style="width: 60px">
+                                        <v-text-field
+                                                v-model="Price[0]"
+                                                class="mt-0"
+                                                hide-details
+                                                single-line
+                                                type="number"
+                                        ></v-text-field>
+                                    </v-flex>
+                                    <v-flex class="px-3">
+                                        <v-range-slider
+                                                v-model="Price"
+                                                :max="200"
+                                                :min="0"
+                                                :step="1"
+                                                value="Price range"
+                                        ></v-range-slider>
+                                    </v-flex>
+                                    <v-flex shrink style="width: 60px">
+                                        <v-text-field
+                                                v-model="Price[1]"
+                                                class="mt-0"
+                                                hide-details
+                                                single-line
+                                                type="number"
+                                        ></v-text-field>
+                                    </v-flex>
+                                </v-layout>
+                            </v-flex>
+                            <v-flex xs1 ma-1>
+                                <v-btn @click="findVehicles">search</v-btn>
                             </v-flex>
                         </v-layout>
                     </form>
-                    <v-layout row>
-                        <v-subheader style="padding-top: 12px">Price Range: </v-subheader>
-                        <v-flex shrink style="width: 60px">
-                            <v-text-field
-                                    v-model="Price[0]"
-                                    class="mt-0"
-                                    hide-details
-                                    single-line
-                                    type="number"
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex class="px-3">
-                            <v-range-slider
-                                    v-model="Price"
-                                    :max="200"
-                                    :min="0"
-                                    :step="1"
-                                    value="Price range"
-                            ></v-range-slider>
-                        </v-flex>
-                        <v-flex shrink style="width: 60px">
-                            <v-text-field
-                                    v-model="Price[1]"
-                                    class="mt-0"
-                                    hide-details
-                                    single-line
-                                    type="number"
-                            ></v-text-field>
-                        </v-flex>
-                    </v-layout>
                 </v-card-text>
             </v-card>
         </v-layout>
-        <Vehicles v-bind:vehicles="vehicles"/>
+        <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
+        <Vehicles v-bind:vehicles="vehicles" v-bind:startDate="StartUnix" v-bind:endDate="EndUnix"/>
     </v-container>
 </template>
 
@@ -102,8 +95,9 @@
         components: {Vehicles},
         data() {
             return {
+                ErrorSnackbar: false,
+                ErrorSnackbarText: '',
                 vehicles: [],
-                Name: '',
                 Capacity: 0,
                 Type: '',
                 Price: [0, 200],
@@ -116,6 +110,8 @@
                 rules: {
                     required: value => !!value || 'Required.'
                 },
+                StartUnix: '',
+                EndUnix: ''
             }
         },
         methods: {
@@ -123,24 +119,22 @@
                 e.preventDefault();
                 let start;
                 let end;
-                if(this.StartDate === ''){
-                    start = "0";
-                }else{
-                    start = moment(this.StartDate).valueOf().toString();
+                if(this.StartDate === '' || this.EndDate === ''){
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Please fill start and end date';
+                    return;
                 }
-                if(this.StartDate === ''){
-                    end = "0";
-                }else{
-                    end = moment(this.EndDate).valueOf().toString();
-                }
+                this.StartUnix = moment(this.StartDate).valueOf().toString();
+                this.EndUnix = moment(this.EndDate).valueOf().toString();
+
                 const vehicleParams = {
-                    'Name': this.Name,
+                    'ID': parseInt(this.$route.params.id),
                     'Capacity': parseInt(this.Capacity),
                     'Type': this.Type,
                     'PriceLow': this.Price[0],
                     'PriceHigh': this.Price[1],
-                    'StartDate': start,
-                    'EndDate': end
+                    'StartDate': this.StartUnix,
+                    'EndDate': this.EndUnix
                 };
                 this.clear();
                 axios.post('http://localhost:8000/api/rentACarCompany/findVehicles', vehicleParams)

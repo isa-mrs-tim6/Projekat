@@ -36,6 +36,7 @@ import FlightSearchResults from "./views/User/FlightSearchResults";
 import UserProfile from "./components/UserProfile";
 import RACRatingsReport from "./views/RACAdmin/RACRatingsReport";
 import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
+import RACSearch from "./views/User/RACSearch";
 
 Vue.use(Router);
 
@@ -167,7 +168,11 @@ export default new Router({
       component: RACFinancialReport
     },
     {
-      path: '/vehiclesSearch/:id',
+      path: '/racSearch',
+      component: RACSearch
+    },
+    {
+      path: '/vehiclesSearch/:id/:locID',
       component: VehiclesSearch
     },
     {
