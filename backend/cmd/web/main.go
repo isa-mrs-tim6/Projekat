@@ -153,6 +153,7 @@ func (app *Application) Routes() *mux.Router {
 	//SEARCH API
 	router.HandleFunc("/api/search/oneWay", app.OneWaySearch).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/search/multi", app.MultiSearch).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/search/hotels", app.HotelSearch).Methods("POST", "OPTIONS")
 
 	// STATIC FILE HANDLER
 	staticFileDirectory := http.Dir("./ui/")
