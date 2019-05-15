@@ -3,7 +3,7 @@
         <UserNavBar></UserNavBar>
         <v-layout justify-center style="margin-top: 200px">
             <v-flex xs9 style="height: 100%;">
-                <HotelSearch/>
+                <HotelSearch v-on:search="search"/>
                 <ResultGrid v-bind:items="items" v-bind:title="title" style="margin-top: 150px"></ResultGrid>
             </v-flex>
         </v-layout>
@@ -26,11 +26,12 @@
                 isLogIn: false,
             }
         },
-        beforeCreate() {
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/hotel/getHotels")
-                .then(res =>{
-                    this.items = res.data;
-                })
+        methods: {
+            search: function(query) {
+                axios.post('http://localhost:8000/api/search/hotels', query)
+                    .then(res => this.items = res.data)
+                    .catch(err => alert(err));
+            }
         }
     }
 </script>

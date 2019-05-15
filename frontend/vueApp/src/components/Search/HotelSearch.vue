@@ -16,7 +16,7 @@
                         <v-text-field label="Price per night" prepend-icon="euro_symbol" v-model="query.price"></v-text-field>
                     </v-flex>
                     <v-flex xs2>
-                        <v-btn>Search</v-btn>
+                        <v-btn @click="search">Search</v-btn>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -35,6 +35,20 @@
                     capacity: null,
                     price: null,
                 }
+            }
+        },
+        methods: {
+            search(e) {
+                e.preventDefault();
+                const SearchQuery = {
+                    "Name": this.query.name,
+                    "Address": this.query.address,
+                    "RoomCapacityDownLimit": 0,
+                    "RoomCapacityUpLimit": parseInt(this.query.capacity),
+                    "RoomPriceDownLimit": 0,
+                    "RoomPriceUpLimit": parseFloat(this.query.price),
+                };
+                this.$emit('search', SearchQuery)
             }
         }
     }
