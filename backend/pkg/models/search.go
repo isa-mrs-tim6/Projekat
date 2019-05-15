@@ -18,8 +18,10 @@ type OneWayQuery struct {
 }
 
 type HotelQuery struct {
-	Name         string
-	Address      string
-	RoomCapacity string
-	RoomPrice    float64
+	Name                  string
+	Address               string
+	RoomCapacityDownLimit uint
+	RoomCapacityUpLimit   uint
+	RoomPriceDownLimit    float64
+	RoomPriceUpLimit      float64
 }
