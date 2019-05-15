@@ -48,18 +48,18 @@ func (db *Store) GetFlightRatings(id uint) ([]models.FlightRatingDAO, error) {
 	}
 
 	for _, flight := range flights {
-		var ratings []models.FlightReservation
-		if err := db.Where("flight_id = ?", flight.ID).Find(&ratings).Error; err != nil {
+		var reservations []models.FlightReservation
+		if err := db.Where("flight_id = ?", flight.ID).Find(&reservations).Error; err != nil {
 			return nil, err
 		}
 		sumRating := 0
 		lenRating := 1
-		if len(ratings) > 0 {
-			lenRating = len(ratings)
+		if len(reservations) > 0 {
+			lenRating = len(reservations)
 		}
 
-		for _, rating := range ratings {
-			sumRating += int(rating.Rating)
+		for _, reservation := range reservations {
+			sumRating += int(reservation.FlightRating)
 		}
 		retVal = append(retVal, models.FlightRatingDAO{Flight: flight, Rating: sumRating / lenRating})
 	}

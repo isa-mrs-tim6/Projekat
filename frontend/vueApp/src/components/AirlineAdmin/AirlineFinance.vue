@@ -198,16 +198,23 @@
                 if (!moment(this.time.from).isValid() || !moment(this.time.to).isValid()) {
                     return;
                 }
-                let dateFrom = moment(this.time.from).startOf("month");
-                const dateTo = moment(this.time.to).endOf("month");
+                let dateFrom = moment(this.time.from);
+                let dateFromIncrement = moment(this.time.from).startOf("month");
+                const dateTo = moment(this.time.to).endOf("day");
 
-                while (dateFrom.isSameOrBefore(dateTo)) {
-                    this.monthlyDictTickets.set(monthNames[dateFrom.month()] + ", " + dateFrom.year(), 0);
-                    this.monthlyDictFinances.set(monthNames[dateFrom.month()] + ", " + dateFrom.year(), 0);
-                    dateFrom.add(1, 'months');
+                while (dateFromIncrement.isSameOrBefore(dateTo)) {
+                    this.monthlyDictTickets.set(monthNames[dateFromIncrement.month()] + ", " + dateFromIncrement.year(), 0);
+                    this.monthlyDictFinances.set(monthNames[dateFromIncrement.month()] + ", " + dateFromIncrement.year(), 0);
+                    dateFromIncrement.add(1, 'months');
                 }
 
                 for (let i = 0; i < this.graphData.length; i++) {
+                    if(moment(this.graphData[i].Departure).isBefore(dateFrom)){
+                        continue
+                    }
+                    if(moment(this.graphData[i].Departure).isAfter(dateTo)){
+                        continue
+                    }
                     const key = monthNames[moment(this.graphData[i].Departure).month()] + ", " + moment(this.graphData[i].Departure).year();
                     if (this.monthlyDictTickets.has(key)) {
                         this.monthlyDictTickets.set(key, this.monthlyDictTickets.get(key) + 1);

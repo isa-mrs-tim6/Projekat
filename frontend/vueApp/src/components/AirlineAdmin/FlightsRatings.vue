@@ -33,10 +33,10 @@
         data() {
             return {
                 headers: [
-                    { text: 'From', value: 'From', align: 'center', width: '50%' },
-                    { text: 'To', value: 'To', align: 'center', width: '50%' },
-                    { text: 'Date', value: 'Date', align: 'center', width: '50%' },
-                    { text: 'Rating', value: 'Rating', align: 'center', width: '50%' },
+                    { text: 'From', value: 'From', align: 'center', width: '20%' },
+                    { text: 'To', value: 'To', align: 'center', width: '20%' },
+                    { text: 'Date', value: 'Date', align: 'center', width: '20%' },
+                    { text: 'Rating', value: 'Rating', align: 'center', width: '40%' },
                 ],
             }
         },

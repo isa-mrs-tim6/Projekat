@@ -35,7 +35,7 @@
                 .then(res => {
                     this.Reservations = res.data;
                     for (let i = 0; i < this.Reservations.length; i++) {
-                        this.Rating += this.Reservations[i].Rating;
+                        this.Rating += this.Reservations[i].CompanyRating;
                     }
                     if (this.Reservations.length > 0) {
                         this.Rating /= this.Reservations.length;

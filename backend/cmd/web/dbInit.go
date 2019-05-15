@@ -641,7 +641,7 @@ func addModels(db *gorm.DB) {
 			Price: 250,
 			Seat: &airline.Flights[2].Airplane.Seats[1],
 			Flight: &airline.Flights[2],
-			FlightRating: 2,
+			FlightRating: 3,
 			CompanyRating: 3,
 			Features: []*models.FeatureAirline {
 				&airline2.AirlineFeatures[0],
@@ -679,7 +679,7 @@ func addModels(db *gorm.DB) {
 			Price: 250,
 			Seat: &airline.Flights[2].Airplane.Seats[4],
 			Flight: &airline.Flights[2],
-			FlightRating: 2,
+			FlightRating: 5,
 			CompanyRating: 3,
 			Features: []*models.FeatureAirline {
 				&airline.AirlineFeatures[0],
@@ -699,51 +699,55 @@ func addModels(db *gorm.DB) {
 			VehicleRating: 4,
 		},
 	}
-	//
-	//reservation4 := models.Reservation{
-	//	Holders: []*models.User{
-	//		&user4,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price: 250,
-	//		Seats: []models.Seat{
-	//			airline2.Flights[0].Airplane.Seats[1],
-	//		},
-	//		FlightID: airline2.Flights[1].ID,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:    70,
-	//		Location: rentACarCompany2.Locations[0].Address.Address,
-	//		Vehicles: []*models.Vehicle{
-	//			&rentACarCompany2.Vehicles[0],
-	//		},
-	//		Ratings: []models.VehicleRating{
-	//			{Rating: 3, VehicleID: rentACarCompany2.Vehicles[0].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		CompanyID: rentACarCompany2.ID,
-	//		Rating:    5,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 180,
-	//		Rooms: []models.Room{
-	//			hotel.Rooms[0],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 4, RoomID: hotel.Rooms[0].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 5, 3, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 5, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		HotelID:     hotel.ID,
-	//		HotelRating: 4,
-	//	},
-	//}
-	//
+
+	reservation4 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID: user4.ID,
+			UserInfo: user4.UserInfo,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price: 350,
+			Seat: &airline.Flights[0].Airplane.Seats[4],
+			Flight: &airline.Flights[0],
+			FlightRating: 2,
+			CompanyRating: 5,
+			Features: []*models.FeatureAirline {
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+		},
+		ReservationRentACar: models.RentACarReservation{
+			Price:    70,
+			Location: rentACarCompany2.Locations[0].Address.Address,
+			Vehicle: rentACarCompany2.Vehicles[0],
+			CompanyRating: 3,
+			VehicleRating: 4,
+			Occupation: models.Occupation{
+				Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
+				End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
+			},
+		},
+		ReservationHotel: models.HotelReservation{
+			Price: 180,
+			Rooms: []models.Room{
+				hotel.Rooms[0],
+			},
+			Ratings: []models.RoomRating{
+				{Rating: 4, RoomID: hotel.Rooms[0].ID},
+			},
+			Occupation: models.Occupation{
+				Beginning: time.Date(2019, 5, 3, 0, 0, 0, 0, time.Local),
+				End:       time.Date(2019, 5, 6, 0, 0, 0, 0, time.Local),
+			},
+			HotelID:     hotel.ID,
+			HotelRating: 4,
+			Features: []*models.Feature{
+				&hotel.Features[0],
+				&hotel.Features[1],
+			},
+		},
+	}
+
 	//reservation5 := models.Reservation{
 	//	Holders: []*models.User{
 	//		&user3, &user,
@@ -1017,7 +1021,7 @@ func addModels(db *gorm.DB) {
 	db.Create(&reservation)
 	db.Create(&reservation2)
 	db.Create(&reservation3)
-	//db.Create(&reservation4)
+	db.Create(&reservation4)
 	//db.Create(&reservation5)
 	//db.Create(&reservation6)
 	//db.Create(&reservation7)
