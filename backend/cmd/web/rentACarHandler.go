@@ -90,7 +90,7 @@ func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *h
 
 func (app *Application) FindVehicles(w http.ResponseWriter, r *http.Request) {
 	var params models.FindVehicleParams
-	var vehicles []models.Vehicle
+	var vehicles []models.VehicleRatingsDAO
 
 	err := json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
@@ -119,9 +119,9 @@ func (app *Application) GetCompanyVehicles(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		app.ErrorLog.Println("Could not retrieve rent-a-car admin")
 	}
-	locations, err := app.Store.GetCompanyVehicles(user.RentACarCompanyID)
+	vehicles, err := app.Store.GetCompanyVehicles(user.RentACarCompanyID)
 
-	err = json.NewEncoder(w).Encode(locations)
+	err = json.NewEncoder(w).Encode(vehicles)
 	if err != nil {
 		app.ErrorLog.Println("Cannot encode vehicles into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -137,13 +137,13 @@ func (app *Application) GetVehicleRatings(w http.ResponseWriter, r *http.Request
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	rooms, err := app.Store.GetVehicleRatings(user.RentACarCompanyID)
+	v, err := app.Store.GetVehicleRatings(user.RentACarCompanyID)
 	if err != nil {
 		app.ErrorLog.Printf("Could not retrive vehicles and their ratings")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	err = json.NewEncoder(w).Encode(rooms)
+	err = json.NewEncoder(w).Encode(v)
 	if err != nil {
 		app.ErrorLog.Printf("Cannot encode vehicles and their ratings into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)

@@ -35,3 +35,21 @@ func (app *Application) UpdateRewards(w http.ResponseWriter, r *http.Request) {
 	}
 	app.Store.UpdateReservationRewards(rewards)
 }
+
+func (app *Application) ReserveVehicle(w http.ResponseWriter, r *http.Request) {
+	var params models.VehicleReservationParams
+
+	err := json.NewDecoder(r.Body).Decode(&params)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = app.Store.ReserveVehicle(params)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive vehicles and their ratings")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}

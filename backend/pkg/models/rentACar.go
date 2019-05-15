@@ -11,9 +11,7 @@ type Vehicle struct {
 	Type              string
 	PricePerDay       float64
 	RentACarCompanyID uint
-	Reservations      []*RentACarReservation `gorm:"many2many:vehicle_reservations;"`
 	Discount          bool
-	Ratings           []VehicleRating `gorm:"foreignkey:VehicleReferer"`
 }
 
 type VehicleParams struct {
@@ -25,8 +23,17 @@ type VehicleParams struct {
 	Discount    bool
 }
 
+type VehicleReservationParams struct {
+	VehicleID  uint
+	LocationID uint
+	CompanyID  uint
+	Price      float64
+	StartDate  string
+	EndDate    string
+}
+
 type FindVehicleParams struct {
-	Name      string
+	ID        uint
 	Capacity  uint
 	Type      string
 	PriceLow  float64
@@ -68,5 +75,4 @@ type RentACarCompany struct {
 	RentACarCompanyProfile
 	Vehicles  []Vehicle        `gorm:"foreignkey:RentACarCompanyID"`
 	Locations []Location       `gorm:"foreignkey:RentACarCompanyID"`
-	Admins    []*RentACarAdmin `gorm:"foreignkey:RentACarCompanyID"`
 }
