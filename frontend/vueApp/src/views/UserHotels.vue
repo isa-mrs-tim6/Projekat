@@ -13,7 +13,7 @@
 <script>
     import ResultGrid from "../components/ResultGrid";
     import axios from "axios";
-    import UserNavBar from "../components/UserNavBar";
+    import UserNavBar from "../components/User/UserNavBar";
 
     export default {
         name: "UserHotels",

@@ -37,7 +37,7 @@
 
 <script>
     import axios from 'axios';
-    import UserNavBar from "../components/UserNavBar";
+    import UserNavBar from "../components/User/UserNavBar";
     export default {
         name: "LoginUser",
         components: {UserNavBar},

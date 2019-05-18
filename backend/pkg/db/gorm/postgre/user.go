@@ -33,6 +33,14 @@ func (db *Store) GetUserProfile(email string) (models.Profile, error) {
 	return retVal.Profile, nil
 }
 
+func (db *Store) GetUser(email string) (models.User, error) {
+	var retVal models.User
+	if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
 func (db *Store) GetAirlineAdmin(email string) (models.AirlineAdmin, error) {
 	var retVal models.AirlineAdmin
 	if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {

@@ -33,10 +33,12 @@ import AirlineAdminProfile from "./views/AirlineAdmin/AirlineAdminProfile";
 import SystemAdminReservationRewards from "./views/SystemAdmin/SystemAdminReservationRewards";
 import FlightSearch from "./components/User/FlightSearch";
 import FlightSearchResults from "./views/User/FlightSearchResults";
-import UserProfile from "./components/UserProfile";
+import UserProfile from "./components/User/UserProfile";
 import RACRatingsReport from "./views/RACAdmin/RACRatingsReport";
 import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
 import RACSearch from "./views/User/RACSearch";
+import ShowProfile from "./views/User/ShowProfile";
+import ShowReservations from "./views/User/ShowReservations";
 
 Vue.use(Router);
 
@@ -117,7 +119,11 @@ export default new Router({
     },
     {
       path: "/userProfile",
-      component: UserProfile
+      component: ShowProfile
+    },
+    {
+      path: "/userReservations",
+      component: ShowReservations
     },
     {
       path: '/airlineAdmin/airline_profile',

@@ -53,3 +53,27 @@ func (app *Application) ReserveVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (app *Application) GetUserReservations(w http.ResponseWriter, r *http.Request) {
+	var reservations []models.ReservationDAO
+
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+	}
+
+	reservations, err = app.Store.GetUserReservations(user.ID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive reservations")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(reservations)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode reservations into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
