@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 func (app *Application) GetRewards(w http.ResponseWriter, r *http.Request) {
@@ -54,5 +56,47 @@ func (app *Application) GetAirlineGraphData(w http.ResponseWriter, r *http.Reque
 		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
+	}
+}
+
+func (app *Application) ReserveFlight(w http.ResponseWriter, r *http.Request) {
+	// GET FLIGHT ID
+	vars := mux.Vars(r)
+	flightID, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Could not get flight ID")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// FIND LOGGED USER
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// DECODE QUERY
+	var query models.FlightReservationParams
+	err = json.NewDecoder(r.Body).Decode(&query)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// ADD LOGGED USER TO LIST OF USERS FOR RESERVATION
+	query.Users = append([]models.UserReserveParams{{
+		ID:       user.ID,
+		Email:    user.Email,
+		UserInfo: user.UserInfo,
+	}}, query.Users...)
+
+	err = app.Store.ReserveFlight(flightID, query)
+	if err != nil {
+		app.ErrorLog.Println("Could not complete reservation")
+		w.WriteHeader(http.StatusBadRequest)
 	}
 }

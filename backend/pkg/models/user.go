@@ -8,8 +8,8 @@ type Credentials struct {
 }
 
 type UserInfo struct {
-	Name    string
-	Surname string
+	Name     string
+	Surname  string
 	Passport string
 }
 
@@ -35,6 +35,12 @@ type User struct {
 	Profile
 	RegistrationComplete bool
 	Reservations         []*Reservation `gorm:"foreignkey:UserID"`
+}
+
+type UserReserveParams struct {
+	ID    uint
+	Email string
+	UserInfo
 }
 
 type AirlineAdmin struct {

@@ -43,7 +43,8 @@ func (db *Store) UpdateAirline(id uint, newProfile models.AirlineProfile) error 
 func (db *Store) GetFlightRatings(id uint) ([]models.FlightRatingDAO, error) {
 	var retVal []models.FlightRatingDAO
 	var flights []models.Flight
-	if err := db.Set("gorm:auto_preload", true).Where("airline_id = ?", id).Find(&flights).Error; err != nil {
+	if err := db.Preload("Origin").Preload("Destination").
+		Where("airline_id = ?", id).Find(&flights).Error; err != nil {
 		return nil, err
 	}
 
@@ -69,8 +70,7 @@ func (db *Store) GetFlightRatings(id uint) ([]models.FlightRatingDAO, error) {
 
 func (db *Store) GetAirlineReservations(id uint) ([]models.FlightReservation, error) {
 	var retVal []models.FlightReservation
-	if err := db.Set("gorm:auto_preload", true).
-		Joins("JOIN flights on flight_reservations.flight_id=flights.id").
+	if err := db.Joins("JOIN flights on flight_reservations.flight_id=flights.id").
 		Where("airline_id = ?", id).Find(&retVal).Error; err != nil {
 		return retVal, err
 	}

@@ -1,0 +1,82 @@
+.seat{
+    min-width: 3vw;
+    min-height: 3vw;
+    background-color: beige;
+    margin: 2px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid black;
+    flex-shrink: 1;
+}
+
+.seat:hover{
+    border: 2px solid pink;
+}
+
+.disabled{
+    background-color: darkgrey !important;
+    cursor: not-allowed;
+}
+
+.occupied:after{
+    display:inline-block;
+    position:absolute;
+    font-size: 72px;
+    width:100%;
+    height: 100%;
+    left: -23px;
+    bottom: 3px;
+    content: 'X';
+}
+.occupied{
+    color: red;
+    background-color: darkgrey;
+    position:relative;
+    width: 20px;
+    height: 20px;
+    font-weight: bold;
+    cursor: not-allowed;
+    z-index: -1;
+}
+
+.legendBlock{
+    margin-left: 50px;
+}
+
+.leftOccupied{}
+.leftOccupied:after{
+    left: 0;
+}
+.selected{
+    border: 3px solid pink;
+}
+
+.economic{
+    background-color: #3a78c3;
+}
+.business{
+    background-color: yellow;
+}
+
+.first{
+    background-color: coral;
+}
+.airplane{
+    border: 1px solid black;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    width: auto;
+    display:inline-block;
+    overflow: auto;
+    max-height: 500px;
+    max-width: 1000px;
+    flex-wrap: nowrap
+}
+
+.passage{
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    display: inline-block;
+}
+
