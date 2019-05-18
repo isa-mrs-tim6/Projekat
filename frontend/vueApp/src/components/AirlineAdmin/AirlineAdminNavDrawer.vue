@@ -12,6 +12,8 @@
             {title: 'Add flight', icon: 'flight', route: 'flight_add'},
             {title: 'Edit flight', icon: 'edit', route: 'flight_edit'},
             {title: 'Add destination', icon: 'add_location', route: 'destination_add'},
+            { title: 'Ratings', icon: 'star', route: 'ratings' },
+            { title: 'Finances', icon: 'assessment', route: 'finances' },
             {title: 'Airline profile', icon: 'business', route: 'airline_profile'},
             {title: 'Admin profile', icon: 'portrait', route: 'admin_profile'},
         ]

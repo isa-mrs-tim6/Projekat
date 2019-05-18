@@ -10,7 +10,7 @@ type Seat struct {
 	gorm.Model
 	Number        uint
 	Class         string
-	Disabled bool
+	Disabled      bool
 	AirplaneID    uint
 	ReservationID uint
 	QuickReserve  bool
@@ -19,7 +19,7 @@ type Seat struct {
 type Airplane struct {
 	gorm.Model
 	Name      string
-	RowWidth uint
+	RowWidth  uint
 	Seats     []Seat `gorm:"foreignkey:AirplaneID"`
 	AirlineID uint
 }
@@ -34,8 +34,8 @@ type PriceList struct {
 	PriceECONOMY               float64
 	PriceBUSINESS              float64
 	PriceFIRSTCLASS            float64
-	SmallSuitcase float64
-	BigSuitcase	float64
+	SmallSuitcase              float64
+	BigSuitcase                float64
 	QuickReservationPriceScale float64
 }
 
@@ -51,24 +51,36 @@ type FeatureAirline struct {
 	Description string
 	Name        string
 	Icon        string
-	AirlineID     uint
+	AirlineID   uint
 }
 
 type Flight struct {
 	gorm.Model
-	Origin                     *Destination
-	OriginID                   uint
-	Destination                *Destination
-	DestinationID              uint
-	Departure                  time.Time
-	Landing                    time.Time
-	Duration                   time.Duration
-	Distance                   uint
+	Origin        *Destination
+	OriginID      uint
+	Destination   *Destination
+	DestinationID uint
+	Departure     time.Time
+	Landing       time.Time
+	Duration      time.Duration
+	Distance      uint
 	PriceList
-	Layovers                   []Layovers `gorm:"foreignkey:FlightID"`
-	Airplane                   Airplane `gorm:"foreignkey:AirplaneID"`
-	AirplaneID                 uint
-	AirlineID                  uint
+	Layovers   []Layovers `gorm:"foreignkey:FlightID"`
+	Airplane   Airplane   `gorm:"foreignkey:AirplaneID"`
+	Ratings    []FlightRating
+	AirplaneID uint
+	AirlineID  uint
+}
+
+type FlightRating struct {
+	FlightID      uint
+	ReservationID uint
+	Rating        int
+}
+
+type FlightRatingDAO struct {
+	Flight Flight
+	Rating int
 }
 
 type LayoverDto struct {
@@ -76,7 +88,7 @@ type LayoverDto struct {
 }
 
 type FlightDto struct {
-	FlightID string
+	FlightID        string
 	Origin          string
 	Destination     string
 	Departure       string
@@ -87,10 +99,10 @@ type FlightDto struct {
 	PriceECONOMY    string
 	PriceBUSINESS   string
 	PriceFIRSTCLASS string
-	SmallSuitcase string
-	BigSuitcase	string
+	SmallSuitcase   string
+	BigSuitcase     string
 	Airplane        string
-	AirplaneObject Airplane
+	AirplaneObject  Airplane
 }
 
 type AirlineProfile struct {
@@ -102,9 +114,9 @@ type AirlineProfile struct {
 type Airline struct {
 	gorm.Model
 	AirlineProfile
-	Flights      []Flight        `gorm:"foreignkey:AirlineID"`
-	Airplanes    []Airplane      `gorm:"foreignkey:AirlineID"`
-	Admins       []*AirlineAdmin `gorm:"foreignkey:AirlineID"`
-	Destinations []Destination   `gorm:"foreignkey:AirlineID"`
-	AirlineFeatures     []FeatureAirline       `gorm:"foreignkey:AirlineID"`
+	Flights         []Flight         `gorm:"foreignkey:AirlineID"`
+	Airplanes       []Airplane       `gorm:"foreignkey:AirlineID"`
+	Admins          []*AirlineAdmin  `gorm:"foreignkey:AirlineID"`
+	Destinations    []Destination    `gorm:"foreignkey:AirlineID"`
+	AirlineFeatures []FeatureAirline `gorm:"foreignkey:AirlineID"`
 }
