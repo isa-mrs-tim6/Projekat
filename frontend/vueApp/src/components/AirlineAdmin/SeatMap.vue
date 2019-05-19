@@ -1,9 +1,9 @@
 <template>
     <div class = "airplane">
-        <template v-for="(seat, index) in this.editedSeats.Seats">
-            <v-layout row-wrap v-if="index % editedSeats.RowWidth  === 0">
+        <template style="display:inline-flex; flex-wrap: nowrap" v-for="(seat, index) in this.editedSeats.Seats">
+            <v-layout row v-if="index % editedSeats.RowWidth  === 0">
             </v-layout>
-            <div class="passage" v-if="index % editedSeats.RowWidth === editedSeats.RowWidth / 2"></div>
+            <div class="passage" v-if="index % editedSeats.RowWidth === Math.floor(editedSeats.RowWidth / 2)"></div>
             <div v-if="editedSeats.Seats[index].ReservationID !== 0" class=seat :class="seatClassBinding(index)" :key="index">
                 <span v-if="editedSeats.Seats[index].ReservationID !== 0" class="occupied"></span>
             </div>
@@ -14,14 +14,14 @@
 </template>
 
 <script>
-    import AirlineAdminNavbar from "./AirlineAdminNavbar";
     export default {
         name: "SeatMap",
-        components: {AirlineAdminNavbar},
+        components: {},
         props:['editedSeats','tab'],
         data(){
             return{
-                Flights:[]
+                Flights:[],
+                SelectedSeats:[]
             }
         },
         methods:{
@@ -46,20 +46,51 @@
                             retval = "";
                     }
                 }
-                if (index === this.editedSeats.SelectedSeat){
-                    retval += " selected"
+                if(this.editedSeats.Seats[index].ReservationID !== 0){
+                    retval += " disabled"
                 }
+                if(this.tab === "reservation"){
+                    if (this.SelectedSeats.includes(this.editedSeats.Seats[index])){
+                        retval += "selected";
+                    }
+                }else{
+                    if (index === this.editedSeats.SelectedSeat){
+                        retval += " selected";
+                    }
+                }
+
                 return retval;
             },
             chooseSeat(index){
                 if(this.tab === "addSeat"){
                     return;
+                }else if(this.tab === "reservation"){
+                    if(this.editedSeats.Seats[index].Disabled){
+                        return;
+                    }
+                    if(this.SelectedSeats.includes(this.editedSeats.Seats[index])){
+                        this.removeA(this.SelectedSeats, this.editedSeats.Seats[index])
+                    }else{
+                        this.SelectedSeats.push(this.editedSeats.Seats[index])
+                    }
+                    this.$emit('seatsChanged', this.SelectedSeats)
+                }else{
+                    this.editedSeats.Number = this.editedSeats.Seats[index].Number;
+                    this.editedSeats.Class = this.editedSeats.Seats[index].Class;
+                    this.editedSeats.SelectedSeat = index;
                 }
-                this.editedSeats.Number = this.editedSeats.Seats[index].Number;
-                this.editedSeats.Class = this.editedSeats.Seats[index].Class;
-                this.editedSeats.SelectedSeat = index;
             },
-        }
+            removeA(arr) {
+                var what, a = arguments, L = a.length, ax;
+                while (L > 1 && arr.length) {
+                    what = a[--L];
+                    while ((ax= arr.indexOf(what)) !== -1) {
+                        arr.splice(ax, 1);
+                    }
+                }
+                return arr;
+            },
+        },
     }
 </script>
 

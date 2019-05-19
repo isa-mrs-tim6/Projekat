@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card dark>
         <v-card-text>
             <v-container>
                 <v-layout align-center justify-center row-wrap>
