@@ -68,6 +68,7 @@ type Flight struct {
 	Layovers   []Layovers `gorm:"foreignkey:FlightID"`
 	Airplane   Airplane   `gorm:"foreignkey:AirplaneID"`
 	AirplaneID uint
+	Airline    *Airline `gorm:"foreignkey:AirlineID"`
 	AirlineID  uint
 }
 

@@ -40,6 +40,7 @@ import RACRatingsReport from "./views/RACAdmin/RACRatingsReport";
 import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
 import RACSearch from "./views/User/RACSearch";
 import FlightReservation from "./components/User/FlightReservation";
+import Reserve from "./views/User/Reserve";
 
 Vue.use(Router);
 
@@ -108,6 +109,10 @@ export default new Router({
     },
     {
       path: '/user',
+      component: Reserve
+    },
+    {
+      path: '/user_flights',
       component: UserFlights
     },
     {

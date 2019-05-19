@@ -7,17 +7,17 @@ func (db *Store) GetFriends(id uint) ([]models.User, error) {
 	var retValSecondHalf []int
 	var fullList []int
 	var retVal []models.User
-	if err := db.Set("gorm:auto_preload", true).Table("friendships").
+	if err := db.Table("friendships").
 		Where("user2_id = ? AND status LIKE 'ACCEPTED'", id).Pluck("user1_id", &retValFirstHalf).Error; err != nil {
 		return retVal, err
 	}
-	if err := db.Set("gorm:auto_preload", true).Table("friendships").
+	if err := db.Table("friendships").
 		Where("user1_id = ? AND status LIKE 'ACCEPTED'", id).Pluck("user2_id", &retValSecondHalf).Error; err != nil {
 		return retVal, err
 	}
 	fullList = append(retValFirstHalf, retValSecondHalf...)
 
-	if err := db.Set("gorm:auto_preload", true).Where(fullList).Find(&retVal).Error; err != nil {
+	if err := db.Where(fullList).Find(&retVal).Error; err != nil {
 		return retVal, err
 	}
 

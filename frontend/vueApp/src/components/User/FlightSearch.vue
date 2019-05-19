@@ -356,31 +356,32 @@
                     this.Error2Snackbar = true;
                     return;
                 }
-                this.$router.push({
-                    name:'fSearch',
-                    query:{
-                        from: this.oneWay.from,
-                        to: this.oneWay.to,
-                        date: this.oneWay.date,
-                        seatClass: this.oneWay.seatClass,
-                        passengers: this.oneWay.passengers
-                    }})
+
+                const query = {
+                    from: this.oneWay.from,
+                    to: this.oneWay.to,
+                    date: this.oneWay.date,
+                    seatClass: this.oneWay.seatClass,
+                    passengers: this.oneWay.passengers
+                };
+                console.log(query);
+                this.$emit('search', query);
             },
             roundSearch(){
                 if(!this.round.from || !this.round.to || !this.round.departureDate || !this.round.returnDate){
                     this.Error2Snackbar = true;
                     return;
                 }
-                this.$router.push({
-                    name:'fSearch',
-                    query:{
-                        from: this.round.from,
-                        to: this.round.to,
-                        departureDate: this.round.departureDate,
-                        returnDate: this.round.returnDate,
-                        seatClass: this.round.seatClass,
-                        passengers: this.round.passengers
-                    }})
+
+                const query = {
+                    from: this.round.from,
+                    to: this.round.to,
+                    departureDate: this.round.departureDate,
+                    returnDate: this.round.returnDate,
+                    seatClass: this.round.seatClass,
+                    passengers: this.round.passengers
+                };
+                this.$emit('search', query);
             },
             multiSearch(){
                 if(!this.multi.layovers[0].from || !this.multi.layovers[this.multi.layovers.length - 1].to){
@@ -406,17 +407,16 @@
                     layovers += ";" + this.multi.layovers[i].from + ";";
                     layovers += this.multi.layovers[i].to;
                 }
-                this.$router.push({
-                    name:'fSearch',
-                    query:{
-                        from: fromDestination,
-                        to: toDestination,
-                        layovers: layovers,
-                        departureDate: this.multi.departureDate,
-                        passengers: this.multi.passengers,
-                        seatClass: this.multi.seatClass
-                    }
-                })
+
+                const query = {
+                    from: fromDestination,
+                    to: toDestination,
+                    layovers: layovers,
+                    departureDate: this.multi.departureDate,
+                    passengers: this.multi.passengers,
+                    seatClass: this.multi.seatClass
+                };
+                this.$emit('search', query);
             },
         },
         computed:{
