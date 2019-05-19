@@ -18,7 +18,7 @@
             <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
             <v-btn class="button" flat @click="goCars">Cars</v-btn>
             <v-btn class="button" flat @click="goProfile">Profile</v-btn>
-            <v-btn class="button" flat @click="goLogout">Log out</v-btn>
+            <v-btn class="button" flat @click="goLogout">Logout</v-btn>
         </v-toolbar>
     </div>
 </template>
@@ -49,27 +49,27 @@
             },
             goProfile (e){
                 e.preventDefault();
-                this.$router.replace("userProfile");
+                this.$router.push("/userProfile");
             },
             goFlights (e){
                 e.preventDefault();
-                this.$router.replace("user");
+                this.$router.push("/user");
             },
             goHotels (e){
                 e.preventDefault();
-                this.$router.replace("user_hotels");
+                this.$router.push("/user_hotels");
             },
             goCars (e){
                 e.preventDefault();
-                this.$router.replace("user_cars");
+                this.$router.push("/user_cars");
             },
             goLogin (e){
                 e.preventDefault();
-                this.$router.replace("login");
+                this.$router.push("/login");
             },
             goRegister (e){
                 e.preventDefault();
-                this.$router.replace("register");
+                this.$router.push("/register");
             },
         }
     }

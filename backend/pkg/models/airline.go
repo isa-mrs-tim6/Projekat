@@ -65,9 +65,9 @@ type Flight struct {
 	Duration      time.Duration
 	Distance      uint
 	PriceList
-	Layovers   []Layovers `gorm:"foreignkey:FlightID"`
-	Airplane   Airplane   `gorm:"foreignkey:AirplaneID"`
-	Ratings    []FlightRating
+	Layovers []Layovers `gorm:"foreignkey:FlightID"`
+	Airplane Airplane   `gorm:"foreignkey:AirplaneID"`
+	//Ratings    []FlightRating
 	AirplaneID uint
 	AirlineID  uint
 }

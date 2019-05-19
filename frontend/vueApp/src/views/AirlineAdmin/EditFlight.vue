@@ -441,11 +441,11 @@
                 }
                 let flight = {
                     FlightID: this.editedItem.ID.toString(),
-                    PriceFIRSTCLASS: this.editedItem.PriceFIRSTCLASS,
-                    PriceBUSINESS: this.editedItem.PriceBUSINESS,
-                    PriceECONOMY: this.editedItem.PriceECONOMY,
-                    SmallSuitcase: this.editedItem.SmallSuitcase,
-                    BigSuitcase: this.editedItem.BigSuitcase
+                    PriceFIRSTCLASS: this.editedItem.PriceFIRSTCLASS.toString(),
+                    PriceBUSINESS: this.editedItem.PriceBUSINESS.toString(),
+                    PriceECONOMY: this.editedItem.PriceECONOMY.toString(),
+                    SmallSuitcase: this.editedItem.SmallSuitcase.toString(),
+                    BigSuitcase: this.editedItem.BigSuitcase.toString()
                 };
                 Object.assign(this.flights[this.editedIndex], this.editedItem);
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/priceList/update", flight)

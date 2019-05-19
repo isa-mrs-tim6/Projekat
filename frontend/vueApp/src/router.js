@@ -4,7 +4,6 @@ import Home from './views/Home.vue'
 import UserFlights from "./views/UserFlights";
 import UserHotels from "./views/UserHotels";
 import UserCars from "./views/UserCars";
-import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
 import AirlineAdmin from "./views/AirlineAdmin/AirlineAdmin";
 import RegisterUser from "./views/RegisterUser";
@@ -40,6 +39,7 @@ import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
 import RACSearch from "./views/User/RACSearch";
 import ShowProfile from "./views/User/ShowProfile";
 import ShowReservations from "./views/User/ShowReservations";
+import ShowVehicleSearch from "./views/User/ShowVehicleSearch";
 
 Vue.use(Router);
 
@@ -187,8 +187,8 @@ export default new Router({
       component: RACSearch
     },
     {
-      path: '/vehiclesSearch/:id/:locID',
-      component: VehiclesSearch
+      path: '/vehiclesSearch/:id-:locID',
+      component: ShowVehicleSearch
     },
     {
       path: '/confirmRegistration/:type/:email/',
