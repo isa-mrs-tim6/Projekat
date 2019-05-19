@@ -584,7 +584,6 @@ func addModels(db *gorm.DB) {
 			UserID:   user.ID,
 			UserInfo: user.UserInfo,
 		},
-		MasterRef: 0,
 		ReservationFlight: models.FlightReservation{
 			Price:         250,
 			Seat:          &airline2.Flights[1].Airplane.Seats[0],
@@ -595,6 +594,7 @@ func addModels(db *gorm.DB) {
 				&airline2.AirlineFeatures[0],
 				&airline2.AirlineFeatures[1],
 			},
+			IsQuickReserve: false,
 		},
 		ReservationHotel: models.HotelReservation{
 			Price: 100,
@@ -615,8 +615,9 @@ func addModels(db *gorm.DB) {
 				&hotel2.Features[2],
 				&hotel2.Features[1],
 			},
-			Hotel:       hotel2,
-			HotelRating: 4,
+			Hotel:          hotel2,
+			HotelRating:    4,
+			IsQuickReserve: false,
 		},
 		ReservationRentACar: models.RentACarReservation{
 			Price:           70,
@@ -627,8 +628,9 @@ func addModels(db *gorm.DB) {
 				Beginning: time.Date(2019, 4, 2, 0, 0, 0, 0, time.Local),
 				End:       time.Date(2019, 4, 3, 0, 0, 0, 0, time.Local),
 			},
-			CompanyRating: 4,
-			VehicleRating: 2,
+			CompanyRating:  4,
+			VehicleRating:  2,
+			IsQuickReserve: false,
 		},
 	}
 	reservation2 := models.Reservation{
@@ -636,7 +638,6 @@ func addModels(db *gorm.DB) {
 			UserID:   user2.ID,
 			UserInfo: user2.UserInfo,
 		},
-		MasterRef: 0,
 		ReservationFlight: models.FlightReservation{
 			Price:         250,
 			Seat:          &airline.Flights[2].Airplane.Seats[1],
@@ -647,6 +648,7 @@ func addModels(db *gorm.DB) {
 				&airline2.AirlineFeatures[0],
 				&airline2.AirlineFeatures[1],
 			},
+			IsQuickReserve: false,
 		},
 		ReservationHotel: models.HotelReservation{
 			Price: 180,
@@ -665,8 +667,9 @@ func addModels(db *gorm.DB) {
 				&hotel.Features[0],
 				&hotel.Features[1],
 			},
-			Hotel:       hotel,
-			HotelRating: 3,
+			Hotel:          hotel,
+			HotelRating:    3,
+			IsQuickReserve: false,
 		},
 	}
 	reservation3 := models.Reservation{
@@ -674,7 +677,7 @@ func addModels(db *gorm.DB) {
 			UserID:   user3.ID,
 			UserInfo: user3.UserInfo,
 		},
-		MasterRef: 2,
+		MasterRef: reservation.ID,
 		ReservationFlight: models.FlightReservation{
 			Price:         250,
 			Seat:          &airline.Flights[2].Airplane.Seats[4],
@@ -685,6 +688,7 @@ func addModels(db *gorm.DB) {
 				&airline.AirlineFeatures[0],
 				&airline.AirlineFeatures[1],
 			},
+			IsQuickReserve: false,
 		},
 		ReservationRentACar: models.RentACarReservation{
 			Price:           70,
@@ -695,8 +699,9 @@ func addModels(db *gorm.DB) {
 				Beginning: time.Date(2019, 4, 2, 0, 0, 0, 0, time.Local),
 				End:       time.Date(2019, 4, 3, 0, 0, 0, 0, time.Local),
 			},
-			CompanyRating: 3,
-			VehicleRating: 4,
+			CompanyRating:  3,
+			VehicleRating:  4,
+			IsQuickReserve: false,
 		},
 	}
 
@@ -715,6 +720,7 @@ func addModels(db *gorm.DB) {
 				&airline.AirlineFeatures[0],
 				&airline.AirlineFeatures[1],
 			},
+			IsQuickReserve: false,
 		},
 		ReservationRentACar: models.RentACarReservation{
 			Price:         70,
@@ -726,6 +732,7 @@ func addModels(db *gorm.DB) {
 				Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
 				End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
 			},
+			IsQuickReserve: false,
 		},
 		ReservationHotel: models.HotelReservation{
 			Price: 180,
@@ -745,6 +752,7 @@ func addModels(db *gorm.DB) {
 				&hotel.Features[0],
 				&hotel.Features[1],
 			},
+			IsQuickReserve: false,
 		},
 	}
 

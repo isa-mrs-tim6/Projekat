@@ -65,10 +65,10 @@ type Flight struct {
 	Duration      time.Duration
 	Distance      uint
 	PriceList
-	Layovers []Layovers `gorm:"foreignkey:FlightID"`
-	Airplane Airplane   `gorm:"foreignkey:AirplaneID"`
-	//Ratings    []FlightRating
+	Layovers   []Layovers `gorm:"foreignkey:FlightID"`
+	Airplane   Airplane   `gorm:"foreignkey:AirplaneID"`
 	AirplaneID uint
+	Airline    *Airline `gorm:"foreignkey:AirlineID"`
 	AirlineID  uint
 }
 
@@ -119,4 +119,10 @@ type Airline struct {
 	Admins          []*AirlineAdmin  `gorm:"foreignkey:AirlineID"`
 	Destinations    []Destination    `gorm:"foreignkey:AirlineID"`
 	AirlineFeatures []FeatureAirline `gorm:"foreignkey:AirlineID"`
+}
+
+type FlightReservationParams struct {
+	Seats          []Seat
+	Users          []UserReserveParams
+	IsQuickReserve bool
 }

@@ -3,7 +3,7 @@
         <UserNavBar></UserNavBar>
         <v-layout justify-center style="margin-top: 200px">
             <v-flex xs9 style="height: 100%;">
-                <div v-bind:isLogIn="isLogIn" style="height: 75px; background-color: lightgray">Ovde ide komponenta za pretragu letova/hotela/vozila</div>
+                <div v-bind:isLogIn="isLogIn"><flight-search></flight-search></div>
                 <ResultGrid v-bind:items="items" v-bind:title="title" style="margin-top: 150px"></ResultGrid>
             </v-flex>
         </v-layout>
@@ -14,10 +14,11 @@
     import ResultGrid from "../components/ResultGrid";
     import axios from "axios";
     import UserNavBar from "../components/User/UserNavBar";
+    import FlightSearch from "../components/User/FlightSearch";
 
     export default {
         name: "UserFlights",
-        components: {UserNavBar, ResultGrid},
+        components: {FlightSearch, UserNavBar, ResultGrid},
         data() {
             return {
                 items: [],

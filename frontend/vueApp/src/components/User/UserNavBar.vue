@@ -14,6 +14,7 @@
         <v-toolbar  fixed app dark >
             <v-toolbar-title>Title</v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn class="button" flat @click="goReserve">Reserve</v-btn>
             <v-btn class="button" flat @click="goFlights">Flights</v-btn>
             <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
             <v-btn class="button" flat @click="goCars">Cars</v-btn>
@@ -53,7 +54,7 @@
             },
             goFlights (e){
                 e.preventDefault();
-                this.$router.push("/user");
+                this.$router.replace("user_flights");
             },
             goHotels (e){
                 e.preventDefault();
@@ -71,6 +72,10 @@
                 e.preventDefault();
                 this.$router.push("/register");
             },
+            goReserve (e){
+                e.preventDefault();
+                this.$router.replace("user");
+            }
         }
     }
 </script>
