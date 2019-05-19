@@ -45,6 +45,9 @@
                                 <v-flex>
                                     Number: <br/>{{this.seatNum}}
                                 </v-flex>
+                                <v-flex>
+                                    Price: <br/>{{this.sPrice}}
+                                </v-flex>
                             </v-layout>
                             <v-layout row>
                                 <v-flex>
@@ -54,6 +57,7 @@
                                     Name: {{ff.Name}}<br/>
                                     Price: {{ff.Price}}
                                 </v-flex>
+                                <v-spacer></v-spacer>
                             </v-layout>
                             <v-layout row>
                                 <v-flex xs3>
@@ -83,7 +87,13 @@
                                 </v-flex>
                             </v-layout>
                             <v-layout row>
-                                Price: {{this.fPrice}}
+                                <v-spacer></v-spacer>
+                                <v-flex class="center" xs2 style="text-align: right">
+                                    Price: {{this.fPrice}}
+                                </v-flex>
+                                <v-flex class="center" xs2 style="text-align: right">
+                                    <v-btn color="error">cancel</v-btn>
+                                </v-flex>
                             </v-layout>
                         </v-card>
                     </v-expansion-panel-content>
@@ -93,9 +103,89 @@
                         <template v-slot:header>
                             <div>Hotel Reservation</div>
                         </template>
-                        <v-card class="center">
-                            Price: {{this.hPrice}}
-                        </v-card>
+                        <v-layout row class="center">
+                            <v-flex>
+                                Beginning:<br/>
+                                {{this.hBeginning}}
+                            </v-flex>
+                            <v-flex>
+                                End:<br/>
+                                {{this.hEnd}}
+                            </v-flex>
+                            <v-flex>
+                                Total Rooms:<br/>
+                                {{this.hRoomNum}}
+                            </v-flex>
+                            <v-flex>
+                                My Room Price:<br/>
+                                {{this.roomPrice}}
+                            </v-flex>
+                        </v-layout>
+                        <v-layout row class="center">
+                            <v-flex>
+                                Hotel Name:<br/>
+                                {{this.hName}}
+                            </v-flex>
+                            <v-flex>
+                                Hotel Address:<br/>
+                                {{this.hAddress}}
+                            </v-flex>
+                            <v-flex xs3>
+                                Hotel Rating: <v-rating
+                                    v-model="this.hRating"
+                                    background-color="indigo lighten-3"
+                                    empty-icon="$vuetify.icons.ratingFull"
+                                    readonly
+                                    half-increments
+                                    color="orange"></v-rating>
+                            </v-flex>
+                            <v-flex xs2>
+                                <v-btn>rate hotel</v-btn>
+                            </v-flex>
+                            <v-spacer></v-spacer>
+                        </v-layout>
+                        <v-layout row class="center">
+                            <v-flex>
+                                Features:
+                            </v-flex>
+                            <v-flex v-for="(hf, index) in this.hFeatures" :key="hf.ID">
+                                Name: {{hf.Name}}<br/>
+                                Price: {{hf.Price}}
+                            </v-flex>
+                            <v-spacer></v-spacer>
+                        </v-layout>
+                        <v-layout class="center" row v-for="(room, index) in this.hRooms" :key="room.ID">
+                            <v-flex xs2>
+                                Room:<br/>
+                                {{room.Number}}
+                            </v-flex>
+                            <v-flex xs2>
+                                Capacity:<br/>
+                                {{room.Capacity}}
+                            </v-flex>
+                            <v-flex xs3>
+                                Room Rating: <v-rating
+                                    v-model="roomRatings[index]"
+                                    background-color="indigo lighten-3"
+                                    empty-icon="$vuetify.icons.ratingFull"
+                                    readonly
+                                    half-increments
+                                    color="orange"></v-rating>
+                            </v-flex>
+                            <v-flex xs2>
+                                <v-btn>rate room</v-btn>
+                            </v-flex>
+                            <v-spacer></v-spacer>
+                        </v-layout>
+                        <v-layout row>
+                            <v-spacer></v-spacer>
+                            <v-flex class="center" xs2 style="text-align: right">
+                                Price: {{this.hPrice}}
+                            </v-flex>
+                            <v-flex class="center" xs2 style="text-align: right">
+                                <v-btn color="error">cancel</v-btn>
+                            </v-flex>
+                        </v-layout>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
                 <v-expansion-panel v-if="this.resDetails.ReservationRentACarID !== 0">
@@ -117,6 +207,10 @@
                                     Location:<br/>
                                     {{this.vLocation}}
                                 </v-flex>
+                                <v-flex>
+                                    Company:<br/>
+                                    {{this.vCompanyName}}
+                                </v-flex>
                             </v-layout>
                             <v-layout row>
                                 <v-flex>
@@ -131,6 +225,7 @@
                                     Vehicle Capacity:<br/>
                                     {{this.vCapacity}}
                                 </v-flex>
+                                <v-spacer></v-spacer>
                             </v-layout>
                             <v-layout row>
                                 <v-flex xs3>
@@ -160,7 +255,13 @@
                                 </v-flex>
                             </v-layout>
                             <v-layout row>
-                                Price: {{this.rPrice}}
+                                <v-spacer></v-spacer>
+                                <v-flex class="center" xs2 style="text-align: right">
+                                    Price: {{this.rPrice}}
+                                </v-flex>
+                                <v-flex class="center" xs2 style="text-align: right">
+                                    <v-btn color="error">cancel</v-btn>
+                                </v-flex>
                             </v-layout>
                         </v-card>
                     </v-expansion-panel-content>
@@ -214,6 +315,7 @@
                 fPrice: '',
                 hPrice: '',
                 rPrice: '',
+                sPrice: '',
                 origin: '',
                 destination: '',
                 departure: '',
@@ -228,9 +330,21 @@
                 vCapacity: '',
                 vBeginning: '',
                 vEnd: '',
-                vRating: '',
-                vCompanyRating: '',
+                vRating: 0,
+                vCompanyRating: 0,
                 vLocation: '',
+                vCompanyName: '',
+                hBeginning: '',
+                hEnd: '',
+                hName: '',
+                hFeatures: [],
+                hRoomNum: 0,
+                hRatings: [],
+                roomPrice: '',
+                hAddress: '',
+                hRating: 0,
+                hRooms: [],
+                roomRatings: [],
             }
         },
         beforeCreate() {
@@ -248,11 +362,17 @@
                     date = moment(this.reservations[i].Master.ReservationFlight.Flight.Landing).format('DD.MM.YYYY HH:mm');
                     this.reservations[i].Master.ReservationFlight.Flight.Landing = date.toString();
 
-                    date = moment(this.reservations[i].Master.ReservationFlight.Flight.Landing).format('DD.MM.YYYY');
+                    date = moment(this.reservations[i].Master.ReservationRentACar.Beginning).format('DD.MM.YYYY');
                     this.reservations[i].Master.ReservationRentACar.Beginning = date.toString();
 
-                    date = moment(this.reservations[i].Master.ReservationFlight.Flight.Landing).format('DD.MM.YYYY');
+                    date = moment(this.reservations[i].Master.ReservationRentACar.End).format('DD.MM.YYYY');
                     this.reservations[i].Master.ReservationRentACar.End = date.toString();
+
+                    date = moment(this.reservations[i].Master.ReservationHotel.Beginning).format('DD.MM.YYYY');
+                    this.reservations[i].Master.ReservationHotel.Beginning = date.toString();
+
+                    date = moment(this.reservations[i].Master.ReservationHotel.End).format('DD.MM.YYYY');
+                    this.reservations[i].Master.ReservationHotel.End = date.toString();
                 }
             })
         },
@@ -266,9 +386,10 @@
                 this.slaves = this.reservations[index].Slaves;
                 this.resDetails = this.reservations[index].Master;
                 this.fPrice = this.reservations[index].Master.ReservationFlight.Price;
+                this.sPrice = this.fPrice;
                 this.hPrice = this.reservations[index].Master.ReservationHotel.Price;
+                this.roomPrice = this.hPrice;
                 this.rPrice = this.reservations[index].Master.ReservationRentACar.Price;
-                this.total = this.fPrice + this.hPrice + this.rPrice;
                 this.origin = this.reservations[index].Master.ReservationFlight.Flight.Origin.Name;
                 this.destination = this.reservations[index].Master.ReservationFlight.Flight.Destination.Name;
                 this.departure = this.reservations[index].Master.ReservationFlight.Flight.Departure;
@@ -279,7 +400,7 @@
                 this.seatNum = this.reservations[index].Master.ReservationFlight.Seat.Number;
                 this.fFeatures = this.reservations[index].Master.ReservationFlight.Features;
                 for(let i=0; i < this.reservations[index].Master.ReservationFlight.Features.length; i++){
-                    this.total += this.reservations[index].Master.ReservationFlight.Features[i].Price;
+                    this.fPrice += this.reservations[index].Master.ReservationFlight.Features[i].Price;
                 }
 
                 this.vName =  this.reservations[index].Master.ReservationRentACar.Vehicle.Name;
@@ -290,6 +411,33 @@
                 this.vLocation = this.reservations[index].Master.ReservationRentACar.Location;
                 this.vRating = this.reservations[index].Master.ReservationRentACar.VehicleRating;
                 this.vCompanyRating = this.reservations[index].Master.ReservationRentACar.CompanyRating;
+                this.vCompanyName = this.reservations[index].Master.ReservationRentACar.RentACarCompany.Name;
+
+                this.hName = this.reservations[index].Master.ReservationHotel.Hotel.Name;
+                this.hBeginning = this.reservations[index].Master.ReservationHotel.Beginning;
+                this.hEnd = this.reservations[index].Master.ReservationHotel.End;
+                this.hRoomNum = this.reservations[index].Master.ReservationHotel.Rooms.length;
+                this.hFeatures = this.reservations[index].Master.ReservationHotel.Features;
+                for(let i=0; i < this.reservations[index].Master.ReservationHotel.Features.length; i++){
+                    this.hPrice += this.reservations[index].Master.ReservationHotel.Features[i].Price;
+                }
+                this.hAddress = this.reservations[index].Master.ReservationHotel.Hotel.Address;
+                this.hRating = this.reservations[index].Master.ReservationHotel.HotelRating;
+                this.hRatings = this.reservations[index].Master.ReservationHotel.Ratings;
+                this.hRooms = this.reservations[index].Master.ReservationHotel.Rooms;
+                for(let i=0; i< this.hRooms.length; i++){
+                    let rating = 0;
+                    for(let j=0; j<this.hRatings.length; j++){
+                        if(this.hRatings[j].RoomID === this.hRooms[i].ID){
+                            rating = this.hRatings[j].Rating;
+                            break;
+                        }
+                    }
+                    this.roomRatings.push(rating);
+                }
+
+                console.log(this.roomRatings);
+                this.total = this.fPrice + this.hPrice + this.rPrice;
 
             },
             close(){
@@ -300,6 +448,7 @@
                 this.fPrice = '';
                 this.hPrice = '';
                 this.rPrice = '';
+                this.sPrice = '';
                 this.origin = '';
                 this.destination = '';
                 this.departure = '';
@@ -307,14 +456,28 @@
                 this.class = '';
                 this.seatNum = '';
                 this.fFeatures = [];
+                this.fRating = 0;
+                this.fCompanyRating = 0;
                 this.vName =  '';
                 this.vType = '';
                 this.vCapacity = '';
                 this.vBeginning = '';
                 this.vEnd = '';
                 this.vLocation = '';
-                this.vRating = '';
-                this.vCompanyRating = '';
+                this.vRating = 0;
+                this.vCompanyRating = 0;
+                this.vCompanyName = '';
+                this.hName = '';
+                this.hBeginning = '';
+                this.hEnd = '';
+                this.hRoomNum = 0;
+                this.hFeatures = [];
+                this.roomPrice = '';
+                this.hAddress = '';
+                this.hRating = 0;
+                this.hRatings = [];
+                this.hRooms = [];
+                this.roomRatings = [];
             },
         }
     }
@@ -323,7 +486,7 @@
 <style scoped>
     .button{
         padding: 0;
-        margin: 2px 0px;
+        margin: 2px 0;
     }
     .center {
         margin: auto;

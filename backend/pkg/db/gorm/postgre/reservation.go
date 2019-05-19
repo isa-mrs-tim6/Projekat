@@ -45,6 +45,7 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 		Preload("ReservationHotel.Rooms").
 		Preload("ReservationHotel.Ratings").
 		Preload("ReservationHotel.Features").
+		Preload("ReservationHotel.Hotel").
 		Preload("ReservationRentACar.RentACarCompany").
 		Preload("ReservationRentACar.Vehicle").
 		Find(&masters).Error; err != nil {
@@ -61,6 +62,7 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 			Preload("ReservationHotel.Rooms").
 			Preload("ReservationHotel.Ratings").
 			Preload("ReservationHotel.Features").
+			Preload("ReservationHotel.Hotel").
 			Preload("ReservationRentACar.RentACarCompany").
 			Preload("ReservationRentACar.Vehicle").
 			Find(&slaves)
