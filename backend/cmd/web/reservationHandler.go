@@ -86,14 +86,10 @@ func (app *Application) ReserveFlight(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	// SET MASTER USER ID
+	query.Users[0].ID = user.ID
 
-	// ADD LOGGED USER TO LIST OF USERS FOR RESERVATION
-	query.Users = append([]models.UserReserveParams{{
-		ID:       user.ID,
-		Email:    user.Email,
-		UserInfo: user.UserInfo,
-	}}, query.Users...)
-
+	// RESERVE
 	err = app.Store.ReserveFlight(flightID, query)
 	if err != nil {
 		app.ErrorLog.Println("Could not complete reservation")
