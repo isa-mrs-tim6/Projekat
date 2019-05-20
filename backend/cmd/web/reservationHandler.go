@@ -38,6 +38,46 @@ func (app *Application) UpdateRewards(w http.ResponseWriter, r *http.Request) {
 	app.Store.UpdateReservationRewards(rewards)
 }
 
+func (app *Application) GetReservation(w http.ResponseWriter, r *http.Request) {
+	// GET RESERVATION ID
+	vars := mux.Vars(r)
+	reservationID, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Could not get flight ID")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// FIND LOGGED USER
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// FIND RESERVATION AND CHECK IF IT BELONGS TO USER REQUESTING IT
+	reservation, err := app.Store.GetReservation(uint(reservationID))
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive reservation")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if reservation.UserID != user.ID {
+		app.ErrorLog.Printf("Cannot access this reservation")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(reservation)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode reservation into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *Application) GetAirlineGraphData(w http.ResponseWriter, r *http.Request) {
 	email := getEmail(r)
 	user, err := app.Store.GetAirlineAdmin(email)
@@ -130,9 +170,14 @@ func (app *Application) ReserveFlight(w http.ResponseWriter, r *http.Request) {
 	query.Users[0].ID = user.ID
 
 	// RESERVE
-	err = app.Store.ReserveFlight(flightID, query)
+	reservationID, err := app.Store.ReserveFlight(flightID, query)
 	if err != nil {
 		app.ErrorLog.Println("Could not complete reservation")
 		w.WriteHeader(http.StatusBadRequest)
+	}
+	if err := json.NewEncoder(w).Encode(reservationID); err != nil {
+		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 }

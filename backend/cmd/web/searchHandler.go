@@ -99,14 +99,34 @@ func (app *Application) FlightSearch(r *http.Request) ([]models.Flight, string, 
 }
 
 func (app *Application) HotelSearch(w http.ResponseWriter, r *http.Request) {
-	var searchQuery models.HotelQuery
+	var searchQuery models.HotelQueryDTO
+	var query models.HotelQuery
 
 	if err := json.NewDecoder(r.Body).Decode(&searchQuery); err != nil {
 		app.ErrorLog.Println("Cannot decode JSON object")
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	if hotels, err := app.Store.HotelSearch(searchQuery); err != nil {
+	dateFromInt, err := strconv.ParseInt(searchQuery.From, 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Invalid from date")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	dateFrom := time.Unix(0, dateFromInt*int64(time.Millisecond))
+
+	dateToInt, err := strconv.ParseInt(searchQuery.To, 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Invalid to date")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	dateTo := time.Unix(0, dateToInt*int64(time.Millisecond))
+
+	query.Name = searchQuery.Name
+	query.Address = searchQuery.Address
+	query.From = dateFrom
+	query.To = dateTo
+
+	if hotels, err := app.Store.HotelSearch(query); err != nil {
 		app.ErrorLog.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {
