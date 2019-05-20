@@ -1,6 +1,5 @@
 <template>
     <div>
-        <UserNavBar></UserNavBar>
         <v-form>
             <v-container>
                 <v-flex xs12 sm2>

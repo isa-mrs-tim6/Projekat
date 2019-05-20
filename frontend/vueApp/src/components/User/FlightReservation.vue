@@ -124,9 +124,9 @@
 </template>
 
 <script>
-    import UserNavBar from "../UserNavBar";
     import SeatMap from "../AirlineAdmin/SeatMap";
     import axios from 'axios/index';
+    import UserNavBar from "./UserNavBar";
 
     export default {
         name: "FlightReservation",

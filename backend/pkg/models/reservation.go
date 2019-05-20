@@ -15,6 +15,11 @@ type ReservationReward struct {
 	PriceScale     float64
 }
 
+type ReservationDAO struct {
+	Master Reservation
+	Slaves []Reservation
+}
+
 type ReservationGraphData struct {
 	Id        uint
 	Departure time.Time

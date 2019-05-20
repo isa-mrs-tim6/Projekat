@@ -17,6 +17,12 @@ func (db *Store) UpdateUser(oldEmail string, params models.ProfileParams) error 
 		return err
 	}
 
+	hashedPassword, err := createHash(params.Profile.Password)
+	if err != nil {
+		return err
+	}
+	params.Profile.Password = string(hashedPassword)
+
 	retVal.Profile = params.Profile
 
 	if err := db.Save(&retVal).Error; err != nil {

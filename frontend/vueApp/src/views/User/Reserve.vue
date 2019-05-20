@@ -12,7 +12,7 @@
 
 <script>
     import FlightGrid from "../../components/User/FlightGrid";
-    import UserNavBar from "../../components/UserNavBar";
+    import UserNavBar from "../../components/User/UserNavBar";
     import FlightSearch from "../../components/User/FlightSearch";
     import axios from "axios";
     import moment from 'moment';

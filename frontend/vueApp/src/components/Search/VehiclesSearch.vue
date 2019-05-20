@@ -86,7 +86,7 @@
 </template>
 
 <script>
-    import Vehicles from "../components/Vehicles";
+    import Vehicles from "../User/Vehicles";
     import axios from 'axios';
     import moment from 'moment';
 

@@ -3,7 +3,7 @@
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md4>
                 <v-card class="elevation-12">
-                    <v-toolbar dark color="primary">
+                    <v-toolbar dark>
                         <v-toolbar-title>Admin login</v-toolbar-title>
                     </v-toolbar>
                     <v-card-text>
@@ -24,7 +24,7 @@
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn color="primary" @click="loginAdmin">Login</v-btn>
+                        <v-btn dark @click="loginAdmin">Login</v-btn>
                         <v-spacer></v-spacer>
                         <v-btn @click="goBack">Back</v-btn>
                     </v-card-actions>

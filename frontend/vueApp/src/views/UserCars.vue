@@ -11,8 +11,8 @@
 
 <script>
     import axios from "axios";
-    import UserNavBar from "../components/UserNavBar";
-    import VehiclesSearch from "./VehiclesSearch";
+    import UserNavBar from "../components/User/UserNavBar";
+    import VehiclesSearch from "../components/Search/VehiclesSearch";
     import RACSearch from "./User/RACSearch";
 
     export default {

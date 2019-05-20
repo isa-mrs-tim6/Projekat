@@ -288,12 +288,12 @@
                 }
                 let ind = false;
                 let number = parseInt(this.addedItem.Capacity);
-                if(isNaN(number)){
+                if(isNaN(number) || number <= 0){
                     this.addedItem.Capacity = "";
                     ind = true;
                 }
                 number = parseFloat(this.addedItem.PricePerDay);
-                if(isNaN(number)){
+                if(isNaN(number) || number <= 0){
                     this.addedItem.PricePerDay = "";
                     ind = true;
                 }
@@ -306,12 +306,12 @@
                 }
                 let ind = false;
                 let number = parseInt(this.editedItem.Capacity);
-                if(isNaN(number) || number < 0){
+                if(isNaN(number) || number <= 0){
                     this.editedItem.Capacity = "";
                     ind = true;
                 }
                 number = parseFloat(this.editedItem.PricePerDay);
-                if(isNaN(number || number < 0)){
+                if(isNaN(number) || number <= 0){
                     this.editedItem.PricePerDay = "";
                     ind = true;
                 }

@@ -45,7 +45,7 @@
 </template>
 
 <script>
-    import UserNavBar from "../components/UserNavBar";
+    import UserNavBar from "../components/User/UserNavBar";
     import axios from 'axios';
     export default {
         name: "RegisterUser",

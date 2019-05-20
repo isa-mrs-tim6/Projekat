@@ -4,7 +4,6 @@ import Home from './views/Home.vue'
 import UserFlights from "./views/UserFlights";
 import UserHotels from "./views/UserHotels";
 import UserCars from "./views/UserCars";
-import VehiclesSearch from "./views/VehiclesSearch";
 import RegistrationSuccess from "./views/RegistrationSuccess";
 import AirlineAdmin from "./views/AirlineAdmin/AirlineAdmin";
 import RegisterUser from "./views/RegisterUser";
@@ -33,12 +32,14 @@ import AirlineAdminProfile from "./views/AirlineAdmin/AirlineAdminProfile";
 import SystemAdminReservationRewards from "./views/SystemAdmin/SystemAdminReservationRewards";
 import FlightSearch from "./components/User/FlightSearch";
 import FlightSearchResults from "./views/User/FlightSearchResults";
-import UserProfile from "./components/UserProfile";
 import AirlineRatings from "./views/AirlineAdmin/AirlineRatingsReport";
 import AirlineFinancialReport from "./views/AirlineAdmin/AirlineFinancialReport";
 import RACRatingsReport from "./views/RACAdmin/RACRatingsReport";
 import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
 import RACSearch from "./views/User/RACSearch";
+import ShowProfile from "./views/User/ShowProfile";
+import ShowReservations from "./views/User/ShowReservations";
+import ShowVehicleSearch from "./views/User/ShowVehicleSearch";
 import FlightReservation from "./components/User/FlightReservation";
 import Reserve from "./views/User/Reserve";
 
@@ -125,7 +126,11 @@ export default new Router({
     },
     {
       path: "/userProfile",
-      component: UserProfile
+      component: ShowProfile
+    },
+    {
+      path: "/userReservations",
+      component: ShowReservations
     },
     {
       path: '/airlineAdmin/airline_profile',
@@ -188,8 +193,8 @@ export default new Router({
       component: RACSearch
     },
     {
-      path: '/vehiclesSearch/:id/:locID',
-      component: VehiclesSearch
+      path: '/vehiclesSearch/:id-:locID',
+      component: ShowVehicleSearch
     },
     {
       path: '/confirmRegistration/:type/:email/',

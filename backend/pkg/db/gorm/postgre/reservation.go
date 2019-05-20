@@ -31,6 +31,47 @@ func (db *Store) GetReservationGraphData(id uint) ([]models.ReservationGraphData
 	}
 	return retVal, nil
 }
+func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
+	var reservations []models.ReservationDAO
+	var masters []models.Reservation
+	var slaves []models.Reservation
+
+	if err := db.Order("created_at desc").
+		Where("user_id = ?", id).
+		Preload("ReservationFlight.Flight.Origin").
+		Preload("ReservationFlight.Flight.Destination").
+		Preload("ReservationFlight.Flight.Layovers").
+		Preload("ReservationFlight.Seat").
+		Preload("ReservationFlight.Features").
+		Preload("ReservationHotel.Rooms").
+		Preload("ReservationHotel.Ratings").
+		Preload("ReservationHotel.Features").
+		Preload("ReservationHotel.Hotel").
+		Preload("ReservationRentACar.RentACarCompany").
+		Preload("ReservationRentACar.Vehicle").
+		Find(&masters).Error; err != nil {
+		return nil, err
+	}
+
+	for _, res := range masters {
+		db.Where("master_ref = ?", res.ID).
+			Preload("ReservationFlight.Flight.Origin").
+			Preload("ReservationFlight.Flight.Destination").
+			Preload("ReservationFlight.Flight.Layovers").
+			Preload("ReservationFlight.Seat").
+			Preload("ReservationFlight.Features").
+			Preload("ReservationHotel.Rooms").
+			Preload("ReservationHotel.Ratings").
+			Preload("ReservationHotel.Features").
+			Preload("ReservationHotel.Hotel").
+			Preload("ReservationRentACar.RentACarCompany").
+			Preload("ReservationRentACar.Vehicle").
+			Find(&slaves)
+		reservations = append(reservations, models.ReservationDAO{Master: res, Slaves: slaves})
+	}
+
+	return reservations, nil
+}
 
 func (db *Store) ReserveVehicle(params models.VehicleReservationParams) error {
 	var reservation models.RentACarReservation
