@@ -4,26 +4,28 @@
         <v-layout justify-center style="margin-top: 200px">
             <v-flex xs9 style="height: 100%;">
                 <HotelSearch v-on:search="search"/>
-                <ResultGrid v-bind:items="items" v-bind:title="title" style="margin-top: 150px"></ResultGrid>
+                <HotelGrid v-bind:hotels="items" v-bind:reservationID="reservationID" v-bind:passengers="passengers" style="margin-top: 150px"></HotelGrid>
             </v-flex>
         </v-layout>
     </div>
 </template>
 
 <script>
-    import ResultGrid from "../components/ResultGrid";
     import axios from "axios";
     import UserNavBar from "../components/UserNavBar";
     import HotelSearch from "../components/Search/HotelSearch";
+    import HotelGrid from "../components/User/HotelGrid";
 
     export default {
         name: "UserHotels",
-        components: {HotelSearch, UserNavBar, ResultGrid},
+        components: {HotelGrid, HotelSearch, UserNavBar},
         data() {
             return {
                 items: [],
                 title: "Hotels in our system",
                 isLogIn: false,
+                reservationID: Number.parseInt(this.$route.query.reservationID),
+                passengers: Number.parseInt(this.$route.query.passengers),
             }
         },
         methods: {

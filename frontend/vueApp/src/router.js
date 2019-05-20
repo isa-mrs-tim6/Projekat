@@ -41,6 +41,7 @@ import RACFinancialReport from "./views/RACAdmin/RACFinancialReport";
 import RACSearch from "./views/User/RACSearch";
 import FlightReservation from "./components/User/FlightReservation";
 import Reserve from "./views/User/Reserve";
+import ReservationChoice from "./views/User/ReservationChoice";
 
 Vue.use(Router);
 
@@ -109,6 +110,10 @@ export default new Router({
     },
     {
       path: '/user',
+      component: ReservationChoice
+    },
+    {
+      path: '/reserve_flight',
       component: Reserve
     },
     {

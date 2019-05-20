@@ -29,10 +29,8 @@
         },
         methods: {
             search: function(query) {
-                console.log("s");
                 if(query.returnDate){
                     this.searchType = "round";
-                    console.log("Round");
                     var searchQuery = {
                         from : query.from,
                         to : query.to,
@@ -61,7 +59,6 @@
                         });
                 }else if(query.date){
                     this.searchType = "oneWay";
-                    console.log("One-Way");
                     var searchQuery = {
                         from : query.from,
                         to : query.to,
@@ -76,7 +73,6 @@
                             this.flights = res.data;
                         })
                 }else{
-                    console.log("multi");
                     this.searchType = "oneWay";
                     var searchQuery = {
                         from : query.from,
