@@ -3,6 +3,7 @@ package postgre
 import (
 	"errors"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
+	"sort"
 	"time"
 )
 
@@ -55,6 +56,31 @@ func (db *Store) GetRooms(id uint) ([]models.Room, error) {
 		return retVal, err
 	}
 	return retVal, nil
+}
+
+func (db *Store) GetRoomCapacities(id uint) ([]uint, error) {
+	var capacities []uint
+	var retval []uint
+
+	// GETS EVERY ROOMS CAPACITY
+	if err := db.Model(&models.Room{HotelID: id}).Pluck("capacity", &capacities).Error; err != nil {
+		return capacities, err
+	}
+
+	// MAKE A SET SO AS TO NOT GET DUPLICATES
+	set := make(map[uint]bool)
+	for _, v := range capacities {
+		set[v] = true
+	}
+
+	// CREATE A PROPER RETURN VALUE
+	for k := range set {
+		retval = append(retval, k)
+	}
+	// SORT IT
+	sort.Slice(retval, func(i, j int) bool { return retval[i] < retval[j] })
+
+	return retval, nil
 }
 
 func (db *Store) GetRoomRatings(id uint) ([]models.RoomRatingDAO, error) {

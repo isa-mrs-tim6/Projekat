@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"net/http"
 	"strconv"
@@ -132,6 +133,54 @@ func (app *Application) HotelSearch(w http.ResponseWriter, r *http.Request) {
 	} else {
 		if err := json.NewEncoder(w).Encode(hotels); err != nil {
 			app.ErrorLog.Println("Cannot encode hotels into JSON object")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+	}
+}
+
+func (app *Application) RoomSearch(w http.ResponseWriter, r *http.Request) {
+	var searchQuery models.RoomQueryDTO
+	var query models.RoomQuery
+
+	// GET HOTEL ID
+	vars := mux.Vars(r)
+	hotelID, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Could not get hotel ID")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&searchQuery); err != nil {
+		app.ErrorLog.Println("Cannot decode JSON object")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	dateFromInt, err := strconv.ParseInt(searchQuery.From, 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Invalid from date")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	dateFrom := time.Unix(0, dateFromInt*int64(time.Millisecond))
+
+	dateToInt, err := strconv.ParseInt(searchQuery.To, 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Invalid to date")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	dateTo := time.Unix(0, dateToInt*int64(time.Millisecond))
+
+	query.HotelID = uint(hotelID)
+	query.Capacities = searchQuery.Capacities
+	query.From = dateFrom
+	query.To = dateTo
+
+	if rooms, err := app.Store.RoomSearch(query); err != nil {
+		app.ErrorLog.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		if err := json.NewEncoder(w).Encode(rooms); err != nil {
+			app.ErrorLog.Println("Cannot encode rooms into JSON object")
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}

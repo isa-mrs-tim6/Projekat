@@ -54,7 +54,7 @@
             },
             goFlights (e){
                 e.preventDefault();
-                this.$router.replace("user_flights");
+                this.$router.push("/user_flights");
             },
             goHotels (e){
                 e.preventDefault();
@@ -74,7 +74,7 @@
             },
             goReserve (e){
                 e.preventDefault();
-                this.$router.replace("user");
+                this.$router.push("/user");
             }
         }
     }

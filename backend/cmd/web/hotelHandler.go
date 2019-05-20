@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 func (app *Application) GetHotels(w http.ResponseWriter, r *http.Request) {
@@ -105,6 +107,30 @@ func (app *Application) GetRooms(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(rooms)
 	if err != nil {
 		app.ErrorLog.Printf("Cannot encode hotel rooms into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetRoomCapacities(w http.ResponseWriter, r *http.Request) {
+	// GET HOTEL ID
+	vars := mux.Vars(r)
+	hotelID, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Could not get flight ID")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	capacities, err := app.Store.GetRoomCapacities(uint(hotelID))
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive room capacities")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(capacities)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode room capacities into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

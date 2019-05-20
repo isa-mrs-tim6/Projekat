@@ -62,3 +62,17 @@ func (db *Store) HotelSearch(query models.HotelQuery) ([]models.Hotel, error) {
 
 	return retval, nil
 }
+
+func (db *Store) RoomSearch(query models.RoomQuery) ([]models.Room, error) {
+	var rooms []models.Room
+
+	if err := db.Joins("FULl JOIN room_reservations on room_reservations.room_id = rooms.id").
+		Joins("JOIN hotel_reservations ON hotel_reservations.id = room_reservations.hotel_reservation_id").
+		Where("rooms.hotel_id = ? AND rooms.capacity in (?)", query.HotelID, query.Capacities).
+		Where("hotel_reservations.beginning NOT BETWEEN ? AND ?", query.From, query.To).
+		Where("hotel_reservations.end NOT BETWEEN ? AND ?", query.From, query.To).
+		Group("rooms.id").Find(&rooms).Error; err != nil {
+		return nil, err
+	}
+	return rooms, nil
+}

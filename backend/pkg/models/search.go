@@ -32,3 +32,16 @@ type HotelQuery struct {
 	From    time.Time
 	To      time.Time
 }
+
+type RoomQueryDTO struct {
+	Capacities []uint
+	From       string
+	To         string
+}
+
+type RoomQuery struct {
+	HotelID    uint
+	Capacities []uint
+	From       time.Time
+	To         time.Time
+}

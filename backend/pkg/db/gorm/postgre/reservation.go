@@ -211,3 +211,85 @@ func (db *Store) CalculatePriceFlight(flightID uint, seatID uint, userID uint, f
 
 	return price
 }
+
+func (db *Store) ReserveHotel(masterReservationID uint, hotelID uint, userID uint,
+	params models.HotelReservationParams) (uint, error) {
+	// Check parameters
+	if params.Rooms == nil || len(params.Rooms) == 0 {
+		return 0, errors.New("invalid parameters")
+	}
+
+	// Grab master reservation
+	var masterReservation models.Reservation
+	db.First(&masterReservation, masterReservationID)
+
+	// Create hotel reservation
+	hotelReservation := models.HotelReservation{
+		Rooms:          params.Rooms,
+		HotelID:        hotelID,
+		IsQuickReserve: params.IsQuickReserve,
+		Occupation: models.Occupation{
+			Beginning: params.From,
+			End:       params.To,
+		},
+		Ratings:  nil,
+		Features: nil,
+		Price:    db.CalculateHotelReservationPrice(userID, params.Rooms, params.IsQuickReserve),
+	}
+	masterReservation.ReservationHotelID = hotelReservation.ID
+	masterReservation.ReservationHotel = hotelReservation
+	//db.Create(&hotelReservation)
+	db.Save(&masterReservation)
+
+	// Get all associated reservations
+	var reservations []models.Reservation
+	db.Where("master_ref = ?", masterReservationID).Find(&reservations)
+
+	for _, reservation := range reservations {
+		hotelReservation := models.HotelReservation{
+			Rooms:          params.Rooms,
+			HotelID:        hotelID,
+			IsQuickReserve: params.IsQuickReserve,
+			Occupation: models.Occupation{
+				Beginning: params.From,
+				End:       params.To,
+			},
+			Ratings:  nil,
+			Features: nil,
+			Price:    db.CalculateHotelReservationPrice(userID, params.Rooms, params.IsQuickReserve),
+		}
+		reservation.ReservationHotel = hotelReservation
+		reservation.ReservationHotelID = hotelReservation.ID
+		//db.Create(&hotelReservation)
+		db.Save(&reservation)
+	}
+
+	return masterReservation.ID, nil
+}
+
+func (db *Store) CalculateHotelReservationPrice(userID uint, sent []models.Room, isQuickReserve bool) float64 {
+	var foundRooms []models.Room
+	var foundRoomIds []uint
+	price := float64(0.0)
+
+	for _, v := range sent {
+		foundRoomIds = append(foundRoomIds, v.ID)
+	}
+	db.Where(foundRoomIds).Find(&foundRooms)
+
+	// Add room prices
+	for _, v := range foundRooms {
+		price += v.Price
+	}
+
+	// Add discount based on number of reservations
+	var numOfReservations uint
+	var reward models.ReservationReward
+	db.Table("reservations").Where("user_id = ?", userID).Count(&numOfReservations)
+	db.First(&reward, "required_number < ?", numOfReservations)
+	if reward.PriceScale != 0 {
+		price *= reward.PriceScale
+	}
+
+	return price
+}

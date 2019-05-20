@@ -24,8 +24,8 @@
                             </div>
                         </v-flex>
                     </v-layout>
-                    <v-divider light></v-divider>
-                    <v-card-actions class="pa-3">
+                    <v-divider light/>
+                    <v-card-actions v-if="reservationID != null" class="pa-3">
                         <v-btn block @click="reserve(value.ID)">Reserve</v-btn>
                     </v-card-actions>
                 </v-card>
@@ -40,7 +40,7 @@
         props: ["hotels", "passengers", "reservationID"],
         methods: {
             reserve(id) {
-                console.log(id, this.passengers, this.reservationID);
+                this.$router.push({ path: `/reserve_room/${id}/${this.reservationID}/${this.passengers}` });
             }
         }
     }
