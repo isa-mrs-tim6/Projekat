@@ -81,7 +81,7 @@
             </v-card>
         </v-layout>
         <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
-        <Vehicles v-bind:vehicles="vehicles" v-bind:startDate="StartUnix" v-bind:endDate="EndUnix"/>
+        <Vehicles v-bind:passengers="passengers" v-bind:reservationID="reservationID" v-bind:vehicles="vehicles" v-bind:startDate="StartUnix" v-bind:endDate="EndUnix"/>
     </v-container>
 </template>
 
@@ -92,6 +92,7 @@
 
     export default {
         name: "VehiclesSearch",
+        props: ["reservationID", "passengers"],
         components: {Vehicles},
         data() {
             return {

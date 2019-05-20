@@ -203,7 +203,7 @@ export default new Router({
       component: RACSearch
     },
     {
-      path: '/vehiclesSearch/:id-:locID',
+      path: '/vehiclesSearch/:id/:locID',
       component: ShowVehicleSearch
     },
     {

@@ -103,14 +103,23 @@ func (app *Application) GetAirlineGraphData(w http.ResponseWriter, r *http.Reque
 func (app *Application) ReserveVehicle(w http.ResponseWriter, r *http.Request) {
 	var params models.VehicleReservationParams
 
-	err := json.NewDecoder(r.Body).Decode(&params)
+	// GET RESERVATION ID
+	vars := mux.Vars(r)
+	reservationID, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Could not get reservation ID")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
 		app.ErrorLog.Println("Could not decode JSON")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	if err := app.Store.ReserveVehicle(params); err != nil {
+	if err := app.Store.ReserveVehicle(uint(reservationID), params); err != nil {
 		app.ErrorLog.Printf("Could not complete reservation")
 		w.WriteHeader(http.StatusInternalServerError)
 	}

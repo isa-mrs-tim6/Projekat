@@ -81,7 +81,7 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 	return reservations, nil
 }
 
-func (db *Store) ReserveVehicle(params models.VehicleReservationParams) error {
+func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservationParams) error {
 	var reservation models.RentACarReservation
 	var vehicle models.Vehicle
 	var location models.Location
@@ -109,8 +109,32 @@ func (db *Store) ReserveVehicle(params models.VehicleReservationParams) error {
 	reservation.Occupation.Beginning = startDate
 	reservation.Occupation.End = endDate
 
-	if err := db.Create(&reservation).Error; err != nil {
-		return err
+	// Grab master reservation
+	var masterReservation models.Reservation
+	db.First(&masterReservation, masterRef)
+
+	masterReservation.ReservationRentACar = reservation
+	masterReservation.ReservationRentACarID = reservation.ID
+	db.Save(&masterReservation)
+
+	// Get all associated reservations
+	var reservations []models.Reservation
+	db.Where("master_ref = ?", masterRef).Find(&reservations)
+
+	for _, associated_reservation := range reservations {
+		reservation := models.RentACarReservation{
+			CompanyID: params.CompanyID,
+			Vehicle:   vehicle,
+			Price:     params.Price,
+			Location:  location.Address.Address,
+			Occupation: models.Occupation{
+				Beginning: startDate,
+				End:       endDate,
+			},
+		}
+		associated_reservation.ReservationRentACar = reservation
+		associated_reservation.ReservationRentACarID = reservation.ID
+		db.Save(&associated_reservation)
 	}
 
 	return nil

@@ -78,6 +78,7 @@
                 this.$router.push({ path: '/user_hotels', query: { reservationID: this.reservationID, passengers: this.passengers}});
             },
             reserveRentACar() {
+                this.$router.push({ path: '/user_cars', query: { reservationID: this.reservationID, passengers: this.passengers}});
             }
         }
     }
