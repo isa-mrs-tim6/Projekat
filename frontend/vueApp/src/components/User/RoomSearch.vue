@@ -2,12 +2,21 @@
     <v-card dark>
         <v-card-text>
             <v-container>
-                <v-layout align-center justify-center row-wrap>
-                    <v-flex xs3>
-                        <v-text-field label="Name" prepend-icon="hotel" v-model="query.name"></v-text-field>
+                <v-layout align-center justify-center row>
+                    <v-flex xs3 style="margin-right: 10px">
+                        <v-text-field label="Number of guests" prepend-icon="person_pin" v-model="guests"></v-text-field>
                     </v-flex>
-                    <v-flex xs3>
-                        <v-text-field label="Address" prepend-icon="place" v-model="query.address"></v-text-field>
+                    <v-flex xs3 style="margin-right: 10px; padding-top: 2px">
+                        <v-select
+                                v-model="selected_capacity"
+                                :items="room_capacities"
+                                :menu-props="{ maxHeight: '400' }"
+                                label="Select room capacities"
+                                prepend-icon="hotel"
+                                multiple
+                                hint="What type of rooms are you looking for?"
+                                persistent-hint
+                        ></v-select>
                     </v-flex>
                     <v-flex xs2>
                         <v-menu v-model="menuFrom" :close-on-content-click="false" lazy transition="scale-transition"
@@ -40,15 +49,14 @@
     import moment from 'moment';
 
     export default {
-        name: "HotelSearch",
+        name: "RoomSearch",
+        props: ["room_capacities"],
         data() {
             return {
                 menuFrom: false,
                 menuTo: false,
-                query: {
-                    name: null,
-                    address: null,
-                },
+                guests: null,
+                selected_capacity: null,
                 time: {
                     from: null,
                     to: null,
@@ -59,8 +67,8 @@
             search(e) {
                 e.preventDefault();
                 const SearchQuery = {
-                    "Name": this.query.name,
-                    "Address": this.query.address,
+                    "Guests": this.guests,
+                    "Capacities": this.selected_capacity,
                     "From": moment(this.time.from,"YYYY-MM-DD").valueOf().toString(),
                     "To": moment(this.time.to,"YYYY-MM-DD").valueOf().toString(),
                 };
@@ -87,7 +95,6 @@
                 }
             }
         }
-
     }
 </script>
 

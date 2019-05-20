@@ -3,7 +3,7 @@
         <UserNavBar></UserNavBar>
         <v-layout justify-center style="margin-top: 150px">
             <v-flex xs9 style="height: 100%;">
-                <RACSearch></RACSearch>
+                <RACSearch v-bind:passengers="passengers" v-bind:reservationID="reservationID"></RACSearch>
             </v-flex>
         </v-layout>
     </div>
@@ -23,6 +23,8 @@
                 items: [],
                 title: "Rent a car companies in our system",
                 isLogIn: false,
+                reservationID: Number.parseInt(this.$route.query.reservationID),
+                passengers: Number.parseInt(this.$route.query.passengers),
             }
         },
         beforeCreate() {

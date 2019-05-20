@@ -399,8 +399,11 @@
                 this.class = this.reservations[index].Master.ReservationFlight.Seat.Class;
                 this.seatNum = this.reservations[index].Master.ReservationFlight.Seat.Number;
                 this.fFeatures = this.reservations[index].Master.ReservationFlight.Features;
-                for(let i=0; i < this.reservations[index].Master.ReservationFlight.Features.length; i++){
-                    this.fPrice += this.reservations[index].Master.ReservationFlight.Features[i].Price;
+                if (this.fFeatures == null) {
+                    this.fFeatures = [];
+                }
+                for(let i=0; i < this.fFeatures; i++){
+                    this.fPrice += this.fFeatures[i].Price;
                 }
 
                 this.vName =  this.reservations[index].Master.ReservationRentACar.Vehicle.Name;
@@ -418,8 +421,11 @@
                 this.hEnd = this.reservations[index].Master.ReservationHotel.End;
                 this.hRoomNum = this.reservations[index].Master.ReservationHotel.Rooms.length;
                 this.hFeatures = this.reservations[index].Master.ReservationHotel.Features;
-                for(let i=0; i < this.reservations[index].Master.ReservationHotel.Features.length; i++){
-                    this.hPrice += this.reservations[index].Master.ReservationHotel.Features[i].Price;
+                if (this.hFeatures == null) {
+                    this.hFeatures = [];
+                }
+                for(let i=0; i < this.hFeatures; i++){
+                    this.hPrice += this.hFeatures[i].Price;
                 }
                 this.hAddress = this.reservations[index].Master.ReservationHotel.Hotel.Address;
                 this.hRating = this.reservations[index].Master.ReservationHotel.HotelRating;
