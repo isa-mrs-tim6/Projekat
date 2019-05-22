@@ -44,6 +44,7 @@ import FlightReservation from "./components/User/FlightReservation";
 import Reserve from "./views/User/Reserve";
 import ReservationChoice from "./views/User/ReservationChoice";
 import RoomReservation from "./components/User/RoomReservation";
+import HotelReservationRewards from "./views/HotelAdmin/HotelReservationRewards";
 
 Vue.use(Router);
 
@@ -97,6 +98,10 @@ export default new Router({
     {
       path: '/hotelAdmin/features',
       component: HotelFeatures
+    },
+    {
+      path: '/hotelAdmin/rewards',
+      component: HotelReservationRewards
     },
     {
       path: '/hotelAdmin/rooms',
