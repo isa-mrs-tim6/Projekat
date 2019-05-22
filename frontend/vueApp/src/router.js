@@ -42,6 +42,7 @@ import ShowReservations from "./views/User/ShowReservations";
 import ShowVehicleSearch from "./views/User/ShowVehicleSearch";
 import FlightReservation from "./components/User/FlightReservation";
 import Reserve from "./views/User/Reserve";
+import ShowFriends from "./views/User/ShowFriends";
 
 Vue.use(Router);
 
@@ -131,6 +132,10 @@ export default new Router({
     {
       path: "/userReservations",
       component: ShowReservations
+    },
+    {
+      path: "/userFriends",
+      component: ShowFriends
     },
     {
       path: '/airlineAdmin/airline_profile',

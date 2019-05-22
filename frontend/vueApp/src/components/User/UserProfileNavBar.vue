@@ -2,7 +2,8 @@
     <v-toolbar dark>
         <v-toolbar-title>My Profile</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn class="button" flat @click="goReservations">My reservations</v-btn>
+        <v-btn class="button" flat @click="goFriends">Friends</v-btn>
+        <v-btn class="button" flat @click="goReservations">Reservations</v-btn>
         <v-btn class="button" flat @click="goProfile">Edit profile</v-btn>
     </v-toolbar>
 </template>
@@ -18,6 +19,10 @@
             goReservations (e){
                 e.preventDefault();
                 this.$router.replace("userReservations");
+            },
+            goFriends (e){
+                e.preventDefault();
+                this.$router.replace("userFriends");
             }
         }
     }
