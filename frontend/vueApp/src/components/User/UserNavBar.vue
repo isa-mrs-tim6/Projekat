@@ -1,7 +1,7 @@
 <template>
     <div v-if="this.isLogIn === false">
         <v-toolbar fixed app dark >
-            <v-toolbar-title>Title</v-toolbar-title>
+            <v-toolbar-title>Front page</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn class="button" flat @click="goFlights">Flights</v-btn>
             <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
@@ -12,7 +12,7 @@
     </div>
     <div v-else>
         <v-toolbar  fixed app dark >
-            <v-toolbar-title>Title</v-toolbar-title>
+            <v-toolbar-title>Front page</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn class="button" flat @click="goReserve">Reserve</v-btn>
             <v-btn class="button" flat @click="goFlights">Flights</v-btn>
@@ -54,7 +54,7 @@
             },
             goFlights (e){
                 e.preventDefault();
-                this.$router.replace("user_flights");
+                this.$router.push("/user_flights");
             },
             goHotels (e){
                 e.preventDefault();
@@ -74,7 +74,7 @@
             },
             goReserve (e){
                 e.preventDefault();
-                this.$router.replace("user");
+                this.$router.push("/user");
             }
         }
     }

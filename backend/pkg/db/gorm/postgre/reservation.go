@@ -22,6 +22,14 @@ func (db *Store) UpdateReservationRewards(rewards []models.ReservationReward) {
 	}
 }
 
+func (db *Store) GetReservation(reservationID uint) (models.Reservation, error) {
+	var retVal models.Reservation
+	if err := db.First(&retVal, "id = ?", reservationID).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
 func (db *Store) GetReservationGraphData(id uint) ([]models.ReservationGraphData, error) {
 	var retVal []models.ReservationGraphData
 	if err := db.Table("flight_reservations").Select("flight_reservations.id, flight_reservations.price, flights.departure").
@@ -73,7 +81,7 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 	return reservations, nil
 }
 
-func (db *Store) ReserveVehicle(params models.VehicleReservationParams) error {
+func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservationParams) error {
 	var reservation models.RentACarReservation
 	var vehicle models.Vehicle
 	var location models.Location
@@ -101,17 +109,41 @@ func (db *Store) ReserveVehicle(params models.VehicleReservationParams) error {
 	reservation.Occupation.Beginning = startDate
 	reservation.Occupation.End = endDate
 
-	if err := db.Create(&reservation).Error; err != nil {
-		return err
+	// Grab master reservation
+	var masterReservation models.Reservation
+	db.First(&masterReservation, masterRef)
+
+	masterReservation.ReservationRentACar = reservation
+	masterReservation.ReservationRentACarID = reservation.ID
+	db.Save(&masterReservation)
+
+	// Get all associated reservations
+	var reservations []models.Reservation
+	db.Where("master_ref = ?", masterRef).Find(&reservations)
+
+	for _, associated_reservation := range reservations {
+		reservation := models.RentACarReservation{
+			CompanyID: params.CompanyID,
+			Vehicle:   vehicle,
+			Price:     params.Price,
+			Location:  location.Address.Address,
+			Occupation: models.Occupation{
+				Beginning: startDate,
+				End:       endDate,
+			},
+		}
+		associated_reservation.ReservationRentACar = reservation
+		associated_reservation.ReservationRentACarID = reservation.ID
+		db.Save(&associated_reservation)
 	}
 
 	return nil
 }
 
-func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationParams) error {
+func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationParams) (uint, error) {
 	// Check parameters
 	if params.Users == nil || params.Seats == nil || len(params.Users) != len(params.Seats) || len(params.Users) == 0 {
-		return errors.New("invalid parameters")
+		return 0, errors.New("invalid parameters")
 	}
 
 	// Create master reservation, { Users[0], Seats[0] } combination
@@ -161,7 +193,7 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 		db.Create(&reservation)
 	}
 
-	return nil
+	return masterReservation.ID, nil
 }
 
 func (db *Store) CalculatePriceFlight(flightID uint, seatID uint, userID uint, features []models.FeatureAirline, isQuickReserve bool) float64 {
@@ -190,6 +222,88 @@ func (db *Store) CalculatePriceFlight(flightID uint, seatID uint, userID uint, f
 		for _, feature := range features {
 			price += feature.Price
 		}
+	}
+
+	// Add discount based on number of reservations
+	var numOfReservations uint
+	var reward models.ReservationReward
+	db.Table("reservations").Where("user_id = ?", userID).Count(&numOfReservations)
+	db.First(&reward, "required_number < ?", numOfReservations)
+	if reward.PriceScale != 0 {
+		price *= reward.PriceScale
+	}
+
+	return price
+}
+
+func (db *Store) ReserveHotel(masterReservationID uint, hotelID uint, userID uint,
+	params models.HotelReservationParams) (uint, error) {
+	// Check parameters
+	if params.Rooms == nil || len(params.Rooms) == 0 {
+		return 0, errors.New("invalid parameters")
+	}
+
+	// Grab master reservation
+	var masterReservation models.Reservation
+	db.First(&masterReservation, masterReservationID)
+
+	// Create hotel reservation
+	hotelReservation := models.HotelReservation{
+		Rooms:          params.Rooms,
+		HotelID:        hotelID,
+		IsQuickReserve: params.IsQuickReserve,
+		Occupation: models.Occupation{
+			Beginning: params.From,
+			End:       params.To,
+		},
+		Ratings:  nil,
+		Features: nil,
+		Price:    db.CalculateHotelReservationPrice(userID, params.Rooms, params.IsQuickReserve),
+	}
+	masterReservation.ReservationHotelID = hotelReservation.ID
+	masterReservation.ReservationHotel = hotelReservation
+	//db.Create(&hotelReservation)
+	db.Save(&masterReservation)
+
+	// Get all associated reservations
+	var reservations []models.Reservation
+	db.Where("master_ref = ?", masterReservationID).Find(&reservations)
+
+	for _, reservation := range reservations {
+		hotelReservation := models.HotelReservation{
+			Rooms:          params.Rooms,
+			HotelID:        hotelID,
+			IsQuickReserve: params.IsQuickReserve,
+			Occupation: models.Occupation{
+				Beginning: params.From,
+				End:       params.To,
+			},
+			Ratings:  nil,
+			Features: nil,
+			Price:    db.CalculateHotelReservationPrice(userID, params.Rooms, params.IsQuickReserve),
+		}
+		reservation.ReservationHotel = hotelReservation
+		reservation.ReservationHotelID = hotelReservation.ID
+		//db.Create(&hotelReservation)
+		db.Save(&reservation)
+	}
+
+	return masterReservation.ID, nil
+}
+
+func (db *Store) CalculateHotelReservationPrice(userID uint, sent []models.Room, isQuickReserve bool) float64 {
+	var foundRooms []models.Room
+	var foundRoomIds []uint
+	price := float64(0.0)
+
+	for _, v := range sent {
+		foundRoomIds = append(foundRoomIds, v.ID)
+	}
+	db.Where(foundRoomIds).Find(&foundRooms)
+
+	// Add room prices
+	for _, v := range foundRooms {
+		price += v.Price
 	}
 
 	// Add discount based on number of reservations

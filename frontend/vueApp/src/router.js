@@ -43,6 +43,8 @@ import ShowVehicleSearch from "./views/User/ShowVehicleSearch";
 import FlightReservation from "./components/User/FlightReservation";
 import Reserve from "./views/User/Reserve";
 import ShowFriends from "./views/User/ShowFriends";
+import ReservationChoice from "./views/User/ReservationChoice";
+import RoomReservation from "./components/User/RoomReservation";
 
 Vue.use(Router);
 
@@ -111,6 +113,10 @@ export default new Router({
     },
     {
       path: '/user',
+      component: ReservationChoice
+    },
+    {
+      path: '/reserve_flight',
       component: Reserve
     },
     {
@@ -128,6 +134,10 @@ export default new Router({
     {
       path: "/userProfile",
       component: ShowProfile
+    },
+    {
+      path: "/reserve_room/:hotel_id/:reservation/:tickets",
+      component: RoomReservation
     },
     {
       path: "/userReservations",
@@ -198,7 +208,7 @@ export default new Router({
       component: RACSearch
     },
     {
-      path: '/vehiclesSearch/:id-:locID',
+      path: '/vehiclesSearch/:id/:locID',
       component: ShowVehicleSearch
     },
     {

@@ -32,6 +32,7 @@
 
     export default {
         name: "RACSearch",
+        props: ["reservationID", "passengers"],
         data() {
             return {
                 items: [],
@@ -40,7 +41,7 @@
         methods: {
             searchVehicles(index){
                 let location = 1;
-                this.$router.push({ path: `/vehiclesSearch/${this.items[index].ID}-${location}` })
+                this.$router.push({ path: `/vehiclesSearch/${this.items[index].ID}/${location}`, query: { reservationID: this.reservationID, passengers: this.passengers}})
             }
         },
         beforeCreate() {

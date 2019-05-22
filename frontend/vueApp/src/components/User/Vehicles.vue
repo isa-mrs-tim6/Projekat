@@ -54,7 +54,7 @@
 
     export default {
         name: "Vehicles",
-        props: ["vehicles", "startDate", "endDate"],
+        props: ["vehicles", "startDate", "endDate", "reservationID", "passengers"],
         data (){
           return {
               SuccessSnackbar: false,
@@ -73,11 +73,11 @@
                     StartDate: this.$props.startDate,
                     EndDate: this.$props.endDate
                 };
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/reserveVehicle', res)
+                axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/' + this.reservationID + '/reserveVehicle', res)
                     .then(res =>{
                         this.SuccessSnackbar = true;
                         this.SuccessSnackbarText = 'Reservation complete';
-                        this.$router.go();
+                        this.$router.push({ path: '/user', query: { reservationID: this.reservationID, passengers: this.passengers }});
                     })
                     .catch(err => {
                         this.ErrorSnackbar = true;

@@ -1,6 +1,9 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+	"time"
+)
 
 type Room struct {
 	gorm.Model
@@ -40,6 +43,20 @@ type HotelProfile struct {
 type Hotel struct {
 	gorm.Model
 	HotelProfile
-	Rooms        []Room             `gorm:"foreignkey:HotelID"`
-	Features     []Feature          `gorm:"foreignkey:HotelID"`
+	Rooms    []Room    `gorm:"foreignkey:HotelID"`
+	Features []Feature `gorm:"foreignkey:HotelID"`
+}
+
+type HotelReservationParamsDTO struct {
+	From           string
+	To             string
+	Rooms          []Room
+	IsQuickReserve bool
+}
+
+type HotelReservationParams struct {
+	From           time.Time
+	To             time.Time
+	Rooms          []Room
+	IsQuickReserve bool
 }

@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type OneWayQueryDto struct {
 	From       string
 	To         string
@@ -17,11 +19,29 @@ type OneWayQuery struct {
 	SeatClass  string
 }
 
+type HotelQueryDTO struct {
+	Name    string
+	Address string
+	From    string
+	To      string
+}
+
 type HotelQuery struct {
-	Name                  string
-	Address               string
-	RoomCapacityDownLimit uint
-	RoomCapacityUpLimit   uint
-	RoomPriceDownLimit    float64
-	RoomPriceUpLimit      float64
+	Name    string
+	Address string
+	From    time.Time
+	To      time.Time
+}
+
+type RoomQueryDTO struct {
+	Capacities []uint
+	From       string
+	To         string
+}
+
+type RoomQuery struct {
+	HotelID    uint
+	Capacities []uint
+	From       time.Time
+	To         time.Time
 }
