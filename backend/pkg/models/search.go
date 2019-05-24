@@ -45,3 +45,17 @@ type RoomQuery struct {
 	From       time.Time
 	To         time.Time
 }
+
+type RacQueryDTO struct {
+	Name    string
+	Address string
+	From    string
+	To      string
+}
+
+type RacQuery struct {
+	Name    string
+	Address string
+	From    time.Time
+	To      time.Time
+}

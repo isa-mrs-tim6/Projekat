@@ -76,3 +76,48 @@ func (db *Store) RoomSearch(query models.RoomQuery) ([]models.Room, error) {
 	}
 	return rooms, nil
 }
+
+func (db *Store) RacSearch(query models.RacQuery) ([]models.RentACarCompany, error) {
+	var companies []models.RentACarCompany
+	var retval []models.RentACarCompany
+
+	query.Name = strings.ToLower(query.Name)
+	query.Address = strings.ToLower(query.Address)
+
+	// mora da se ucitaju rent a kar kompanije gledajuci tabele rent_a_car_companies i locations
+	if err := db.Preload("Vehicles").Preload("Locations").Joins("FULl JOIN locations ON locations.rent_a_car_company_id = rent_a_car_companies.id").
+		Where("LOWER(locations.address) like ?", "%"+strings.ToLower(query.Address)+"%").
+		Where("LOWER(rent_a_car_companies.name) like ?", "%"+strings.ToLower(query.Name)+"%").
+		Group("rent_a_car_companies.id").
+		Find(&companies).Error; err != nil {
+		return nil, err
+	}
+
+	var reservations []models.RentACarReservation
+	if err := db.Find(&reservations).Error; err != nil {
+		return nil, err
+	}
+
+	for _, rac := range companies {
+		for _, v := range rac.Vehicles {
+			available := true
+			for _, reservation := range reservations {
+				if v.ID == reservation.VehicleID &&
+					((reservation.Beginning.After(query.From) && reservation.Beginning.Before(query.To)) ||
+						(reservation.End.After(query.From) && reservation.End.Before(query.To))) {
+					available = false
+					break
+				}
+				if available {
+					break
+				}
+			}
+			if available {
+				retval = append(retval, rac)
+				break
+			}
+		}
+	}
+
+	return retval, nil
+}
