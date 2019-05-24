@@ -64,7 +64,7 @@
                                                 <div class="center">
                                                     Locations:
                                                 </div>
-                                                <div class="center" v-for="(loc, index) in item.Locations" :key="loc.ID">
+                                                <div class="center" v-for="loc in item.Locations" :key="loc.ID">
                                                     {{loc.Address}}
                                                 </div>
                                             </v-layout>
@@ -127,7 +127,6 @@
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/search/rac", SearchQuery).
                     then(res => {
                         this.items = res.data;
-                        console.log(res.data)
                 })
             }
         }
