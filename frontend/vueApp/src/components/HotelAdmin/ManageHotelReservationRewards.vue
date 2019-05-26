@@ -14,30 +14,11 @@
                                         <v-icon x-large color="white">add</v-icon>
                                     </v-btn>
                                 </v-flex>
-                                <v-flex xs4 v-for="(value, index) in new_rewards" v-bind:key="index">
+                                <v-flex xs4 v-for="(value, index) in new_rewards" v-bind:key="'new' + index">
                                     <v-card>
                                         <v-card-text>
                                             <v-container grid-list-xl fill-height>
                                                 <v-layout column>
-                                                    <v-flex>
-                                                        <v-icon x-large>{{value.Icon}}</v-icon>
-                                                    </v-flex>
-                                                    <v-flex>
-                                                        <v-autocomplete
-                                                                v-model="value.Icon"
-                                                                :items="icons_model"
-                                                                :label="`Pick an icon`"
-                                                                prepend-inner-icon="wallpaper"
-                                                                persistent-hint
-                                                        >
-                                                            <template v-slot:append-outer>
-                                                                <v-slide-x-reverse-transition
-                                                                        mode="out-in"
-                                                                >
-                                                                </v-slide-x-reverse-transition>
-                                                            </template>
-                                                        </v-autocomplete>
-                                                    </v-flex>
                                                     <v-flex >
                                                         <v-text-field
                                                                 v-model="value.Name"
@@ -46,6 +27,47 @@
                                                                 prepend-inner-icon="input"
                                                                 required
                                                         ></v-text-field>
+                                                    </v-flex>
+                                                    <v-flex>
+                                                        <v-autocomplete
+                                                                :items="features"
+                                                                v-model="value.Features"
+                                                                label="Features"
+                                                                item-text="Name"
+                                                                item-value="Name"
+                                                                multiple
+                                                                chips
+                                                                return-object
+                                                        >
+                                                            <template slot="selection" slot-scope="data">
+                                                                <v-chip
+                                                                        :selected="data.selected"
+                                                                        :key="JSON.stringify(data.item)"
+                                                                        close
+                                                                        class="chip--select-multi"
+                                                                        @input="data.parent.selectItem(data.item)"
+                                                                >
+                                                                    <v-icon style="margin-right: 10px;">
+                                                                        {{data.item.Icon}}
+                                                                    </v-icon>
+                                                                    {{ data.item.Name }}
+                                                                </v-chip>
+                                                            </template>
+                                                            <template slot="item" slot-scope="data">
+                                                                <template >
+                                                                    <v-list-tile-avatar>
+                                                                        <v-icon>{{data.item.Icon}}</v-icon>
+                                                                    </v-list-tile-avatar>
+                                                                    <v-list-tile-content>
+                                                                        <v-list-tile-title v-html="data.item.Name"></v-list-tile-title>
+                                                                        <v-list-tile-sub-title v-html="data.item.Description"></v-list-tile-sub-title>
+                                                                    </v-list-tile-content>
+                                                                    <v-list-tile-action>
+                                                                        <v-list-tile-action-text>{{ data.item.Price }}</v-list-tile-action-text>
+                                                                    </v-list-tile-action>
+                                                                </template>
+                                                            </template>
+                                                        </v-autocomplete>
                                                     </v-flex>
                                                     <v-flex>
                                                         <v-textarea
@@ -58,13 +80,15 @@
                                                         ></v-textarea>
                                                     </v-flex>
                                                     <v-flex>
-                                                        <v-text-field
-                                                                v-model="value.Price"
-                                                                label="Price"
-                                                                class="body-2"
-                                                                prepend-inner-icon="euro_symbol"
-                                                                required
-                                                        ></v-text-field>
+                                                        <v-slider
+                                                                v-model="value.PriceScale"
+                                                                :max=1
+                                                                :min=0
+                                                                step="0.01"
+                                                                ticks
+                                                                label="Discount"
+                                                                thumb-label="always"
+                                                        ></v-slider>
                                                     </v-flex>
                                                     <v-flex>
                                                         <v-tooltip bottom>
@@ -104,14 +128,45 @@
                                                         ></v-text-field>
                                                     </v-flex>
                                                     <v-flex>
-                                                        <v-select
+                                                        <v-autocomplete
                                                                 :items="features"
-                                                                name="Features"
-                                                                label="Select a category"
                                                                 v-model="value.Features"
-                                                                v-validate="'required'"
-                                                                item-text="name"
-                                                        ></v-select>
+                                                                label="Features"
+                                                                item-text="Name"
+                                                                item-value="Name"
+                                                                multiple
+                                                                chips
+                                                                return-object
+                                                        >
+                                                            <template slot="selection" slot-scope="data">
+                                                                <v-chip
+                                                                        :selected="data.selected"
+                                                                        :key="JSON.stringify(data.item)"
+                                                                        close
+                                                                        class="chip--select-multi"
+                                                                        @input="data.parent.selectItem(data.item)"
+                                                                >
+                                                                    <v-icon style="margin-right: 10px;">
+                                                                        {{data.item.Icon}}
+                                                                    </v-icon>
+                                                                    {{ data.item.Name }}
+                                                                </v-chip>
+                                                            </template>
+                                                            <template slot="item" slot-scope="data">
+                                                                <template >
+                                                                    <v-list-tile-avatar>
+                                                                        <v-icon>{{data.item.Icon}}</v-icon>
+                                                                    </v-list-tile-avatar>
+                                                                    <v-list-tile-content>
+                                                                        <v-list-tile-title v-html="data.item.Name"></v-list-tile-title>
+                                                                        <v-list-tile-sub-title v-html="data.item.Description"></v-list-tile-sub-title>
+                                                                    </v-list-tile-content>
+                                                                    <v-list-tile-action>
+                                                                        <v-list-tile-action-text>{{ data.item.Price }}</v-list-tile-action-text>
+                                                                    </v-list-tile-action>
+                                                                </template>
+                                                            </template>
+                                                        </v-autocomplete>
                                                     </v-flex>
                                                     <v-flex>
                                                         <v-textarea
@@ -176,7 +231,6 @@
 
 <script>
     import axios from 'axios/index';
-    import { icons } from '../../iconList';
 
     export default {
         name: "ManageReservationRewards",
@@ -196,8 +250,6 @@
                 new_rewards: [],
                 backup: [],
                 features: [],
-                dialogm1: '',
-                dialog: false
             }
         },
         mounted() {
@@ -206,7 +258,7 @@
                     this.rewards = res.data;
                     this.backup = JSON.parse(JSON.stringify(this.rewards));
                 })
-                .catch(err => alert("Could not retrieve hotel rewards"))
+                .catch(err => alert("Could not retrieve hotel rewards"));
             axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/features')
                 .then(res => {
                     this.features = res.data;
@@ -215,11 +267,22 @@
         },
         methods: {
             addFeature(index) {
-                if (!Number.isInteger(parseInt(this.new_rewards[index].Price)) || parseInt(this.new_rewards[index].Price) < 0) {
+                if (!Number.isInteger(parseInt(this.new_rewards[index].PriceScale)) || parseInt(this.new_rewards[index].PriceScale) < 0) {
                     alert("Price must be a positive integer");
                     return;
                 }
                 this.new_rewards[index].Price = parseInt(this.new_rewards[index].Price);
+
+                if (!this.new_rewards[index].Name || !this.new_rewards[index].Description) {
+                    alert("Please fill in all the fields");
+                    return;
+                }
+
+                if (this.new_rewards[index].Features.length === 0) {
+                    alert("Please choose at least one feature");
+                    return;
+                }
+
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/rewards', this.new_rewards[index])
                     .then(res => {
                         this.rewards.unshift(this.new_rewards[index]);
@@ -232,6 +295,22 @@
                 this.new_rewards.splice(index, 1);
             },
             updateFeature(index) {
+                if (!Number.isInteger(parseInt(this.rewards[index].PriceScale)) || parseInt(this.rewards[index].PriceScale) < 0) {
+                    alert("Price must be a positive integer");
+                    return;
+                }
+                this.rewards[index].Price = parseInt(this.rewards[index].Price);
+
+                if (!this.rewards[index].Name || !this.rewards[index].Description) {
+                    alert("Please fill in all the fields");
+                    return;
+                }
+
+                if (this.rewards[index].Features.length === 0) {
+                    alert("Please choose at least one feature");
+                    return;
+                }
+                
                 axios.create({withCredentials: true}).put('http://localhost:8000/api/hotel/rewards', this.rewards[index])
                     .then(res => {
                         this.backup = JSON.parse(JSON.stringify(this.rewards));
