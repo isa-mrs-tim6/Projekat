@@ -86,7 +86,6 @@ func (db *Store) GetRoomCapacities(id uint) ([]uint, error) {
 func (db *Store) GetRoomRatings(id uint) ([]models.RoomRatingDAO, error) {
 	var retVal []models.RoomRatingDAO
 	var rooms []models.Room
-	db.LogMode(true)
 	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&rooms).Error; err != nil {
 		return nil, err
 	}
@@ -113,7 +112,6 @@ func (db *Store) GetRoomRatings(id uint) ([]models.RoomRatingDAO, error) {
 
 func (db *Store) GetHotelReservations(id uint) ([]models.HotelReservation, error) {
 	var retVal []models.HotelReservation
-	db.LogMode(true)
 	if err := db.Preload("Rooms").Preload("Ratings").Where("hotel_id = ?", id).Find(&retVal).Error; err != nil {
 		return retVal, err
 	}
@@ -123,7 +121,6 @@ func (db *Store) GetHotelReservations(id uint) ([]models.HotelReservation, error
 func (db *Store) AddRooms(id uint, rooms []models.Room) error {
 	var retVal models.Hotel
 	retVal.ID = id
-	db.LogMode(true)
 	if err := db.Preload("Rooms").Find(&retVal).Error; err != nil {
 		return err
 	}
@@ -188,4 +185,24 @@ func (db *Store) UpdateHotelFeature(feature models.Feature) {
 
 func (db *Store) DeleteHotelFeature(feature models.Feature) {
 	db.Where("id = ?", feature.ID).Delete(&feature)
+}
+
+func (db *Store) GetHotelRewards(id uint) ([]models.HotelReservationReward, error) {
+	var retVal []models.HotelReservationReward
+	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) AddHotelReward(reward models.HotelReservationReward) {
+	db.Create(&reward)
+}
+
+func (db *Store) UpdateHotelReward(reward models.HotelReservationReward) {
+	db.Model(&reward).Where("id = ?", reward.ID).Update(reward)
+}
+
+func (db *Store) DeleteHotelReward(reward models.HotelReservationReward) {
+	db.Where("id = ?", reward.ID).Delete(&reward)
 }
