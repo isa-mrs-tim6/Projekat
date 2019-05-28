@@ -200,9 +200,9 @@ func (db *Store) AddHotelReward(reward models.HotelReservationReward) {
 }
 
 func (db *Store) UpdateHotelReward(reward models.HotelReservationReward) {
-	db.Model(&reward).Where("id = ?", reward.ID).Update(reward)
+	db.Set("gorm:auto_preload", true).Model(&reward).Where("id = ?", reward.ID).Update(reward).Association("Features").Replace(reward.Features)
 }
 
 func (db *Store) DeleteHotelReward(reward models.HotelReservationReward) {
-	db.Where("id = ?", reward.ID).Delete(&reward)
+	db.Set("gorm:auto_preload", true).Where("id = ?", reward.ID).Delete(&reward).Association("Features").Delete(reward.Features)
 }
