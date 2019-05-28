@@ -579,14 +579,13 @@
                                 ResType: 'room',
                                 ResID: this.hID,
                                 Rating: this.rateStars,
-                                RoomID: this.roomIndex
+                                RoomID: this.hRooms[this.rateIndex].ID
                             };
                             axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
                                 .then(res => {
                                     this.SuccessSnackbar = true;
                                     this.SuccessSnackbarText = 'Reservation successfully rated';
-                                    this.roomRatings[this.roomIndex] = this.rateStars;
-                                    alert(this.roomRatings[this.roomIndex]);
+                                    this.roomRatings[this.rateIndex] = this.rateStars;
                                 });
                         }
                         break;

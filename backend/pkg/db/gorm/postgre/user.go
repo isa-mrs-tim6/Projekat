@@ -169,18 +169,12 @@ func (db *Store) Rate(rating models.ResRatingDAO) error {
 		}
 		break
 	case "room":
-		var hRes models.HotelReservation
-		if err := db.First(&hRes, rating.ResID).Error; err != nil {
+		if err := db.Table("room_ratings").
+			Where("room_id = ?", rating.RoomID).
+			Where("reservation_id = ?", rating.ResID).
+			Update("rating", int(rating.Rating)).
+			Error; err != nil {
 			return err
-		}
-		for _, res := range hRes.Ratings {
-			if res.RoomID == rating.RoomID {
-				res.Rating = int(rating.Rating)
-				if err := db.Save(&res).Error; err != nil {
-					return err
-				}
-				break
-			}
 		}
 		break
 	case "vehicle":
