@@ -95,14 +95,65 @@
                     </v-edit-dialog>
                 </td>
                 <td class="text-xs-center">
-                    <v-checkbox style="padding-top: 17px" class="text-xs-center" @change="save(rooms.item)" v-model="rooms.item.QuickReserve"></v-checkbox>
+                    <v-icon
+                            small
+                            @click="editQuickReservations(rooms.item)"
+                    >
+                        edit
+                    </v-icon>
                 </td>
             </template>
         </v-data-table>
+        <v-dialog v-model="dialog" max-width="500px">
+            <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+            </template>
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Manage quick reservations</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+                            <v-flex xs12 v-for="(value, index) in editedItem.QuickReserveDays" v-bind:key="index">
+                                <v-layout align-center justify-center row-wrap>
+                                    <v-flex xs6>
+                                        <v-menu v-model="menuFrom[index]" :close-on-content-click="false" lazy transition="scale-transition"
+                                                :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field v-model="value.Start" label="Start" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                            </template>
+                                            <v-date-picker no-title scrollable v-model = "value.Start" @input="menuFrom[index] = false"></v-date-picker>
+                                        </v-menu>
+                                    </v-flex>
+                                    <v-flex xs6>
+                                        <v-menu v-model="menuTo[index]" :close-on-content-click="false" lazy transition="scale-transition"
+                                                :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field v-model="value.End" label="End" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                            </template>
+                                            <v-date-picker no-title scrollable v-model = "value.End " @input="menuTo[index] = false"></v-date-picker>
+                                        </v-menu>
+                                    </v-flex>
+                                </v-layout>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click="addNewQuickReserve">Add new dates</v-btn>
+                    <v-btn color="blue darken-1" flat @click="closeQuickReserve">Cancel</v-btn>
+                    <v-btn color="blue darken-1" flat @click="saveQuickReserve">Save</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
 <script>
+    import moment from 'moment';
+
     export default {
         name: "Rooms",
         props: ["rooms"],
@@ -112,13 +163,21 @@
                     { text: 'Number', value: 'Number' },
                     { text: 'Capacity', value: 'Capacity' },
                     { text: 'Price', value: 'Price' },
-                    { text: 'Quick reservation', value: 'QuickReserve' },
+                    { text: 'Quick reservation' },
                 ],
                 selected: [],
                 numeric: value => !isNaN(value) || 'Numeric',
                 editNumber: null,
                 editPrice: null,
                 editCapacity: null,
+                dialog: false,
+                editedItem: {QuickReserveDays: []},
+                menuFrom: [],
+                menuTo: [],
+                time: {
+                    from: null,
+                    to: null,
+                },
             }
         },
         methods: {
@@ -169,7 +228,28 @@
                 this.editNumber = null;
                 this.editPrice = null;
                 this.editCapacity = null;
-            }
+            },
+            editQuickReservations(item) {
+                this.editedItem = item;
+                this.menuFrom = [];
+                this.menuTo = [];
+
+                for (let i = 0; i < item.QuickReserveDays.length; i++) {
+                    this.menuFrom.push(false);
+                    this.menuTo.push(false);
+                }
+
+                this.dialog = true;
+            },
+            addNewQuickReserve() {
+
+            },
+            closeQuickReserve () {
+                this.dialog = false;
+            },
+            saveQuickReserve() {
+
+            },
         }
     }
 </script>

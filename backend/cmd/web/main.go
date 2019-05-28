@@ -132,7 +132,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/hotel/updateProfile", app.UpdateHotelProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/addHotel", Validate(app.CreateHotel, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/{id}/getRoomCapacities", Validate(app.GetRoomCapacities, []string{"User"})).Methods("GET")
-	router.HandleFunc("/api/hotel/getRooms", Validate(app.GetRooms, []string{"User"})).Methods("GET")
+	router.HandleFunc("/api/hotel/getRooms", Validate(app.GetRooms, []string{"User", "HotelAdmin"})).Methods("GET")
 	router.HandleFunc("/api/hotel/getRoomRatings", Validate(app.GetRoomRatings, []string{"HotelAdmin"})).Methods("GET")
 	router.HandleFunc("/api/hotel/addRooms", Validate(app.AddRooms, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/deleteRooms", Validate(app.DeleteRooms, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
@@ -169,6 +169,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/search/multi", app.MultiSearch).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/search/hotels", app.HotelSearch).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/search/{id}/rooms", Validate(app.RoomSearch, []string{"User"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/search/{id}/quickRooms", Validate(app.QuickReserveRoomSearch, []string{"User"})).Methods("POST", "OPTIONS")
 
 	// STATIC FILE HANDLER
 	staticFileDirectory := http.Dir("./ui/")

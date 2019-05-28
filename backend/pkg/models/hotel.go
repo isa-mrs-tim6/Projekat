@@ -5,13 +5,20 @@ import (
 	"time"
 )
 
+type RoomQuickReserveDays struct {
+	gorm.Model
+	Start  time.Time
+	End    time.Time
+	RoomID uint
+}
+
 type Room struct {
 	gorm.Model
-	Number       int
-	Price        float64
-	Capacity     uint
-	HotelID      uint
-	QuickReserve bool
+	Number           int
+	Price            float64
+	Capacity         uint
+	HotelID          uint
+	QuickReserveDays []RoomQuickReserveDays `gorm:"foreignkey:RoomID"`
 }
 
 type RoomRating struct {
