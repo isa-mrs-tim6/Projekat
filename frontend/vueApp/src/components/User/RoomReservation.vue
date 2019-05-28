@@ -25,7 +25,7 @@
                     </v-card-title>
                 </v-card>
             </v-flex>
-            <v-flex xs12 style="margin-top: 2vw">
+            <v-flex xs12 style="margin-top: 2vw" v-if="allow">
                 <v-btn dark block @click="reserve">Reserve</v-btn>
             </v-flex>
         </v-layout>
@@ -106,6 +106,15 @@
                     .catch(err => alert(err));
             }
         },
+        computed:{
+            allow:function(){
+                let retVal = this.checkboxes;
+                if(this.checkboxes.length > 0){
+                    retVal = retVal.filter(ind => ind);
+                }
+                return retVal.length > 0;
+            }
+        }
     }
 </script>
 
