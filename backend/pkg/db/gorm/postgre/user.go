@@ -135,3 +135,74 @@ func (db *Store) UpdateSystemAdmin(id uint, newProfile models.Profile) error {
 	}
 	return nil
 }
+
+func (db *Store) Rate(rating models.ResRatingDAO) error {
+	switch rating.ResType {
+	case "flight":
+		var fRes models.FlightReservation
+		if err := db.First(&fRes, rating.ResID).Error; err != nil {
+			return err
+		}
+		fRes.FlightRating = rating.Rating
+		if err := db.Save(&fRes).Error; err != nil {
+			return err
+		}
+		break
+	case "airline":
+		var fRes models.FlightReservation
+		if err := db.First(&fRes, rating.ResID).Error; err != nil {
+			return err
+		}
+		fRes.CompanyRating = rating.Rating
+		if err := db.Save(&fRes).Error; err != nil {
+			return err
+		}
+		break
+	case "hotel":
+		var hRes models.HotelReservation
+		if err := db.First(&hRes, rating.ResID).Error; err != nil {
+			return err
+		}
+		hRes.HotelRating = rating.Rating
+		if err := db.Save(&hRes).Error; err != nil {
+			return err
+		}
+		break
+	case "room":
+		var hRes models.HotelReservation
+		if err := db.First(&hRes, rating.ResID).Error; err != nil {
+			return err
+		}
+		for _, res := range hRes.Ratings {
+			if res.RoomID == rating.RoomID {
+				res.Rating = int(rating.Rating)
+				if err := db.Save(&res).Error; err != nil {
+					return err
+				}
+				break
+			}
+		}
+		break
+	case "vehicle":
+		var rRes models.RentACarReservation
+		if err := db.First(&rRes, rating.ResID).Error; err != nil {
+			return err
+		}
+		rRes.VehicleRating = rating.Rating
+		if err := db.Save(&rRes).Error; err != nil {
+			return err
+		}
+		break
+	case "rac":
+		var rRes models.RentACarReservation
+		if err := db.First(&rRes, rating.ResID).Error; err != nil {
+			return err
+		}
+		rRes.CompanyRating = rating.Rating
+		if err := db.Save(&rRes).Error; err != nil {
+			return err
+		}
+		break
+	}
+	return nil
+}

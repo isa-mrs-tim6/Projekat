@@ -66,7 +66,6 @@
                                         background-color="indigo lighten-3"
                                         empty-icon="$vuetify.icons.ratingFull"
                                         readonly
-                                        half-increments
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
@@ -83,7 +82,6 @@
                                         background-color="indigo lighten-3"
                                         empty-icon="$vuetify.icons.ratingFull"
                                         readonly
-                                        half-increments
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
@@ -138,7 +136,6 @@
                                     background-color="indigo lighten-3"
                                     empty-icon="$vuetify.icons.ratingFull"
                                     readonly
-                                    half-increments
                                     color="orange"></v-rating>
                             </v-flex>
                             <v-flex xs2>
@@ -171,7 +168,6 @@
                                     background-color="indigo lighten-3"
                                     empty-icon="$vuetify.icons.ratingFull"
                                     readonly
-                                    half-increments
                                     color="orange"></v-rating>
                             </v-flex>
                             <v-flex xs2>
@@ -234,7 +230,6 @@
                                         background-color="indigo lighten-3"
                                         empty-icon="$vuetify.icons.ratingFull"
                                         readonly
-                                        half-increments
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
@@ -247,7 +242,6 @@
                                         background-color="indigo lighten-3"
                                         empty-icon="$vuetify.icons.ratingFull"
                                         readonly
-                                        half-increments
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
@@ -305,7 +299,6 @@
                             v-model="rateStars"
                             background-color="indigo lighten-3"
                             empty-icon="$vuetify.icons.ratingFull"
-                            half-increments
                             hover
                             color="orange"></v-rating>
                 </v-card-text>
@@ -544,9 +537,18 @@
                             this.ErrorSnackbar = true;
                             this.ErrorSnackbarText = 'Reservation isn\'t over yet';
                         }else{
-                            this.SuccessSnackbar = true;
-                            this.SuccessSnackbarText = 'Reservation successfully rated';
-                            this.fRating = this.rateStars;
+                            let rating = {
+                                ResType: 'flight',
+                                ResID: this.fID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.fRating = this.rateStars;
+                                });
                         }
                         break;
                     case 'airline':
@@ -554,9 +556,18 @@
                             this.ErrorSnackbar = true;
                             this.ErrorSnackbarText = 'Reservation isn\'t over yet';
                         }else{
-                            this.SuccessSnackbar = true;
-                            this.SuccessSnackbarText = 'Reservation successfully rated';
-                            this.fCompanyRating = this.rateStars;
+                            let rating = {
+                                ResType: 'airline',
+                                ResID: this.fID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.fCompanyRating = this.rateStars;
+                                });
                         }
                         break;
                     case 'room':
@@ -564,9 +575,19 @@
                             this.ErrorSnackbar = true;
                             this.ErrorSnackbarText = 'Reservation isn\'t over yet';
                         }else{
-                            this.SuccessSnackbar = true;
-                            this.SuccessSnackbarText = 'Reservation successfully rated';
-                            this.roomRatings[this.rateIndex] = this.rateStars;
+                            let rating = {
+                                ResType: 'room',
+                                ResID: this.hID,
+                                Rating: this.rateStars,
+                                RoomID: this.roomIndex
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.roomRatings[this.roomIndex] = this.rateStars;
+                                    alert(this.roomRatings[this.roomIndex]);
+                                });
                         }
                         break;
                     case 'hotel':
@@ -574,19 +595,37 @@
                             this.ErrorSnackbar = true;
                             this.ErrorSnackbarText = 'Reservation isn\'t over yet';
                         }else{
-                            this.SuccessSnackbar = true;
-                            this.SuccessSnackbarText = 'Reservation successfully rated';
-                            this.hRating = this.rateStars;
+                            let rating = {
+                                ResType: 'hotel',
+                                ResID: this.hID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.hRating = this.rateStars;
+                                });
                         }
                         break;
                     case 'vehicle':
-                        if(moment(this.hEnd, 'DD.MM.YYYY').isAfter(moment())){
+                        if(moment(this.vEnd, 'DD.MM.YYYY').isAfter(moment())){
                             this.ErrorSnackbar = true;
                             this.ErrorSnackbarText = 'Reservation isn\'t over yet';
                         }else{
-                            this.SuccessSnackbar = true;
-                            this.SuccessSnackbarText = 'Reservation successfully rated';
-                            this.vRating = this.rateStars;
+                            let rating = {
+                                ResType: 'vehicle',
+                                ResID: this.rID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.vRating = this.rateStars;
+                                });
                         }
                         break;
                     case 'rac':
@@ -594,9 +633,18 @@
                             this.ErrorSnackbar = true;
                             this.ErrorSnackbarText = 'Reservation isn\'t over yet';
                         }else{
-                            this.SuccessSnackbar = true;
-                            this.SuccessSnackbarText = 'Reservation successfully rated';
-                            this.vCompanyRating = this.rateStars;
+                            let rating = {
+                                ResType: 'rac',
+                                ResID: this.rID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.vCompanyRating = this.rateStars;
+                                });
                         }
                         break;
                 }
