@@ -20,8 +20,8 @@
         </v-card>
         <v-dialog v-model="dialog" persistent max-width="1000px">
             <v-card>
-                <v-expansion-panel v-if="this.resDetails.ReservationFlightID !== 0">
-                    <v-expansion-panel-content>
+                <v-expansion-panel>
+                    <v-expansion-panel-content v-if="this.resDetails.ReservationFlightID !== 0">
                         <template v-slot:header>
                             <div>Flight Reservation</div>
                         </template>
@@ -97,9 +97,7 @@
                             </v-layout>
                         </v-card>
                     </v-expansion-panel-content>
-                </v-expansion-panel>
-                <v-expansion-panel v-if="this.resDetails.ReservationHotelID !== 0">
-                    <v-expansion-panel-content>
+                    <v-expansion-panel-content v-if="this.resDetails.ReservationHotelID !== 0">
                         <template v-slot:header>
                             <div>Hotel Reservation</div>
                         </template>
@@ -187,9 +185,7 @@
                             </v-flex>
                         </v-layout>
                     </v-expansion-panel-content>
-                </v-expansion-panel>
-                <v-expansion-panel v-if="this.resDetails.ReservationRentACarID !== 0">
-                    <v-expansion-panel-content>
+                    <v-expansion-panel-content  v-if="this.resDetails.ReservationRentACarID !== 0">
                         <template v-slot:header>
                             <div>Vehicle Reservation</div>
                         </template>

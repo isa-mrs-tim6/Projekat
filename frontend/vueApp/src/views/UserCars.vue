@@ -1,7 +1,7 @@
 <template>
     <div>
         <UserNavBar></UserNavBar>
-        <v-layout justify-center style="margin-top: 150px">
+        <v-layout justify-center style="margin-top: 200px">
             <v-flex xs9 style="height: 100%;">
                 <RACSearch v-bind:passengers="passengers" v-bind:reservationID="reservationID"></RACSearch>
             </v-flex>

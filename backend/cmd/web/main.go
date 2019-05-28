@@ -164,6 +164,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/search/oneWay", app.OneWaySearch).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/search/multi", app.MultiSearch).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/search/hotels", app.HotelSearch).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/search/rac", app.RacSearch).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/search/{id}/rooms", Validate(app.RoomSearch, []string{"User"})).Methods("POST", "OPTIONS")
 
 	// STATIC FILE HANDLER

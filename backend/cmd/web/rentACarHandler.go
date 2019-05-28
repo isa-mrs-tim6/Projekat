@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 func (app *Application) GetRentACarCompanies(w http.ResponseWriter, r *http.Request) {
@@ -85,6 +87,45 @@ func (app *Application) UpdateRentACarCompanyProfile(w http.ResponseWriter, r *h
 	if err != nil {
 		app.ErrorLog.Println("Could not add rent-a-car company to database")
 		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func (app *Application) RacSearch(w http.ResponseWriter, r *http.Request) {
+	var searchQuery models.RacQueryDTO
+	var query models.RacQuery
+
+	if err := json.NewDecoder(r.Body).Decode(&searchQuery); err != nil {
+		app.ErrorLog.Println("Cannot decode JSON object")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	dateFromInt, err := strconv.ParseInt(searchQuery.From, 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Invalid from date")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	dateFrom := time.Unix(0, dateFromInt*int64(time.Millisecond))
+
+	dateToInt, err := strconv.ParseInt(searchQuery.To, 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Invalid to date")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	dateTo := time.Unix(0, dateToInt*int64(time.Millisecond))
+
+	query.Name = searchQuery.Name
+	query.Address = searchQuery.Address
+	query.From = dateFrom
+	query.To = dateTo
+
+	if hotels, err := app.Store.RacSearch(query); err != nil {
+		app.ErrorLog.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		if err := json.NewEncoder(w).Encode(hotels); err != nil {
+			app.ErrorLog.Println("Cannot encode hotels into JSON object")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 	}
 }
 
