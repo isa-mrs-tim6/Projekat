@@ -7,7 +7,7 @@
             <v-container>
                 <v-layout>
                     <v-flex align-self-center>
-                        <HotelFeaturesComponent/>
+                        <ManageHotelReservationRewards/>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -17,12 +17,12 @@
 
 <script>
     import HotelAdminNavDrawer from "../../components/HotelAdmin/HotelAdminNavDrawer";
-    import HotelFeaturesComponent from "../../components/HotelAdmin/HotelFeaturesComponent";
+    import ManageHotelReservationRewards from "../../components/HotelAdmin/ManageHotelReservationRewards";
     import axios from 'axios';
 
     export default {
-        name: "HotelFeatures",
-        components: {HotelAdminNavDrawer, HotelFeaturesComponent},
+        name: "HotelReservationRewards",
+        components: {ManageHotelReservationRewards, HotelAdminNavDrawer},
         mounted(){
             this.checkFirstPass();
         },

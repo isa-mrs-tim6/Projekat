@@ -66,11 +66,28 @@ func (db *Store) HotelSearch(query models.HotelQuery) ([]models.Hotel, error) {
 func (db *Store) RoomSearch(query models.RoomQuery) ([]models.Room, error) {
 	var rooms []models.Room
 
-	if err := db.Joins("FULl JOIN room_reservations on room_reservations.room_id = rooms.id").
-		Joins("JOIN hotel_reservations ON hotel_reservations.id = room_reservations.hotel_reservation_id").
+	if err := db.Joins("LEFT JOIN room_reservations on room_reservations.room_id = rooms.id").
+		Joins("LEFT JOIN hotel_reservations ON hotel_reservations.id = room_reservations.hotel_reservation_id"+
+			" AND (hotel_reservations.beginning NOT BETWEEN ? AND ?) AND (hotel_reservations.end NOT BETWEEN ? AND ?)",
+			query.From, query.To, query.From, query.To).
 		Where("rooms.hotel_id = ? AND rooms.capacity in (?)", query.HotelID, query.Capacities).
-		Where("hotel_reservations.beginning NOT BETWEEN ? AND ?", query.From, query.To).
-		Where("hotel_reservations.end NOT BETWEEN ? AND ?", query.From, query.To).
+		Group("rooms.id").Find(&rooms).Error; err != nil {
+		return nil, err
+	}
+	return rooms, nil
+}
+
+func (db *Store) QuickReservationRoomSearch(query models.RoomQuery) ([]models.Room, error) {
+	var rooms []models.Room
+
+	if err := db.Joins("JOIN room_quick_reserve_days ON room_quick_reserve_days.room_id = rooms.id AND"+
+		" (? BETWEEN room_quick_reserve_days.start AND room_quick_reserve_days.end) AND"+
+		" (? BETWEEN room_quick_reserve_days.start AND room_quick_reserve_days.end)", query.From, query.To).
+		Joins("LEFT JOIN room_reservations ON room_reservations.room_id = rooms.id").
+		Joins("LEFT JOIN hotel_reservations ON hotel_reservations.id = room_reservations.hotel_reservation_id"+
+			" AND (hotel_reservations.beginning NOT BETWEEN ? AND ?) AND (hotel_reservations.end NOT BETWEEN ? AND ?)",
+			query.From, query.To, query.From, query.To).
+		Where("rooms.hotel_id = ?", query.HotelID).
 		Group("rooms.id").Find(&rooms).Error; err != nil {
 		return nil, err
 	}

@@ -27,6 +27,7 @@
                     <v-divider light/>
                     <v-card-actions v-if="reservationID != null" class="pa-3">
                         <v-btn block @click="reserve(value.ID)">Reserve</v-btn>
+                        <v-btn block @click="quickReserve(value.ID)">Quick Reserve</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-flex>
@@ -37,10 +38,13 @@
 <script>
     export default {
         name: "HotelGrid",
-        props: ["hotels", "passengers", "reservationID"],
+        props: ["hotels", "passengers", "reservationID", "start", "end"],
         methods: {
             reserve(id) {
                 this.$router.push({ path: `/reserve_room/${id}/${this.reservationID}/${this.passengers}` });
+            },
+            quickReserve(id) {
+                this.$router.push({ path: `/quick_reserve_room/${id}/${this.reservationID}/${this.start}/${this.end}` });
             }
         }
     }

@@ -45,6 +45,8 @@ import Reserve from "./views/User/Reserve";
 import ShowFriends from "./views/User/ShowFriends";
 import ReservationChoice from "./views/User/ReservationChoice";
 import RoomReservation from "./components/User/RoomReservation";
+import HotelReservationRewards from "./views/HotelAdmin/HotelReservationRewards";
+import QuickRoomReservation from "./components/User/QuickRoomReservation";
 
 Vue.use(Router);
 
@@ -100,6 +102,10 @@ export default new Router({
       component: HotelFeatures
     },
     {
+      path: '/hotelAdmin/rewards',
+      component: HotelReservationRewards
+    },
+    {
       path: '/hotelAdmin/rooms',
       component: HotelRooms
     },
@@ -138,6 +144,10 @@ export default new Router({
     {
       path: "/reserve_room/:hotel_id/:reservation/:tickets",
       component: RoomReservation
+    },
+    {
+      path: "/quick_reserve_room/:hotel_id/:reservation/:start/:end",
+      component: QuickRoomReservation
     },
     {
       path: "/userReservations",

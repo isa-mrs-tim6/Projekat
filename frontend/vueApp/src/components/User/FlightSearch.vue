@@ -1,13 +1,13 @@
 <template>
     <v-card dark>
         <div>
-            <v-layout row-wrap>
+            <v-layout row-wrap pt-3 ml-3>
                 <v-flex xs1><span class=".body-2" :class='this.searchClassBinder("one-way")' @click='selectedSearchType = "one-way"'>One-way</span></v-flex>
                 <v-flex xs1><span class=".body-2" :class='this.searchClassBinder("round")' @click='selectedSearchType = "round"'>Round-Trip</span></v-flex>
                 <v-flex xs1><span class=".body-2" :class='this.searchClassBinder("multi")' @click='selectedSearchType = "multi"'>Multi-city</span></v-flex>
             </v-layout>
             <div v-if='selectedSearchType === "one-way"'>
-                <v-layout row-wrap mt-2>
+                <v-layout row-wrap mx-3>
                     <v-flex xs3 mr-2>
                         <v-text-field label="From" prepend-icon="map" v-model="oneWay.from"></v-text-field>
                     </v-flex>
@@ -78,11 +78,11 @@
                             </v-card>
                         </v-menu>
                     </v-flex>
-                    <v-flex xs4><v-btn @click="oneWaySearch">Search</v-btn></v-flex>
+                    <v-flex xs3><v-btn @click="oneWaySearch">Search</v-btn></v-flex>
                 </v-layout>
             </div>
             <div v-else-if='selectedSearchType === "round"'>
-                <v-layout row-wrap mt-2>
+                <v-layout row-wrap mx-3>
                     <v-flex xs3 mr-2>
                         <v-text-field label="From" v-model="round.from" prepend-icon="map"></v-text-field>
                     </v-flex>
@@ -162,12 +162,12 @@
                             </v-card>
                         </v-menu>
                     </v-flex>
-                    <v-flex xs4><v-btn @click="roundSearch">Search</v-btn></v-flex>
+                    <v-flex xs3><v-btn @click="roundSearch">Search</v-btn></v-flex>
                 </v-layout>
             </div>
             <div v-else-if='selectedSearchType === "multi"'>
                 <div v-for="(layover, index) in multi.layovers" :key="index">
-                    <v-layout row-wrap justify-start align-center>
+                    <v-layout row-wrap justify-start align-center mx-3>
                         <v-flex xs4 mr-3>
                             <v-text-field label="From" prepend-icon="map" v-model="layover.from"></v-text-field>
                         </v-flex>
@@ -176,11 +176,11 @@
                         </v-flex>
                     </v-layout>
                 </div>
-                <v-layout row-wrap justify-start>
-                    <v-flex xs2>
+                <v-layout row-wrap justify-start mx-3>
+                    <v-flex xs2 pt-2>
                         <v-btn small @click="addRow" v-if="this.multi.layovers.length < 4">Add</v-btn>
                     </v-flex>
-                    <v-flex xs2 mr-3>
+                    <v-flex xs2 mr-3 pt-2>
                         <v-btn small @click="deleteRow">Remove</v-btn>
                     </v-flex>
                     <v-flex xs2 mr-3>
