@@ -122,6 +122,9 @@
                         seatClass: query.seatClass,
                         passengers: query.passengers.toString()
                     };
+                    localStorage.setItem('departureDate',query.departureDate);
+                    localStorage.setItem('returnDate',query.returnDate);
+
                     var dateMoment2 = moment(searchQuery2.date,"YYYY-MM-DD");
                     searchQuery2.date = dateMoment2.valueOf().toString();
                     axios.post("http://localhost:8000/api/search/oneWay", searchQuery2)
@@ -143,6 +146,7 @@
                         .then(res=>{
                             this.flights = res.data;
                         })
+                    localStorage.setItem('departureDate',query.date);
                 }else{
                     this.searchType = "oneWay";
                     var searchQuery = {
@@ -158,7 +162,8 @@
                     axios.post("http://localhost:8000/api/search/multi", searchQuery)
                         .then(res=>{
                             this.flights = res.data;
-                        })
+                        });
+                    localStorage.setItem('departureDate',query.date);
                 }
             }
         },

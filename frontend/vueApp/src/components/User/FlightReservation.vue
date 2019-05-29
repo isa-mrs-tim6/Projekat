@@ -228,7 +228,7 @@
             },
             reserve(e) {
                 e.preventDefault();
-
+                localStorage.setItem('destination',this.flight.Destination.Name);
                 for (let i = 0; i < this.userInfo.length; i++) {
                     if (!this.checkInfo(i, this.userInfo[i].Type)) {
                         this.snackbar_fields.text = "Please fill in the required fields";

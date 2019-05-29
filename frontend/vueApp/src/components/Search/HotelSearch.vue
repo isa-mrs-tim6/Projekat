@@ -7,25 +7,24 @@
                         <v-text-field label="Name" prepend-icon="hotel" v-model="query.name"></v-text-field>
                     </v-flex>
                     <v-flex xs3>
-                        <v-text-field label="Address" prepend-icon="place" v-model="query.address"></v-text-field>
+                        <v-text-field label="Address" prepend-icon="place" v-model="query.address" readonly></v-text-field>
                     </v-flex>
                     <v-flex xs2>
-                        <v-menu v-model="menuFrom" :close-on-content-click="false" lazy transition="scale-transition"
-                                :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
-                            <template v-slot:activator="{ on }">
-                                <v-text-field v-model="time.from" label="From" prepend-icon="event" readonly v-on="on"></v-text-field>
-                            </template>
-                            <v-date-picker no-title scrollable v-model = "time.from" @input="menuFrom = false"></v-date-picker>
-                        </v-menu>
+                        <v-text-field v-model="time.from" label="From" prepend-icon="event" readonly></v-text-field>
                     </v-flex>
                     <v-flex xs2>
-                        <v-menu v-model="menuTo" :close-on-content-click="false" lazy transition="scale-transition"
-                                :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
-                            <template v-slot:activator="{ on }">
-                                <v-text-field v-model="time.to" label="To" prepend-icon="event" readonly v-on="on"></v-text-field>
-                            </template>
-                            <v-date-picker no-title scrollable v-model = "time.to" @input="menuTo = false"></v-date-picker>
-                        </v-menu>
+                        <template v-if="returnDate === null">
+                            <v-menu v-model="menuTo" :close-on-content-click="false" lazy transition="scale-transition"
+                                    :nudge-right="40" offset-y full-width max-width="290px" min-width="290px" >
+                                <template v-slot:activator="{ on }">
+                                    <v-text-field v-model="time.to" label="To" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                </template>
+                                <v-date-picker no-title scrollable v-model = "time.to" @input="menuTo = false" :min="minDate"></v-date-picker>
+                            </v-menu>
+                        </template>
+                        <template v-else>
+                            <v-text-field v-model="time.to" label="From" prepend-icon="event" readonly></v-text-field>
+                        </template>
                     </v-flex>
                     <v-flex xs2>
                         <v-btn @click="search">Search</v-btn>
@@ -43,7 +42,6 @@
         name: "HotelSearch",
         data() {
             return {
-                menuFrom: false,
                 menuTo: false,
                 query: {
                     name: null,
@@ -53,7 +51,16 @@
                     from: null,
                     to: null,
                 },
+                minDate: null,
+                returnDate: null,
             }
+        },
+        created(){
+            this.query.address = localStorage.getItem("destination");
+            this.time.to = localStorage.getItem("returnDate");
+            this.returnDate = localStorage.getItem("returnDate");
+            this.time.from = localStorage.getItem("departureDate");
+            this.minDate = this.time.from;
         },
         methods: {
             search(e) {
