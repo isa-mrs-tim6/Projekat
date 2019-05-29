@@ -29,8 +29,8 @@ func initTables(db *gorm.DB) {
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
 		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{},
-		&models.VehicleRating{}, &models.FeatureAirline{},
-		"user_reservations", "room_reservations", "flight_reservation_feature", "hotel_reservation_feature", "vehicle_reservations")
+		&models.VehicleRating{}, &models.FeatureAirline{}, &models.HotelReservationReward{},
+		"user_reservations", "room_reservations", "flight_reservation_feature", "hotel_reservation_feature", "vehicle_reservations", "reward_features")
 	fmt.Printf("DATABASE: Finished dropping, time taken: %f seconds\n", time.Since(timeDroppingTables).Seconds())
 
 	fmt.Println("DATABASE: Auto migrating schema")
@@ -42,7 +42,7 @@ func initTables(db *gorm.DB) {
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
 		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{},
-		&models.VehicleRating{}, &models.FeatureAirline{})
+		&models.VehicleRating{}, &models.FeatureAirline{}, &models.HotelReservationReward{})
 	fmt.Printf("DATABASE: Finished automigration, time taken: %f seconds\n", time.Since(timeAutoMigration).Seconds())
 }
 
@@ -442,6 +442,13 @@ func addModels(db *gorm.DB) {
 			{Number: 5, Capacity: 2, Price: 250, QuickReserve: false},
 		},
 	}
+	hotel.Rewards = []models.HotelReservationReward{
+		{Name: "H1_REWARD1", Description: "H1_DESC1", PriceScale: 0.95, Features: []*models.Feature{
+			&hotel.Features[0], &hotel.Features[1]}},
+		{Name: "H1_REWARD2", Description: "H1_DESC2", PriceScale: 0.85, Features: []*models.Feature{
+			&hotel.Features[1], &hotel.Features[2]}},
+	}
+
 	hotel2 := models.Hotel{
 		HotelProfile: models.HotelProfile{
 			Name:        "H2_NAME",
@@ -462,6 +469,12 @@ func addModels(db *gorm.DB) {
 			{Number: 4, Capacity: 5, Price: 450, QuickReserve: false},
 			{Number: 5, Capacity: 2, Price: 550, QuickReserve: true},
 		},
+	}
+	hotel2.Rewards = []models.HotelReservationReward{
+		{Name: "H2_REWARD1", Description: "H2_DESC1", PriceScale: 0.90, Features: []*models.Feature{
+			&hotel2.Features[0], &hotel2.Features[1]}},
+		{Name: "H2_REWARD2", Description: "H2_DESC2", PriceScale: 0.85, Features: []*models.Feature{
+			&hotel2.Features[1], &hotel2.Features[2]}},
 	}
 	db.Create(&hotel)
 	db.Create(&hotel2)

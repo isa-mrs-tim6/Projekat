@@ -333,3 +333,92 @@ func (app *Application) DeleteHotelFeature(w http.ResponseWriter, r *http.Reques
 	}
 	app.Store.DeleteHotelFeature(feature)
 }
+
+func (app *Application) GetHotelRewards(w http.ResponseWriter, r *http.Request) {
+	var hotelID uint
+	if getAccountType(r) == "HotelAdmin" {
+		// The request came from a hotel admin
+		// No hotel ID was sent as request payload
+		email := getEmail(r)
+		user, err := app.Store.GetHotelAdmin(email)
+		if err != nil {
+			app.ErrorLog.Printf("Could not retrive hotel admin")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		hotelID = user.HotelID
+	} else {
+		// The request came from a regular user
+		// Hotel ID was sent as request payload
+		err := json.NewDecoder(r.Body).Decode(&hotelID)
+		if err != nil {
+			app.ErrorLog.Println("Could not decode JSON")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	}
+
+	features, err := app.Store.GetHotelRewards(hotelID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive hotel features")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(features)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode hotel features into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) AddHotelReward(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetHotelAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive hotel admin")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var reward models.HotelReservationReward
+	if err := json.NewDecoder(r.Body).Decode(&reward); err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if reward.PriceScale <= 0 || reward.PriceScale > 1 {
+		app.ErrorLog.Println("Invalid request")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	reward.HotelID = user.HotelID
+
+	app.Store.AddHotelReward(reward)
+}
+
+func (app *Application) UpdateHotelReward(w http.ResponseWriter, r *http.Request) {
+	var reward models.HotelReservationReward
+	if err := json.NewDecoder(r.Body).Decode(&reward); err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if reward.PriceScale <= 0 || reward.PriceScale > 1 {
+		app.ErrorLog.Println("Invalid request")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	app.Store.UpdateHotelReward(reward)
+}
+
+func (app *Application) DeleteHotelReward(w http.ResponseWriter, r *http.Request) {
+	var reward models.HotelReservationReward
+	if err := json.NewDecoder(r.Body).Decode(&reward); err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	app.Store.DeleteHotelReward(reward)
+}

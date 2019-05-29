@@ -132,7 +132,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/hotel/updateProfile", app.UpdateHotelProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/addHotel", Validate(app.CreateHotel, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/{id}/getRoomCapacities", Validate(app.GetRoomCapacities, []string{"User"})).Methods("GET")
-	router.HandleFunc("/api/hotel/getRooms", Validate(app.GetRooms, []string{"User"})).Methods("GET")
+	router.HandleFunc("/api/hotel/getRooms", Validate(app.GetRooms, []string{"User", "HotelAdmin"})).Methods("GET")
 	router.HandleFunc("/api/hotel/getRoomRatings", Validate(app.GetRoomRatings, []string{"HotelAdmin"})).Methods("GET")
 	router.HandleFunc("/api/hotel/addRooms", Validate(app.AddRooms, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/deleteRooms", Validate(app.DeleteRooms, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
@@ -141,6 +141,10 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/hotel/features", Validate(app.AddHotelFeature, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/features", Validate(app.UpdateHotelFeature, []string{"HotelAdmin"})).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/api/hotel/features", Validate(app.DeleteHotelFeature, []string{"HotelAdmin"})).Methods("DELETE", "OPTIONS")
+	router.HandleFunc("/api/hotel/rewards", Validate(app.GetHotelRewards, []string{"HotelAdmin", "User"})).Methods("GET")
+	router.HandleFunc("/api/hotel/rewards", Validate(app.AddHotelReward, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/hotel/rewards", Validate(app.UpdateHotelReward, []string{"HotelAdmin"})).Methods("PUT", "OPTIONS")
+	router.HandleFunc("/api/hotel/rewards", Validate(app.DeleteHotelReward, []string{"HotelAdmin"})).Methods("DELETE", "OPTIONS")
 
 	// RENT-A-CAR API
 	router.HandleFunc("/api/rentACarCompany/getCompanyVehicles", Validate(app.GetCompanyVehicles, []string{"Rent-A-CarAdmin"})).Methods("GET")
