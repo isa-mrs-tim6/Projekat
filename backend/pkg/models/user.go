@@ -18,6 +18,13 @@ type Passenger struct {
 	UserInfo
 }
 
+type ResRatingDAO struct {
+	ResType string
+	ResID   uint
+	Rating  uint
+	RoomID  uint
+}
+
 type Profile struct {
 	Credentials
 	UserInfo

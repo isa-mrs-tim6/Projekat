@@ -225,3 +225,21 @@ func (app *Application) UpdateAdminProfile(w http.ResponseWriter, r *http.Reques
 		return
 	}
 }
+
+func (app *Application) Rate(w http.ResponseWriter, r *http.Request) {
+	var rating models.ResRatingDAO
+
+	err := json.NewDecoder(r.Body).Decode(&rating)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = app.Store.Rate(rating)
+	if err != nil {
+		app.ErrorLog.Println("Could not rate")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}

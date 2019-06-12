@@ -18,7 +18,7 @@
                 </v-flex>
             </v-layout>
         </v-card>
-        <v-dialog v-model="dialog" persistent max-width="1000px">
+        <v-dialog hide-overlay v-model="dialog" max-width="1000px">
             <v-card>
                 <v-expansion-panel>
                     <v-expansion-panel-content v-if="this.resDetails.ReservationFlightID !== 0">
@@ -62,28 +62,30 @@
                             <v-layout row>
                                 <v-flex xs3>
                                     Flight Rating: <v-rating
-                                        v-model="this.fRating"
+                                        v-model="fRating"
                                         background-color="indigo lighten-3"
                                         empty-icon="$vuetify.icons.ratingFull"
                                         readonly
-                                        half-increments
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn>rate flight</v-btn>
+                                    <v-btn
+                                        @click="rateFlight()"
+                                    >
+                                        rate flight
+                                    </v-btn>
                                 </v-flex>
                                 <v-spacer></v-spacer>
                                 <v-flex xs3>
                                     Airline Rating: <v-rating
-                                        v-model="this.fCompanyRating"
+                                        v-model="fCompanyRating"
                                         background-color="indigo lighten-3"
                                         empty-icon="$vuetify.icons.ratingFull"
                                         readonly
-                                        half-increments
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn>rate airline</v-btn>
+                                    <v-btn @click="rateAirline()">rate airline</v-btn>
                                 </v-flex>
                             </v-layout>
                             <v-layout row>
@@ -130,15 +132,14 @@
                             </v-flex>
                             <v-flex xs3>
                                 Hotel Rating: <v-rating
-                                    v-model="this.hRating"
+                                    v-model="hRating"
                                     background-color="indigo lighten-3"
                                     empty-icon="$vuetify.icons.ratingFull"
                                     readonly
-                                    half-increments
                                     color="orange"></v-rating>
                             </v-flex>
                             <v-flex xs2>
-                                <v-btn>rate hotel</v-btn>
+                                <v-btn @click="rateHotel()">rate hotel</v-btn>
                             </v-flex>
                             <v-spacer></v-spacer>
                         </v-layout>
@@ -152,7 +153,7 @@
                             </v-flex>
                             <v-spacer></v-spacer>
                         </v-layout>
-                        <v-layout class="center" row v-for="(room, index) in this.hRooms" :key="room.ID">
+                        <v-layout class="center" row v-for="(room, roomIndex) in this.hRooms" :key="room.ID">
                             <v-flex xs2>
                                 Room:<br/>
                                 {{room.Number}}
@@ -163,15 +164,14 @@
                             </v-flex>
                             <v-flex xs3>
                                 Room Rating: <v-rating
-                                    v-model="roomRatings[index]"
+                                    v-model="roomRatings[roomIndex]"
                                     background-color="indigo lighten-3"
                                     empty-icon="$vuetify.icons.ratingFull"
                                     readonly
-                                    half-increments
                                     color="orange"></v-rating>
                             </v-flex>
                             <v-flex xs2>
-                                <v-btn>rate room</v-btn>
+                                <v-btn @click="rateRoom(roomIndex)">rate room</v-btn>
                             </v-flex>
                             <v-spacer></v-spacer>
                         </v-layout>
@@ -226,28 +226,26 @@
                             <v-layout row>
                                 <v-flex xs3>
                                     Vehicle Rating: <v-rating
-                                        v-model="this.vRating"
+                                        v-model="vRating"
                                         background-color="indigo lighten-3"
                                         empty-icon="$vuetify.icons.ratingFull"
                                         readonly
-                                        half-increments
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn>rate vehicle</v-btn>
+                                    <v-btn @click="rateVehicle()">rate vehicle</v-btn>
                                 </v-flex>
                                 <v-spacer></v-spacer>
                                 <v-flex xs3>
                                     Company Rating: <v-rating
-                                        v-model="this.vCompanyRating"
+                                        v-model="vCompanyRating"
                                         background-color="indigo lighten-3"
                                         empty-icon="$vuetify.icons.ratingFull"
                                         readonly
-                                        half-increments
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn>rate company</v-btn>
+                                    <v-btn @click="rateRAC()">rate company</v-btn>
                                 </v-flex>
                             </v-layout>
                             <v-layout row>
@@ -289,9 +287,30 @@
                         <v-btn @click="close()">close</v-btn>
                     </v-flex>
                 </v-layout>
-
             </v-card>
         </v-dialog>
+        <v-dialog v-model="rateDialog" max-width="400px">
+            <v-card>
+                <v-card-title primary-title>
+                    <div class="headline font-weight-medium">{{this.rateTitle}}</div>
+                </v-card-title>
+                <v-card-text style="text-align: center">
+                    <v-rating
+                            v-model="rateStars"
+                            background-color="indigo lighten-3"
+                            empty-icon="$vuetify.icons.ratingFull"
+                            hover
+                            color="orange"></v-rating>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="sendRate()">rate</v-btn>
+                    <v-btn @click="close2()">close</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-snackbar v-model="SuccessSnackbar" :timeout=2000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
+        <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </div>
 </template>
 
@@ -303,8 +322,21 @@
         name: "UserReservations",
         data (){
             return {
+                SuccessSnackbar: false,
+                SuccessSnackbarText: '',
+                ErrorSnackbar: false,
+                ErrorSnackbarText: '',
+                rateIndex: '',
+                rateTitle: '',
+                fID: '',
+                hID: '',
+                rID: '',
+                rateType: '',
+                rateStars: 0,
+                rateDate: '',
                 reservations: [],
                 dialog: false,
+                rateDialog: false,
                 slaves: [],
                 resDetails: '',
                 total: '',
@@ -381,6 +413,9 @@
                 this.dialog = true;
                 this.slaves = this.reservations[index].Slaves;
                 this.resDetails = this.reservations[index].Master;
+                this.fID = this.resDetails.ReservationFlightID;
+                this.hID = this.resDetails.ReservationHotelID;
+                this.rID = this.resDetails.ReservationRentACarID;
                 this.fPrice = this.reservations[index].Master.ReservationFlight.Price;
                 this.sPrice = this.fPrice;
                 this.hPrice = this.reservations[index].Master.ReservationHotel.Price;
@@ -415,7 +450,6 @@
                 this.hName = this.reservations[index].Master.ReservationHotel.Hotel.Name;
                 this.hBeginning = this.reservations[index].Master.ReservationHotel.Beginning;
                 this.hEnd = this.reservations[index].Master.ReservationHotel.End;
-                this.hRoomNum = this.reservations[index].Master.ReservationHotel.Rooms.length;
                 this.hFeatures = this.reservations[index].Master.ReservationHotel.Features;
                 if (this.hFeatures == null) {
                     this.hFeatures = [];
@@ -426,7 +460,12 @@
                 this.hAddress = this.reservations[index].Master.ReservationHotel.Hotel.Address;
                 this.hRating = this.reservations[index].Master.ReservationHotel.HotelRating;
                 this.hRatings = this.reservations[index].Master.ReservationHotel.Ratings;
-                this.hRooms = this.reservations[index].Master.ReservationHotel.Rooms;
+                if(this.reservations[index].Master.ReservationHotel.Rooms == null){
+                    this.hRooms = [];
+                }else{
+                    this.hRooms = this.reservations[index].Master.ReservationHotel.Rooms;
+                }
+                this.hRoomNum = this.hRooms.length;
                 for(let i=0; i< this.hRooms.length; i++){
                     let rating = 0;
                     for(let j=0; j<this.hRatings.length; j++){
@@ -437,13 +476,20 @@
                     }
                     this.roomRatings.push(rating);
                 }
-
                 console.log(this.roomRatings);
                 this.total = this.fPrice + this.hPrice + this.rPrice;
 
             },
             close(){
                 this.dialog = false;
+                this.rateIndex = '';
+                this.rateTitle = '';
+                this.fID = '';
+                this.hID = '';
+                this.rID = '';
+                this.rateType = '';
+                this.rateStars = 0;
+                this.rateDate = '';
                 this.slaves = [];
                 this.resDetails = '';
                 this.total = '';
@@ -481,6 +527,164 @@
                 this.hRooms = [];
                 this.roomRatings = [];
             },
+            close2(){
+                this.rateDialog = false;
+            },
+            sendRate(){
+                switch (this.rateType) {
+                    case 'flight':
+                        if(moment(this.landing, 'DD.MM.YYYY HH:mm').isAfter(moment())){
+                            this.ErrorSnackbar = true;
+                            this.ErrorSnackbarText = 'Reservation isn\'t over yet';
+                        }else{
+                            let rating = {
+                                ResType: 'flight',
+                                ResID: this.fID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.fRating = this.rateStars;
+                                });
+                        }
+                        break;
+                    case 'airline':
+                        if(moment(this.landing, 'DD.MM.YYYY HH:mm').isAfter(moment())){
+                            this.ErrorSnackbar = true;
+                            this.ErrorSnackbarText = 'Reservation isn\'t over yet';
+                        }else{
+                            let rating = {
+                                ResType: 'airline',
+                                ResID: this.fID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.fCompanyRating = this.rateStars;
+                                });
+                        }
+                        break;
+                    case 'room':
+                        if(moment(this.hEnd, 'DD.MM.YYYY').isAfter(moment())){
+                            this.ErrorSnackbar = true;
+                            this.ErrorSnackbarText = 'Reservation isn\'t over yet';
+                        }else{
+                            let rating = {
+                                ResType: 'room',
+                                ResID: this.hID,
+                                Rating: this.rateStars,
+                                RoomID: this.hRooms[this.rateIndex].ID
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.roomRatings[this.rateIndex] = this.rateStars;
+                                });
+                        }
+                        break;
+                    case 'hotel':
+                        if(moment(this.hEnd, 'DD.MM.YYYY').isAfter(moment())){
+                            this.ErrorSnackbar = true;
+                            this.ErrorSnackbarText = 'Reservation isn\'t over yet';
+                        }else{
+                            let rating = {
+                                ResType: 'hotel',
+                                ResID: this.hID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.hRating = this.rateStars;
+                                });
+                        }
+                        break;
+                    case 'vehicle':
+                        if(moment(this.vEnd, 'DD.MM.YYYY').isAfter(moment())){
+                            this.ErrorSnackbar = true;
+                            this.ErrorSnackbarText = 'Reservation isn\'t over yet';
+                        }else{
+                            let rating = {
+                                ResType: 'vehicle',
+                                ResID: this.rID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.vRating = this.rateStars;
+                                });
+                        }
+                        break;
+                    case 'rac':
+                        if(moment(this.vEnd, 'DD.MM.YYYY').isAfter(moment())){
+                            this.ErrorSnackbar = true;
+                            this.ErrorSnackbarText = 'Reservation isn\'t over yet';
+                        }else{
+                            let rating = {
+                                ResType: 'rac',
+                                ResID: this.rID,
+                                Rating: this.rateStars,
+                                RoomID: 0
+                            };
+                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                                .then(res => {
+                                    this.SuccessSnackbar = true;
+                                    this.SuccessSnackbarText = 'Reservation successfully rated';
+                                    this.vCompanyRating = this.rateStars;
+                                });
+                        }
+                        break;
+                }
+            },
+            rateFlight(){
+                this.rateDialog = true;
+                this.rateStars = this.fRating;
+                this.rateTitle = 'Rate Flight';
+                this.rateType = 'flight';
+            },
+            rateAirline(){
+                this.rateDialog = true;
+                this.rateStars = this.fCompanyRating;
+                this.rateTitle = 'Rate Airline';
+                this.rateType = 'airline';
+            },
+            rateHotel(){
+                this.rateDialog = true;
+                this.rateStars = this.hRating;
+                this.rateTitle = 'Rate Hotel';
+                this.rateType = 'hotel';
+            },
+            rateRoom(roomIndex){
+                this.rateDialog = true;
+                this.rateStars = this.roomRatings[roomIndex];
+                this.rateTitle = 'Rate Room';
+                this.rateType = 'room';
+                this.rateIndex = roomIndex;
+            },
+            rateVehicle(){
+                this.rateDialog = true;
+                this.rateStars = this.vRating;
+                this.rateTitle = 'Rate Vehicle';
+                this.rateType = 'vehicle';
+            },
+            rateRAC(){
+                this.rateDialog = true;
+                this.rateStars = this.vCompanyRating;
+                this.rateTitle = 'Rate Rent A Car Company';
+                this.rateType = 'rac';
+            }
         }
     }
 </script>
