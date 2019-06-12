@@ -46,7 +46,7 @@ func (db *Store) CompleteRegistration(email string, accountType string) error {
 	return nil
 }
 
-func (db *Store) RegisterAdmin(credentials models.Credentials, accountType string) error {
+func (db *Store) RegisterAdmin(credentials models.Credentials, accountType string, companyID uint) error {
 	hashedPassword, err := createHash(credentials.Password)
 	if err != nil {
 		return err
@@ -65,6 +65,7 @@ func (db *Store) RegisterAdmin(credentials models.Credentials, accountType strin
 		var admin models.AirlineAdmin
 		admin.Credentials = credentials
 		admin.Password = string(hashedPassword)
+		admin.AirlineID = companyID
 		if err := db.Create(&admin).Error; err != nil {
 			return err
 		}
@@ -73,6 +74,7 @@ func (db *Store) RegisterAdmin(credentials models.Credentials, accountType strin
 		var admin models.HotelAdmin
 		admin.Credentials = credentials
 		admin.Password = string(hashedPassword)
+		admin.HotelID = companyID
 		if err := db.Create(&admin).Error; err != nil {
 			return err
 		}
@@ -81,6 +83,7 @@ func (db *Store) RegisterAdmin(credentials models.Credentials, accountType strin
 		var admin models.RentACarAdmin
 		admin.Credentials = credentials
 		admin.Password = string(hashedPassword)
+		admin.RentACarCompanyID = companyID
 		if err := db.Create(&admin).Error; err != nil {
 			return err
 		}

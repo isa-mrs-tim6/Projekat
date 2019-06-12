@@ -1,8 +1,8 @@
 <template>
-    <v-container grid-list-xl text-xs-center style="height: 100vh;">
+    <v-container grid-list-xl text-xs-center fill-height>
         <v-layout align-center justify-center column wrap fill-height>
             <v-flex style="width: 60vw">
-                <v-card min-height="100%" class="flexcard">
+                <v-card class="flexcard">
                     <v-card-title primary-title>
                         <div class="headline font-weight-medium">Admin account</div>
                     </v-card-title>
