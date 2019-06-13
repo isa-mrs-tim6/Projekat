@@ -146,6 +146,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/hotel/rewards", Validate(app.AddHotelReward, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotel/rewards", Validate(app.UpdateHotelReward, []string{"HotelAdmin"})).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/api/hotel/rewards", Validate(app.DeleteHotelReward, []string{"HotelAdmin"})).Methods("DELETE", "OPTIONS")
+	router.HandleFunc("/api/hotel/updateQuickReserveDays", Validate(app.UpdateQuickReserveDays, []string{"HotelAdmin"})).Methods("PUT", "OPTIONS")
 
 	// RENT-A-CAR API
 	router.HandleFunc("/api/rentACarCompany/getCompanyVehicles", Validate(app.GetCompanyVehicles, []string{"Rent-A-CarAdmin"})).Methods("GET")

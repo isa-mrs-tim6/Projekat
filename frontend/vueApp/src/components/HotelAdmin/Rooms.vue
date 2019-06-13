@@ -104,7 +104,7 @@
                 </td>
             </template>
         </v-data-table>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" persistent max-width="500px">
             <template v-slot:activator="{ on }">
                 <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
             </template>
@@ -121,7 +121,7 @@
                                         <v-menu v-model="menuFrom[index]" :close-on-content-click="false" lazy transition="scale-transition"
                                                 :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
                                             <template v-slot:activator="{ on }">
-                                                <v-text-field v-model="value.Start" label="Start" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                                <v-text-field :value="computedDateFormattedMomentjs(value.Start)" label="Start" prepend-icon="event" readonly v-on="on"></v-text-field>
                                             </template>
                                             <v-date-picker no-title scrollable v-model = "value.Start" @input="menuFrom[index] = false"></v-date-picker>
                                         </v-menu>
@@ -130,7 +130,7 @@
                                         <v-menu v-model="menuTo[index]" :close-on-content-click="false" lazy transition="scale-transition"
                                                 :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
                                             <template v-slot:activator="{ on }">
-                                                <v-text-field v-model="value.End" label="End" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                                <v-text-field :value="computedDateFormattedMomentjs(value.End)" label="End" prepend-icon="event" readonly v-on="on"></v-text-field>
                                             </template>
                                             <v-date-picker no-title scrollable v-model = "value.End " @input="menuTo[index] = false"></v-date-picker>
                                         </v-menu>
@@ -142,7 +142,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" flat @click="addNewQuickReserve">Add new dates</v-btn>
+                    <v-btn color="blue darken-1" flat @click="addNewQuickReserve(editedItem)">Add new dates</v-btn>
                     <v-btn color="blue darken-1" flat @click="closeQuickReserve">Cancel</v-btn>
                     <v-btn color="blue darken-1" flat @click="saveQuickReserve">Save</v-btn>
                 </v-card-actions>
@@ -153,6 +153,7 @@
 
 <script>
     import moment from 'moment';
+    import axios from 'axios/index';
 
     export default {
         name: "Rooms",
@@ -172,6 +173,7 @@
                 editCapacity: null,
                 dialog: false,
                 editedItem: {QuickReserveDays: []},
+                editedItemBackup: null,
                 menuFrom: [],
                 menuTo: [],
                 time: {
@@ -231,6 +233,7 @@
             },
             editQuickReservations(item) {
                 this.editedItem = item;
+                this.editedItemBackup = JSON.parse(JSON.stringify(item));
                 this.menuFrom = [];
                 this.menuTo = [];
 
@@ -241,16 +244,42 @@
 
                 this.dialog = true;
             },
-            addNewQuickReserve() {
-
+            computedDateFormattedMomentjs(date) {
+                return date ? moment(date).format('DD-MM-YYYY') : ''
             },
-            closeQuickReserve () {
+            addNewQuickReserve(editedItem) {
+                editedItem.QuickReserveDays.push(
+                    {
+                        "RoomID": editedItem.ID,
+                        "Start": null,
+                        "End": null,
+                    },
+                );
+            },
+            closeQuickReserve() {
+                this.editedItem.QuickReserveDays = JSON.parse(JSON.stringify(this.editedItemBackup.QuickReserveDays));
                 this.dialog = false;
             },
             saveQuickReserve() {
+                this.editedItem.QuickReserveDays = this.editedItem.QuickReserveDays.filter(
+                    quickReserve => quickReserve.Start != null && quickReserve.End != null &&
+                        moment(quickReserve.Start).isBefore(moment(quickReserve.End)));
+                this.dialog = false;
 
+                let quickReserveDays = [];
+                this.editedItem.QuickReserveDays.forEach(item => {
+                    quickReserveDays.push({
+                        ID: item.ID == null ? 0 : item.ID,
+                        RoomID: item.RoomID,
+                        Start: moment(moment(item.Start).format('DD-MM-YYYY'), 'DD-MM-YYYY').valueOf().toString(),
+                        End: moment(moment(item.End).format('DD-MM-YYYY'), 'DD-MM-YYYY').valueOf().toString()
+                    })
+                });
+
+
+                axios.create({withCredentials: true}).put('http://localhost:8000/api/hotel/updateQuickReserveDays', quickReserveDays);
             },
-        }
+        },
     }
 </script>
 

@@ -1,8 +1,8 @@
 <template>
-    <v-container grid-list-xl text-xs-center style="height: 100vh;">
+    <v-container grid-list-xl text-xs-center fill-height>
         <v-layout align-center justify-center row wrap fill-height>
             <v-flex xs12>
-                <v-card min-height="100%" class="flexcard">
+                <v-card xs12 class="flexcard">
                     <v-card-title primary-title>
                         <div class="headline font-weight-medium">Add new rooms</div>
                     </v-card-title>

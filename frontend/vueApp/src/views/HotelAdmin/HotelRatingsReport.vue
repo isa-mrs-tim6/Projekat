@@ -1,8 +1,18 @@
 <template>
-    <div id="main">
-        <HotelAdminNavDrawer/>
-        <HotelRatings style="height: 100vh;" v-bind:rooms="Rooms" v-bind:name="Name" v-bind:rating="Rating"></HotelRatings>
-    </div>
+    <v-container fill-height fluid id="main">
+        <v-layout>
+            <v-flex>
+                <HotelAdminNavDrawer/>
+            </v-flex>
+            <v-container>
+                <v-layout>
+                    <v-flex align-self-center>
+                        <HotelRatings v-bind:rooms="Rooms" v-bind:name="Name" v-bind:rating="Rating"></HotelRatings>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

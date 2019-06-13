@@ -12,6 +12,13 @@ type RoomQuickReserveDays struct {
 	RoomID uint
 }
 
+type RoomQuickReserveDaysDAO struct {
+	ID     uint
+	Start  string
+	End    string
+	RoomID uint
+}
+
 type Room struct {
 	gorm.Model
 	Number           int

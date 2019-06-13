@@ -1,8 +1,18 @@
 <template>
-    <div id="main">
-        <HotelAdminNavDrawer/>
-        <ManageHotelProfile/>
-    </div>
+    <v-container fill-height fluid id="main">
+        <v-layout>
+            <v-flex>
+                <HotelAdminNavDrawer/>
+            </v-flex>
+            <v-container>
+                <v-layout>
+                    <v-flex align-self-center>
+                        <ManageHotelProfile/>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
