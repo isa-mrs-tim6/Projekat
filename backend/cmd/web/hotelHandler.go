@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
+	"github.com/jinzhu/gorm"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func (app *Application) GetHotels(w http.ResponseWriter, r *http.Request) {
@@ -421,4 +423,38 @@ func (app *Application) DeleteHotelReward(w http.ResponseWriter, r *http.Request
 		return
 	}
 	app.Store.DeleteHotelReward(reward)
+}
+
+func (app *Application) UpdateQuickReserveDays(w http.ResponseWriter, r *http.Request) {
+	var days []models.RoomQuickReserveDaysDAO
+	var fixedDays []models.RoomQuickReserveDays
+	data, err := ioutil.ReadAll(r.Body)
+	if err == nil && data != nil {
+		err = json.Unmarshal(data, &days)
+	} else {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	for _, day := range days {
+		startInt, err := strconv.ParseInt(day.Start, 10, 64)
+		if err != nil {
+			app.ErrorLog.Println("Invalid from date")
+			w.WriteHeader(http.StatusBadRequest)
+		}
+
+		endInt, err := strconv.ParseInt(day.End, 10, 64)
+		if err != nil {
+			app.ErrorLog.Println("Invalid to date")
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		fixedDays = append(fixedDays, models.RoomQuickReserveDays{
+			Model:  gorm.Model{ID: day.ID},
+			RoomID: day.RoomID,
+			Start:  time.Unix(0, startInt*int64(time.Millisecond)),
+			End:    time.Unix(0, endInt*int64(time.Millisecond)),
+		})
+	}
+	app.Store.UpdateQuickReservationDays(fixedDays)
 }
