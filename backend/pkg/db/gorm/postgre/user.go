@@ -1,6 +1,8 @@
 package postgre
 
-import "github.com/isa-mrs-tim6/Projekat/pkg/models"
+import (
+	"github.com/isa-mrs-tim6/Projekat/pkg/models"
+)
 
 func (db *Store) GetUsers() ([]models.User, error) {
 	var retVal []models.User
@@ -55,6 +57,25 @@ func (db *Store) GetAirlineAdmin(email string) (models.AirlineAdmin, error) {
 	return retVal, nil
 }
 
+func (db *Store) UpdateAirlineAdmin(email string, newProfile models.Profile) error {
+	var retVal models.AirlineAdmin
+	if err := db.First(&retVal, "email = ?", email).Error; err != nil {
+		return err
+	}
+	hashedPassword, err := createHash(newProfile.Credentials.Password)
+	if err != nil {
+		return err
+	}
+	newProfile.Password = string(hashedPassword)
+
+	retVal.Profile = newProfile
+	retVal.FirstPassChanged = true
+	if err := db.Save(&retVal).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (db *Store) GetRACAdmin(email string) (models.RentACarAdmin, error) {
 	var retVal models.RentACarAdmin
 	if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {
@@ -63,12 +84,12 @@ func (db *Store) GetRACAdmin(email string) (models.RentACarAdmin, error) {
 	return retVal, nil
 }
 
-func (db *Store) UpdateRACAdmin(id uint, newProfile models.Profile) error {
+func (db *Store) UpdateRACAdmin(email string, newProfile models.Profile) error {
 	var retVal models.RentACarAdmin
-	if err := db.First(&retVal, id).Error; err != nil {
+	if err := db.First(&retVal, "email = ?", email).Error; err != nil {
 		return err
 	}
-	hashedPassword, err := createHash(retVal.Credentials.Password)
+	hashedPassword, err := createHash(newProfile.Credentials.Password)
 	if err != nil {
 		return err
 	}
@@ -90,12 +111,12 @@ func (db *Store) GetHotelAdmin(email string) (models.HotelAdmin, error) {
 	return retVal, nil
 }
 
-func (db *Store) UpdateHotelAdmin(id uint, newProfile models.Profile) error {
+func (db *Store) UpdateHotelAdmin(email string, newProfile models.Profile) error {
 	var retVal models.HotelAdmin
-	if err := db.First(&retVal, id).Error; err != nil {
+	if err := db.First(&retVal, "email = ?", email).Error; err != nil {
 		return err
 	}
-	hashedPassword, err := createHash(retVal.Credentials.Password)
+	hashedPassword, err := createHash(newProfile.Credentials.Password)
 	if err != nil {
 		return err
 	}
@@ -117,12 +138,13 @@ func (db *Store) GetSystemAdmin(email string) (models.SystemAdmin, error) {
 	return retVal, nil
 }
 
-func (db *Store) UpdateSystemAdmin(id uint, newProfile models.Profile) error {
+func (db *Store) UpdateSystemAdmin(email string, newProfile models.Profile) error {
 	var retVal models.SystemAdmin
-	if err := db.First(&retVal, id).Error; err != nil {
+	if err := db.First(&retVal, "email = ?", email).Error; err != nil {
 		return err
 	}
-	hashedPassword, err := createHash(retVal.Credentials.Password)
+
+	hashedPassword, err := createHash(newProfile.Credentials.Password)
 	if err != nil {
 		return err
 	}
