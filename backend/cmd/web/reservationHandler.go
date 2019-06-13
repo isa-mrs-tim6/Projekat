@@ -79,6 +79,25 @@ func (app *Application) GetReservation(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (app *Application) GetQuickVehRes(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	vehicleID, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Could not get vehicle ID")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	data, err := app.Store.GetQuickVehRes(uint(vehicleID))
+
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *Application) GetAirlineGraphData(w http.ResponseWriter, r *http.Request) {
 	email := getEmail(r)
 	user, err := app.Store.GetAirlineAdmin(email)

@@ -317,3 +317,13 @@ func (db *Store) CalculateHotelReservationPrice(userID uint, sent []models.Room,
 
 	return price
 }
+
+func (db *Store) GetQuickVehRes(id uint) ([]models.RentACarReservation, error) {
+	var reservations []models.RentACarReservation
+
+	if err := db.Where("vehicle_id = ? AND is_quick_reserve = true", id).Find(&reservations).Error; err != nil {
+		return reservations, err
+	}
+
+	return reservations, nil
+}
