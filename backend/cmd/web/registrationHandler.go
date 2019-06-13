@@ -23,6 +23,7 @@ func (app *Application) RegisterAdmin(w http.ResponseWriter, r *http.Request) {
 	type RequestJSON struct {
 		models.Credentials
 		AccountType string
+		CompanyID   uint
 	}
 	var requestObject RequestJSON
 
@@ -40,16 +41,23 @@ func (app *Application) RegisterAdmin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
+
 	emailAddress, emailError := mail.ParseAddress(requestObject.Email)
 	if emailError != nil {
 		app.ErrorLog.Println("Invalid email format")
 		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
-	requestObject.AccountType = strings.Join(strings.Fields(requestObject.AccountType), "")
 
-	// ADD NEW SYSTEM ADMIN TO DATABASE
-	err = app.Store.RegisterAdmin(requestObject.Credentials, requestObject.AccountType)
+	requestObject.AccountType = strings.Join(strings.Fields(requestObject.AccountType), "")
+	if requestObject.AccountType != "SystemAdmin" && requestObject.CompanyID == 0 {
+		app.ErrorLog.Println("Invalid company")
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
+	// ADD NEW ADMIN TO DATABASE
+	err = app.Store.RegisterAdmin(requestObject.Credentials, requestObject.AccountType, requestObject.CompanyID)
 	if err != nil {
 		app.ErrorLog.Printf("Could not add system admin to database")
 		w.WriteHeader(http.StatusInternalServerError)

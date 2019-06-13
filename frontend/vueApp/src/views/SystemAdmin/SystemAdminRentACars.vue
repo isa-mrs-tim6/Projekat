@@ -1,8 +1,18 @@
 <template>
-    <div id="main">
-        <SystemAdminNavDrawer/>
-        <ManageRentACarCompanies/>
-    </div>
+    <v-container fill-height fluid id="main">
+        <v-layout>
+            <v-flex>
+                <SystemAdminNavDrawer/>
+            </v-flex>
+            <v-container>
+                <v-layout>
+                    <v-flex align-self-center>
+                        <ManageRentACarCompanies/>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
