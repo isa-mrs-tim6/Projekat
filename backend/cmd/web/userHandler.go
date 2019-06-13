@@ -164,66 +164,65 @@ func (app *Application) UpdateAdminProfile(w http.ResponseWriter, r *http.Reques
 
 	switch accountType {
 	case "AirlineAdmin":
-		// TODO
-	case "HotelAdmin":
-		admin, err := app.Store.GetHotelAdmin(email)
-		if err != nil {
-			app.ErrorLog.Printf("Could not retrive hotel admin")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		err = app.Store.UpdateHotelAdmin(admin.ID, profile)
-		if err != nil {
-			app.ErrorLog.Printf("Could not update hotel admin profile")
-			w.WriteHeader(http.StatusInternalServerError)
-		}
-		err = json.NewEncoder(w).Encode(admin.Profile)
-		if err != nil {
-			app.ErrorLog.Printf("Cannot encode hotel admin profile into JSON object")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-	case "Rent-A-CarAdmin":
-		admin, err := app.Store.GetRACAdmin(email)
-		if err != nil {
-			app.ErrorLog.Printf("Could not retrive hotel admin")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		err = app.Store.UpdateRACAdmin(admin.ID, profile)
-		if err != nil {
-			app.ErrorLog.Printf("Could not update rac admin profile")
-			w.WriteHeader(http.StatusInternalServerError)
-		}
-		err = json.NewEncoder(w).Encode(admin.Profile)
-		if err != nil {
-			app.ErrorLog.Printf("Cannot encode hotel admin profile into JSON object")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-	case "SystemAdmin":
-		admin, err := app.Store.GetSystemAdmin(email)
-		if err != nil {
-			app.ErrorLog.Printf("Could not retrive system admin")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		err = app.Store.UpdateSystemAdmin(admin.ID, profile)
+		err = app.Store.UpdateAirlineAdmin(email, profile)
 		if err != nil {
 			app.ErrorLog.Printf("Could not update system profile")
 			w.WriteHeader(http.StatusInternalServerError)
 		}
-		err = json.NewEncoder(w).Encode(admin.Profile)
+		UpdateToken(w, profile.Email)
+	case "HotelAdmin":
+		err = app.Store.UpdateHotelAdmin(email, profile)
 		if err != nil {
-			app.ErrorLog.Printf("Cannot encode hotel admin profile into JSON object")
+			app.ErrorLog.Printf("Could not update hotel admin profile")
 			w.WriteHeader(http.StatusInternalServerError)
-			return
 		}
+		UpdateToken(w, profile.Email)
+	case "Rent-A-CarAdmin":
+		err = app.Store.UpdateRACAdmin(email, profile)
+		if err != nil {
+			app.ErrorLog.Printf("Could not update rac admin profile")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		UpdateToken(w, profile.Email)
+	case "SystemAdmin":
+		err = app.Store.UpdateSystemAdmin(email, profile)
+		if err != nil {
+			app.ErrorLog.Printf("Could not update system profile")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		UpdateToken(w, profile.Email)
 	default:
 		app.ErrorLog.Printf("Invalid user type")
 		w.WriteHeader(http.StatusExpectationFailed)
 		return
 	}
+}
+
+func UpdateToken(w http.ResponseWriter, Email string) {
+	expirationTime := time.Now().Add(24 * time.Hour)
+	claims := &Claims{
+		Email: Email,
+		Type:  "User",
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// Create the JWT string
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		// If there is an error in creating the JWT return an internal server error
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Path:    "/",
+		Expires: expirationTime,
+	})
 }
 
 func (app *Application) Rate(w http.ResponseWriter, r *http.Request) {
