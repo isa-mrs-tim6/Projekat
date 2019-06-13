@@ -70,7 +70,7 @@
                                 </v-flex>
                                 <v-flex xs2>
                                     <v-btn
-                                        @click="rateFlight()"
+                                        @click="rateFlight()" :disabled="checkFlightRating(this.landing)"
                                     >
                                         rate flight
                                     </v-btn>
@@ -85,7 +85,7 @@
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn @click="rateAirline()">rate airline</v-btn>
+                                    <v-btn @click="rateAirline()" :disabled="checkFlightRating(this.landing)">rate airline</v-btn>
                                 </v-flex>
                             </v-layout>
                             <v-layout row>
@@ -94,7 +94,7 @@
                                     Price: {{this.fPrice}}
                                 </v-flex>
                                 <v-flex class="center" xs2 style="text-align: right">
-                                    <v-btn color="error">cancel</v-btn>
+                                    <v-btn color="error" :disabled="!checkFlight(this.departure)">cancel</v-btn>
                                 </v-flex>
                             </v-layout>
                         </v-card>
@@ -139,7 +139,7 @@
                                     color="orange"></v-rating>
                             </v-flex>
                             <v-flex xs2>
-                                <v-btn @click="rateHotel()">rate hotel</v-btn>
+                                <v-btn @click="rateHotel()" :disabled="checkHotelRating(this.hEnd)">rate hotel</v-btn>
                             </v-flex>
                             <v-spacer></v-spacer>
                         </v-layout>
@@ -171,7 +171,7 @@
                                     color="orange"></v-rating>
                             </v-flex>
                             <v-flex xs2>
-                                <v-btn @click="rateRoom(roomIndex)">rate room</v-btn>
+                                <v-btn @click="rateRoom(roomIndex)" :disabled="checkHotelRating(hEnd)">rate room</v-btn>
                             </v-flex>
                             <v-spacer></v-spacer>
                         </v-layout>
@@ -181,7 +181,7 @@
                                 Price: {{this.hPrice}}
                             </v-flex>
                             <v-flex class="center" xs2 style="text-align: right">
-                                <v-btn color="error">cancel</v-btn>
+                                <v-btn color="error" :disabled="!checkHotel(hBeginning)">cancel</v-btn>
                             </v-flex>
                         </v-layout>
                     </v-expansion-panel-content>
@@ -233,7 +233,7 @@
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn @click="rateVehicle()">rate vehicle</v-btn>
+                                    <v-btn @click="rateVehicle()" :disabled="checkHotelRating(this.vEnd)">rate vehicle</v-btn>
                                 </v-flex>
                                 <v-spacer></v-spacer>
                                 <v-flex xs3>
@@ -245,7 +245,7 @@
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn @click="rateRAC()">rate company</v-btn>
+                                    <v-btn @click="rateRAC()" :disabled="checkHotelRating(this.vEnd)">rate company</v-btn>
                                 </v-flex>
                             </v-layout>
                             <v-layout row>
@@ -254,7 +254,7 @@
                                     Price: {{this.rPrice}}
                                 </v-flex>
                                 <v-flex class="center" xs2 style="text-align: right">
-                                    <v-btn color="error">cancel</v-btn>
+                                    <v-btn color="error" :disabled="!checkHotel(vBeginning)">cancel</v-btn>
                                 </v-flex>
                             </v-layout>
                         </v-card>
@@ -406,6 +406,18 @@
         },
         methods : {
             checkFlight(d){
+                let date = moment(d);
+                return date.isAfter(moment().subtract({hours: 3}));
+            },
+            checkHotel(d){
+                let date = moment(d);
+                return date.isAfter(moment().subtract({days: 2}));
+            },
+            checkFlightRating(d){
+                let date = moment(d);
+                return date.isAfter(moment());
+            },
+            checkHotelRating(d){
                 let date = moment(d);
                 return date.isAfter(moment());
             },

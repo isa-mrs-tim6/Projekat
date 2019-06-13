@@ -33,6 +33,7 @@
                                         <td>{{props.item.PricePerDay}}</td>
                                         <td>{{props.item.Discount | valueConversion}}</td>
                                         <td>
+                                            <v-icon small class="mr-2" @click="quickRes(props.item)">list</v-icon>
                                             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                                             <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
                                         </td>
@@ -133,6 +134,32 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="dialog2" persistent max-width="500px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Quick Reserve Vehicle:</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-layout row-wrap>
+                            <v-flex xs6>
+                                <v-text-field v-model="editedItem.Name" label="Name" :rules="[rules.required]"></v-text-field>
+                            </v-flex>
+                        </v-layout>
+                        <v-layout row-wrap>
+                            <v-flex xs6>
+                                <v-text-field v-model="editedItem.Capacity" label="Capacity" :rules="[rules.required]"></v-text-field>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click="close2">Cancel</v-btn>
+                    <v-btn color="blue darken-1" flat @click="createRes">Create</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-snackbar v-model="SuccessSnackbar" :timeout=2000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
         <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </v-container>
@@ -152,6 +179,8 @@
                     required: value => !!value || 'Required.'
                 },
                 dialog: false,
+                dialog2: false,
+                vID : '',
                 vehicles:[],
                 filter: {
                     Name: '',
@@ -197,7 +226,7 @@
                     {
                         text: 'Type',
                         value: "Type",
-                        width: '25%'
+                        width: '20%'
                     },
                     {
                         text: 'Price/Day',
@@ -212,7 +241,7 @@
                     {
                         text: 'Action',
                         sortable: false,
-                        width: '20%'
+                        width: '25%'
                     }
                 ]
             }
@@ -317,6 +346,25 @@
                 }
                 return ind !== true;
             },
+            quickRes (item) {
+                this.vID = this.vehicles[this.vehicles.indexOf(item)].ID;
+                this.dialog2 = true
+            },
+            createRes(){
+                axios.create({withCredentials:true}).post("http://localhost:8000/api/rentACarCompany/createQRes", {})
+                    .then(res=>{
+                        axios.create({withCredentials: true}).get("http://localhost:8000/api/rentACarCompany/getCompanyVehicles")
+                            .then(res => {
+                                this.vehicles = res.data;
+                            });
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Quick reservation successfully deleted'
+                    })
+                    .catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'There are reservations in this time period';
+                    });
+            },
             editItem (item) {
                 this.editedIndex = this.vehicles.indexOf(item);
                 this.editedItem = Object.assign({}, item);
@@ -328,6 +376,9 @@
                     this.editedItem = Object.assign({}, this.defaultItem);
                     this.editedIndex = -1;
                 }, 300);
+            },
+            close2(){
+                this.dialog2 = false;
             },
             save(){
                 if (!this.checkInput()){
