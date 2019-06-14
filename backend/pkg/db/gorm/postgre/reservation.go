@@ -306,6 +306,10 @@ func (db *Store) CalculateHotelReservationPrice(userID uint, sent []models.Room,
 		price += v.Price
 	}
 
+	if isQuickReserve {
+		price *= 0.9
+	}
+
 	// Add discount based on number of reservations
 	var numOfReservations uint
 	var reward models.ReservationReward

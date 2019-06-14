@@ -84,3 +84,14 @@ type HotelReservationParams struct {
 	Rooms          []Room
 	IsQuickReserve bool
 }
+
+type HotelSearchResults struct {
+	Hotel  Hotel
+	Rating float64
+}
+
+type RoomSearchResults struct {
+	Room   Room
+	Rating float64
+	Price  float64
+}

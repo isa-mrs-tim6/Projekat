@@ -74,7 +74,7 @@
             },
             goReserve (e){
                 e.preventDefault();
-                this.$router.push("/user");
+                this.$router.push("/user/reserve");
             }
         }
     }

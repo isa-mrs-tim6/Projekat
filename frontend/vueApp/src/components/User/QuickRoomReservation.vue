@@ -10,13 +10,19 @@
                 <v-card dark class="white--text">
                     <v-card-title class="headline" primary-title>
                         <v-flex xs2 style="margin-right: 2vh">
-                            Number: {{value.Number}}
+                            Number: {{value.Room.Number}}
                         </v-flex>
                         <v-flex xs2 style="margin-right: 2vh">
-                            <v-icon> group </v-icon> Capacity: {{value.Capacity}}
+                            <v-icon> group </v-icon> Capacity: {{value.Room.Capacity}}
                         </v-flex>
                         <v-flex xs2 style="margin-right: 2vh">
-                            <v-icon> euro_symbol </v-icon> Price: {{value.Price}}
+                            <v-icon> euro_symbol </v-icon>
+                            <template v-if="value.Room.Price !== value.Price">
+                                Price: <span style="text-decoration: line-through;">{{value.Room.Price}}</span> {{value.Price}}
+                            </template>
+                            <template v-else>
+                                Price: {{value.Room.Price}}
+                            </template>
                         </v-flex>
                         <v-flex xs2 style="float:right; margin-right: 2vh">
                             <v-checkbox v-model="checkboxes[index]" label="Reserve?"></v-checkbox>
@@ -70,7 +76,7 @@
                 let rooms = [];
                 for (let i = 0; i < this.checkboxes.length; i++) {
                     if (this.checkboxes[i]) {
-                        rooms.push(this.rooms[i])
+                        rooms.push(this.rooms[i].Room)
                     }
                 }
                 if (rooms.length === 0) {
@@ -84,7 +90,7 @@
                 };
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/reservations/hotel/' + this.hotelID + '/reserve/masterRef='+ this.reservationID, query)
                     .then(res => {
-                        this.$router.push({ path: '/user', query: { reservationID: this.reservationID, passengers: this.passengers }});
+                        this.$router.push({ path: '/user/reserve', query: { reservationID: this.reservationID, passengers: this.passengers }});
                     })
                     .catch(err => alert(err));
             }
