@@ -81,7 +81,7 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 	return reservations, nil
 }
 
-func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservationParams) error {
+func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservationParams, userID uint) error {
 	var reservation models.RentACarReservation
 	var vehicle models.Vehicle
 	var location models.Location
@@ -121,23 +121,36 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 	var reservations []models.Reservation
 	db.Where("master_ref = ?", masterRef).Find(&reservations)
 
-	for _, associated_reservation := range reservations {
+	for _, associatedReservation := range reservations {
 		reservation := models.RentACarReservation{
 			CompanyID: params.CompanyID,
 			Vehicle:   vehicle,
-			Price:     params.Price,
+			Price:     db.CalculatePriceVehicle(userID, params.Price),
 			Location:  location.Address.Address,
 			Occupation: models.Occupation{
 				Beginning: startDate,
 				End:       endDate,
 			},
 		}
-		associated_reservation.ReservationRentACar = reservation
-		associated_reservation.ReservationRentACarID = reservation.ID
-		db.Save(&associated_reservation)
+		associatedReservation.ReservationRentACar = reservation
+		associatedReservation.ReservationRentACarID = reservation.ID
+		db.Save(&associatedReservation)
 	}
 
 	return nil
+}
+
+func (db *Store) CalculatePriceVehicle(userID uint, originalPrice float64) float64 {
+	price := float64(0.0)
+
+	var numOfReservations uint
+	var reward models.ReservationReward
+	db.Table("reservations").Where("user_id = ?", userID).Count(&numOfReservations)
+	db.First(&reward, "required_number < ?", numOfReservations)
+	if reward.PriceScale != 0 {
+		price *= reward.PriceScale
+	}
+	return price
 }
 
 func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationParams) (uint, error) {
@@ -342,7 +355,7 @@ func (db *Store) GetCompanyQuickVehicle(params models.VehicleQuickResParams) ([]
 	endDate := time.Unix(0, end*int64(time.Millisecond))
 
 	if err := db.Preload("Vehicle").
-		Where("company_id = ? AND is_quick_reserve = true AND beginning >= ? AND rent_a_car_reservations.end <= ?",
+		Where("company_id = ? AND is_quick_reserve = true AND beginning = ? AND rent_a_car_reservations.end = ?",
 			params.CompanyID, startDate, endDate).
 		Find(&reservations).Error; err != nil {
 		return retVal, err
