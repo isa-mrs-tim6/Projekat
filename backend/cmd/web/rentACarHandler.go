@@ -389,6 +389,8 @@ func (app *Application) UpdateQuickReservationsRAC(w http.ResponseWriter, r *htt
 		return
 	}
 
+	scale := 0.9
+
 	for _, day := range days {
 		startInt, err := strconv.ParseInt(day.Beginning, 10, 64)
 		if err != nil {
@@ -408,9 +410,10 @@ func (app *Application) UpdateQuickReservationsRAC(w http.ResponseWriter, r *htt
 				Beginning: time.Unix(0, startInt*int64(time.Millisecond)),
 				End:       time.Unix(0, endInt*int64(time.Millisecond)),
 			},
-			CompanyID:      day.CompanyID,
-			Price:          day.Price * 0.90,
-			IsQuickReserve: true,
+			CompanyID:                  day.CompanyID,
+			QuickReservationPriceScale: scale,
+			Price:                      day.Price * scale,
+			IsQuickReserve:             true,
 		})
 	}
 	app.Store.UpdateQuickResRAC(fixedReservations)

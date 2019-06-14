@@ -27,7 +27,7 @@
                             </v-flex>
                         </v-layout>
                         <v-layout row>
-                            <v-flex xs6 class="center">
+                            <v-flex xs3 class="center">
                                 Type: {{item.Vehicle.Type}}<br/>
                                 Capacity: {{item.Vehicle.Capacity}}<v-icon large>person</v-icon><br/>
                                 Start: {{computedDateFormattedMomentjs(item.Beginning)}} <br/>
@@ -36,6 +36,11 @@
                             <v-spacer></v-spacer>
                             <v-flex xs3 class="center price">
                                 Total:<br/>
+                                <v-icon large>attach_money</v-icon>
+                                {{item.Price / item.QuickReservationPriceScale}}
+                            </v-flex>
+                            <v-flex xs3 class="center price">
+                                Your price:<br/>
                                 <v-icon large>attach_money</v-icon>
                                 {{item.Price}}
                             </v-flex>
