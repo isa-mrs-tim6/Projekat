@@ -60,7 +60,7 @@
                                         item-text="Name"
                                         item-value=item
                                         return-object
-                                        v-if="select === 'HotelAdmin Admin'">
+                                        v-if="select === 'Hotel Admin'">
                                 </v-select>
                                 <v-select
                                         v-model="selectCompany"
@@ -122,7 +122,7 @@
                 items: [
                     'System Admin',
                     'Airline Admin',
-                    'HotelAdmin Admin',
+                    'Hotel Admin',
                     'Rent-A-Car Admin'
                 ],
                 loader: null,
