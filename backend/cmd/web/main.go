@@ -98,6 +98,8 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/reservations/{id}/reservation", Validate(app.GetReservation, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/reservations/airline/reserve/q={id}", Validate(app.ReserveFlight, []string{"User"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/reservations/hotel/{hotel_id}/reserve/masterRef={master_id}", Validate(app.ReserveHotel, []string{"User"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/reservations/rac/quickReservationsCompany", Validate(app.GetCompanyQuickVehicle, []string{"User"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/reservation/rac/completeQuickRes", Validate(app.CompleteQuickResVehicle, []string{"User"})).Methods("POST", "OPTIONS")
 
 	// FLIGHT API
 	router.HandleFunc("/api/flight/add", app.CreateFlight).Methods("POST", "OPTIONS")
@@ -166,6 +168,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/rentACarCompany/addRentACarCompany", Validate(app.CreateRentACarCompany, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/rentACarCompany/getReservations", Validate(app.GetRACReservations, []string{"Rent-A-CarAdmin"})).Methods("GET")
 	router.HandleFunc("/api/rentACarCompany/{id}/quickReservations", Validate(app.GetQuickVehRes, []string{"Rent-A-CarAdmin"})).Methods("GET")
+	router.HandleFunc("/api/rentACarCompany/updateQuickReservations", Validate(app.UpdateQuickReservationsRAC, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
 
 	// SEARCH API
 	router.HandleFunc("/api/search/oneWay", app.OneWaySearch).Methods("POST", "OPTIONS")

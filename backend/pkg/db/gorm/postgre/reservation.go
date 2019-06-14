@@ -327,3 +327,25 @@ func (db *Store) GetQuickVehRes(id uint) ([]models.RentACarReservation, error) {
 
 	return reservations, nil
 }
+
+func (db *Store) GetCompanyQuickVehicle(params models.VehicleQuickResParams) ([]models.RentACarReservation, error) {
+	var reservations []models.RentACarReservation
+	start, _ := strconv.ParseInt(params.StartDate, 10, 64)
+	end, _ := strconv.ParseInt(params.EndDate, 10, 64)
+
+	startDate := time.Unix(0, start*int64(time.Millisecond))
+	endDate := time.Unix(0, end*int64(time.Millisecond))
+
+	if err := db.Preload("Vehicle").
+		Where("company_id = ? AND is_quick_reserve = true AND beginning >= ? AND rent_a_car_reservations.end <= ?",
+			params.CompanyID, startDate, endDate).
+		Find(&reservations).Error; err != nil {
+		return reservations, err
+	}
+
+	return reservations, nil
+}
+
+func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams) error {
+	return nil
+}

@@ -33,9 +33,9 @@
                                         <td>{{props.item.PricePerDay}}</td>
                                         <td>{{props.item.Discount | valueConversion}}</td>
                                         <td>
+                                            <v-icon small class="mr-2" @click="openQuickRes(props.item)">add_box</v-icon>
                                             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                                             <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
-                                            <v-icon small class="mr-2" @click="openQuickRes(props.item)">add_box</v-icon>
                                         </td>
                                     </template>
                                 </v-data-table>
@@ -152,7 +152,7 @@
                                         <v-menu v-model="menuFrom[index]" :close-on-content-click="false" lazy transition="scale-transition"
                                                 :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
                                             <template v-slot:activator="{ on }">
-                                                <v-text-field v-model="value.Beginning" label="Beginning" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                                <v-text-field :value="computedDateFormattedMomentjs(value.Beginning)" label="Beginning" prepend-icon="event" readonly v-on="on"></v-text-field>
                                             </template>
                                             <v-date-picker no-title scrollable v-model = "value.Beginning" @input="menuFrom[index] = false"></v-date-picker>
                                         </v-menu>
@@ -161,7 +161,7 @@
                                         <v-menu v-model="menuTo[index]" :close-on-content-click="false" lazy transition="scale-transition"
                                                 :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
                                             <template v-slot:activator="{ on }">
-                                                <v-text-field v-model="value.End" label="End" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                                <v-text-field :value="computedDateFormattedMomentjs(value.End)" label="End" prepend-icon="event" readonly v-on="on"></v-text-field>
                                             </template>
                                             <v-date-picker no-title scrollable v-model = "value.End " @input="menuTo[index] = false"></v-date-picker>
                                         </v-menu>
@@ -378,13 +378,6 @@
                 axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/'+item.ID+'/quickReservations')
                     .then(res =>{
                             this.QuickReserveDays = res.data;
-                            for(let i = 0; i < this.QuickReserveDays.length; i++) {
-                                let date = moment(this.QuickReserveDays[i].Beginning).format('DD-MM-YYYY');
-                                this.QuickReserveDays[i].Beginning = date;
-
-                                date = moment(this.QuickReserveDays[i].End).format('DD-MM-YYYY');
-                                this.QuickReserveDays[i].End = date;
-                            }
 
                             console.log(this.QuickReserveDays);
 
@@ -396,15 +389,49 @@
                             this.QuickRes = true
                     });
             },
+            computedDateFormattedMomentjs(date) {
+                return date ? moment(date).format('DD-MM-YYYY') : ''
+            },
             addNewQuickReserve() {
-
+                this.QuickReserveDays.push(
+                    {
+                        "VehicleID": this.editedItem.ID,
+                        "Start": null,
+                        "End": null,
+                    },
+                );
             },
             closeQuickReserve () {
                 this.QuickReserveDays = [];
                 this.QuickRes = false;
             },
             saveQuickReserve() {
+                this.QuickReserveDays = this.QuickReserveDays.filter(
+                    quickReserve => quickReserve.Beginning != null && quickReserve.End != null &&
+                        moment(quickReserve.Beginning).isBefore(moment(quickReserve.End)));
+                this.QuickRes = false;
 
+                let quickReserveDays = [];
+                this.QuickReserveDays.forEach(item => {
+
+                    let a = moment(moment(item.Beginning));
+                    let b = moment(moment(item.End));
+                    let days = b.diff(a, 'days') + 1;
+
+                    quickReserveDays.push({
+                        ID: item.ID == null ? 0 : item.ID,
+                        Beginning: moment(moment(item.Beginning).format('DD-MM-YYYY'), 'DD-MM-YYYY').valueOf().toString(),
+                        End: moment(moment(item.End).format('DD-MM-YYYY'), 'DD-MM-YYYY').valueOf().toString(),
+                        VehicleID: this.editedItem.ID,
+                        LocationID: "",
+                        CompanyID: this.editedItem.RentACarCompanyID,
+                        Price: this.editedItem.PricePerDay * days,
+                        IsQuickReserve: true
+                    })
+                });
+
+                axios.create({withCredentials: true})
+                    .post('http://localhost:8000/api/rentACarCompany/updateQuickReservations', quickReserveDays);
             },
             editItem (item) {
                 this.editedIndex = this.vehicles.indexOf(item);
