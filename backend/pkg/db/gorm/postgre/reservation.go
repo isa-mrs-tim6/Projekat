@@ -330,6 +330,11 @@ func (db *Store) GetQuickVehRes(id uint) ([]models.RentACarReservation, error) {
 
 func (db *Store) GetCompanyQuickVehicle(params models.VehicleQuickResParams) ([]models.RentACarReservation, error) {
 	var reservations []models.RentACarReservation
+	var retVal []models.RentACarReservation
+	var masters []models.Reservation
+
+	db.Preload("ReservationRentACar").Find(&masters)
+
 	start, _ := strconv.ParseInt(params.StartDate, 10, 64)
 	end, _ := strconv.ParseInt(params.EndDate, 10, 64)
 
@@ -340,12 +345,45 @@ func (db *Store) GetCompanyQuickVehicle(params models.VehicleQuickResParams) ([]
 		Where("company_id = ? AND is_quick_reserve = true AND beginning >= ? AND rent_a_car_reservations.end <= ?",
 			params.CompanyID, startDate, endDate).
 		Find(&reservations).Error; err != nil {
-		return reservations, err
+		return retVal, err
 	}
 
-	return reservations, nil
+	var found bool
+
+	for _, res := range reservations {
+		found = false
+		for _, master := range masters {
+			if master.ReservationRentACarID == res.ID {
+				found = true
+				break
+			}
+		}
+		if !found {
+			retVal = append(retVal, res)
+		}
+	}
+
+	return retVal, nil
 }
 
 func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams) error {
+	var master models.Reservation
+	var slave models.RentACarReservation
+
+	if err := db.Preload("ReservationRentACar").
+		Where("id = ?", params.MasterID).First(&master).Error; err != nil {
+		return err
+	}
+	if err := db.Where("id = ?", params.ReservationID).First(&slave).Error; err != nil {
+		return err
+	}
+
+	master.ReservationRentACar = slave
+	master.ReservationRentACarID = slave.ID
+
+	if err := db.Save(&master).Error; err != nil {
+		return err
+	}
+
 	return nil
 }
