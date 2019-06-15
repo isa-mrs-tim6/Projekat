@@ -259,3 +259,39 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (app *Application) CancelFlight(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	resID, err := strconv.ParseUint(vars["id"], 10, 64)
+
+	if err = app.Store.CancelFlight(uint(resID)); err != nil {
+		app.ErrorLog.Printf("Could not cancel reservation")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+}
+
+func (app *Application) CancelHotel(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	resID, err := strconv.ParseUint(vars["id"], 10, 64)
+
+	if err = app.Store.CancelHotel(uint(resID)); err != nil {
+		app.ErrorLog.Printf("Could not cancel reservation")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+}
+
+func (app *Application) CancelVehicle(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	resID, err := strconv.ParseUint(vars["id"], 10, 64)
+
+	if err = app.Store.CancelVehicle(uint(resID)); err != nil {
+		app.ErrorLog.Printf("Could not cancel reservation")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+}

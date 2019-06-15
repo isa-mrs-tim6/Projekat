@@ -317,3 +317,160 @@ func (db *Store) CalculateHotelReservationPrice(userID uint, sent []models.Room,
 
 	return price
 }
+
+func (db *Store) CancelFlight(resID uint) error {
+	var master models.Reservation
+	var slaves []models.Reservation
+
+	db.Where("id = ?", resID).
+		Preload("ReservationFlight.Flight.Origin").
+		Preload("ReservationFlight.Flight.Destination").
+		Preload("ReservationFlight.Flight.Layovers").
+		Preload("ReservationFlight.Seat").
+		Preload("ReservationFlight.Features").
+		Preload("ReservationHotel.Rooms").
+		Preload("ReservationHotel.Ratings").
+		Preload("ReservationHotel.Features").
+		Preload("ReservationHotel.Hotel").
+		Preload("ReservationRentACar.RentACarCompany").
+		Preload("ReservationRentACar.Vehicle").
+		First(&master)
+	db.Table("seats").Where("reservation_id = ?", master.ReservationFlight.Seat.ReservationID).
+		Update("reservation_id", 0)
+
+	db.Where("id=?", master.ID).Delete(master.ReservationFlight)
+	db.Where("id=?", master.ID).Delete(master.ReservationHotel)
+	db.Where("id=?", master.ID).Delete(master.ReservationRentACar)
+
+	if master.MasterRef != 0 {
+		db.Delete(&master)
+		return nil
+	}
+
+	db.Where("master_ref = ?", master.ID).
+		Preload("ReservationFlight.Flight.Origin").
+		Preload("ReservationFlight.Flight.Destination").
+		Preload("ReservationFlight.Flight.Layovers").
+		Preload("ReservationFlight.Seat").
+		Preload("ReservationFlight.Features").
+		Preload("ReservationHotel.Rooms").
+		Preload("ReservationHotel.Ratings").
+		Preload("ReservationHotel.Features").
+		Preload("ReservationHotel.Hotel").
+		Preload("ReservationRentACar.RentACarCompany").
+		Preload("ReservationRentACar.Vehicle").
+		Find(&slaves)
+
+	for _, slave := range slaves {
+		db.Table("seats").Where("reservation_id = ?", slave.ReservationFlight.Seat.ReservationID).
+			Update("reservation_id", 0)
+
+		db.Where("id=?", slave.ID).Delete(slave.ReservationFlight)
+		db.Where("id=?", slave.ID).Delete(slave.ReservationHotel)
+		db.Where("id=?", slave.ID).Delete(slave.ReservationRentACar)
+		db.Delete(slave)
+	}
+
+	db.Delete(&master)
+	return nil
+}
+
+func (db *Store) CancelHotel(resID uint) error {
+	var master models.Reservation
+	var slaves []models.Reservation
+
+	db.Where("id = ?", resID).
+		Preload("ReservationFlight.Flight.Origin").
+		Preload("ReservationFlight.Flight.Destination").
+		Preload("ReservationFlight.Flight.Layovers").
+		Preload("ReservationFlight.Seat").
+		Preload("ReservationFlight.Features").
+		Preload("ReservationHotel.Rooms").
+		Preload("ReservationHotel.Ratings").
+		Preload("ReservationHotel.Features").
+		Preload("ReservationHotel.Hotel").
+		Preload("ReservationRentACar.RentACarCompany").
+		Preload("ReservationRentACar.Vehicle").
+		First(&master)
+
+	if master.MasterRef != 0 {
+		return nil
+	}
+
+	db.Table("hotel_reservations").Where("id = ?", master.ReservationHotelID).
+		Delete(master.ReservationHotel)
+	db.Table("reservations").Where("id=?", master.ID).
+		Update("reservation_hotel_id", 0)
+
+	db.Where("master_ref = ?", master.ID).
+		Preload("ReservationFlight.Flight.Origin").
+		Preload("ReservationFlight.Flight.Destination").
+		Preload("ReservationFlight.Flight.Layovers").
+		Preload("ReservationFlight.Seat").
+		Preload("ReservationFlight.Features").
+		Preload("ReservationHotel.Rooms").
+		Preload("ReservationHotel.Ratings").
+		Preload("ReservationHotel.Features").
+		Preload("ReservationHotel.Hotel").
+		Preload("ReservationRentACar.RentACarCompany").
+		Preload("ReservationRentACar.Vehicle").
+		Find(&slaves)
+
+	for _, slave := range slaves {
+		db.Table("hotel_reservations").Where("id = ?", slave.ReservationHotelID).
+			Delete(slave.ReservationHotel)
+		db.Table("reservations").Where("id=?", slave.ID).
+			Update("reservation_hotel_id", 0)
+	}
+	return nil
+}
+
+func (db *Store) CancelVehicle(resID uint) error {
+	var master models.Reservation
+	var slaves []models.Reservation
+
+	db.Where("id = ?", resID).
+		Preload("ReservationFlight.Flight.Origin").
+		Preload("ReservationFlight.Flight.Destination").
+		Preload("ReservationFlight.Flight.Layovers").
+		Preload("ReservationFlight.Seat").
+		Preload("ReservationFlight.Features").
+		Preload("ReservationHotel.Rooms").
+		Preload("ReservationHotel.Ratings").
+		Preload("ReservationHotel.Features").
+		Preload("ReservationHotel.Hotel").
+		Preload("ReservationRentACar.RentACarCompany").
+		Preload("ReservationRentACar.Vehicle").
+		First(&master)
+
+	if master.MasterRef != 0 {
+		return nil
+	}
+
+	db.Table("rent_a_car_reservations").Where("id=?", master.ReservationRentACarID).
+		Delete(master.ReservationRentACar)
+	db.Table("reservations").Where("id=?", master.ID).
+		Update("reservation_rent_a_car_id", 0)
+
+	db.Where("master_ref = ?", master.ID).
+		Preload("ReservationFlight.Flight.Origin").
+		Preload("ReservationFlight.Flight.Destination").
+		Preload("ReservationFlight.Flight.Layovers").
+		Preload("ReservationFlight.Seat").
+		Preload("ReservationFlight.Features").
+		Preload("ReservationHotel.Rooms").
+		Preload("ReservationHotel.Ratings").
+		Preload("ReservationHotel.Features").
+		Preload("ReservationHotel.Hotel").
+		Preload("ReservationRentACar.RentACarCompany").
+		Preload("ReservationRentACar.Vehicle").
+		Find(&slaves)
+
+	for _, slave := range slaves {
+		db.Table("rent_a_car_reservations").Where("id=?", slave.ReservationRentACarID).
+			Delete(slave.ReservationRentACar)
+		db.Table("reservations").Where("id=?", slave.ID).
+			Update("reservation_rent_a_car_id", 0)
+	}
+	return nil
+}

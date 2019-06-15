@@ -14,7 +14,9 @@
                 </v-flex>
                 <v-flex style="text-align: right">
                     <v-btn class="button" @click="details(index)">details</v-btn><br/>
-                    <v-btn class="button" color="error" :disabled="!checkFlight(item.Master.ReservationFlight.Flight.Departure)">cancel</v-btn>
+                    <v-btn class="button" color="error"
+                           :disabled="!checkFlight(item.Master.ReservationFlight.Flight.Departure, item.Master)"
+                    @click="cancelFlight(item.Master)">cancel</v-btn>
                 </v-flex>
             </v-layout>
         </v-card>
@@ -70,7 +72,7 @@
                                 </v-flex>
                                 <v-flex xs2>
                                     <v-btn
-                                        @click="rateFlight()" :disabled="checkFlightRating(this.landing)"
+                                        @click="rateFlight()" :disabled="checkFlightRating(landing)"
                                     >
                                         rate flight
                                     </v-btn>
@@ -85,7 +87,7 @@
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn @click="rateAirline()" :disabled="checkFlightRating(this.landing)">rate airline</v-btn>
+                                    <v-btn @click="rateAirline()" :disabled="checkFlightRating(landing)">rate airline</v-btn>
                                 </v-flex>
                             </v-layout>
                             <v-layout row>
@@ -94,7 +96,7 @@
                                     Price: {{this.fPrice}}
                                 </v-flex>
                                 <v-flex class="center" xs2 style="text-align: right">
-                                    <v-btn color="error" :disabled="!checkFlight(this.departure)">cancel</v-btn>
+                                    <v-btn color="error" :disabled="!checkFlight(departure, resDetails)" @click="cancelFlight(resDetails.ID)">cancel</v-btn>
                                 </v-flex>
                             </v-layout>
                         </v-card>
@@ -139,7 +141,7 @@
                                     color="orange"></v-rating>
                             </v-flex>
                             <v-flex xs2>
-                                <v-btn @click="rateHotel()" :disabled="checkHotelRating(this.hEnd)">rate hotel</v-btn>
+                                <v-btn @click="rateHotel()" :disabled="checkHotelRating(hEnd)">rate hotel</v-btn>
                             </v-flex>
                             <v-spacer></v-spacer>
                         </v-layout>
@@ -181,7 +183,7 @@
                                 Price: {{this.hPrice}}
                             </v-flex>
                             <v-flex class="center" xs2 style="text-align: right">
-                                <v-btn color="error" :disabled="!checkHotel(hBeginning)">cancel</v-btn>
+                                <v-btn color="error" :disabled="!checkHotel(hBeginning)" @click="cancelHotel(resDetails)">cancel</v-btn>
                             </v-flex>
                         </v-layout>
                     </v-expansion-panel-content>
@@ -233,7 +235,7 @@
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn @click="rateVehicle()" :disabled="checkHotelRating(this.vEnd)">rate vehicle</v-btn>
+                                    <v-btn @click="rateVehicle()" :disabled="checkHotelRating(vEnd)">rate vehicle</v-btn>
                                 </v-flex>
                                 <v-spacer></v-spacer>
                                 <v-flex xs3>
@@ -245,7 +247,7 @@
                                         color="orange"></v-rating>
                                 </v-flex>
                                 <v-flex xs2>
-                                    <v-btn @click="rateRAC()" :disabled="checkHotelRating(this.vEnd)">rate company</v-btn>
+                                    <v-btn @click="rateRAC()" :disabled="checkHotelRating(vEnd)">rate company</v-btn>
                                 </v-flex>
                             </v-layout>
                             <v-layout row>
@@ -254,7 +256,7 @@
                                     Price: {{this.rPrice}}
                                 </v-flex>
                                 <v-flex class="center" xs2 style="text-align: right">
-                                    <v-btn color="error" :disabled="!checkHotel(vBeginning)">cancel</v-btn>
+                                    <v-btn color="error" :disabled="!checkHotel(vBeginning)" @click="cancelRAC(resDetails)">cancel</v-btn>
                                 </v-flex>
                             </v-layout>
                         </v-card>
@@ -275,7 +277,7 @@
                         Passport:<br/>{{slave.Passport}}
                     </v-flex>
                     <v-flex style="text-align: right">
-                        <v-btn color="error">cancel</v-btn>
+                        <v-btn color="error" :disabled="!checkFlight(departure, resDetails)" @click="cancelFlight(slave)">cancel</v-btn>
                     </v-flex>
                 </v-layout>
                 <v-layout row>
@@ -405,20 +407,20 @@
             })
         },
         methods : {
-            checkFlight(d){
-                let date = moment(d);
-                return date.isAfter(moment().subtract({hours: 3}));
+            checkFlight(d, res){
+                let date = moment(d, "DD.MM.YYYY");
+                return date.isAfter(moment().subtract({hours: 3})) && res.MasterRef === 0;
             },
-            checkHotel(d){
-                let date = moment(d);
-                return date.isAfter(moment().subtract({days: 2}));
+            checkHotel(d, res){
+                let date = moment(d, "DD.MM.YYYY");
+                return date.isAfter(moment().subtract({days: 2})) && res.MasterRef === 0;
             },
             checkFlightRating(d){
-                let date = moment(d);
+                let date = moment(d, "DD.MM.YYYY");
                 return date.isAfter(moment());
             },
             checkHotelRating(d){
-                let date = moment(d);
+                let date = moment(d, "DD.MM.YYYY");
                 return date.isAfter(moment());
             },
             details(index){
@@ -429,7 +431,7 @@
                 this.hID = this.resDetails.ReservationHotelID;
                 this.rID = this.resDetails.ReservationRentACarID;
                 this.fPrice = this.reservations[index].Master.ReservationFlight.Price;
-                this.sPrice = this.fPrice;
+                this.sPrice = JSON.parse(JSON.stringify(this.fPrice));
                 this.hPrice = this.reservations[index].Master.ReservationHotel.Price;
                 this.roomPrice = this.hPrice;
                 this.rPrice = this.reservations[index].Master.ReservationRentACar.Price;
@@ -445,10 +447,9 @@
                 if (this.fFeatures == null) {
                     this.fFeatures = [];
                 }
-                for(let i=0; i < this.fFeatures; i++){
+                for(let i=0; i < this.fFeatures.length; i++){
                     this.fPrice += this.fFeatures[i].Price;
                 }
-
                 this.vName =  this.reservations[index].Master.ReservationRentACar.Vehicle.Name;
                 this.vType = this.reservations[index].Master.ReservationRentACar.Vehicle.Type;
                 this.vCapacity = this.reservations[index].Master.ReservationRentACar.Vehicle.Capacity;
@@ -466,7 +467,7 @@
                 if (this.hFeatures == null) {
                     this.hFeatures = [];
                 }
-                for(let i=0; i < this.hFeatures; i++){
+                for(let i=0; i < this.hFeatures.length; i++){
                     this.hPrice += this.hFeatures[i].Price;
                 }
                 this.hAddress = this.reservations[index].Master.ReservationHotel.Hotel.Address;
@@ -541,6 +542,24 @@
             },
             close2(){
                 this.rateDialog = false;
+            },
+            cancelFlight(reservation){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/cancelFlight/"+reservation.ID)
+                    .then(res => {
+                        this.$router.go();
+                    })
+            },
+            cancelHotel(reservation){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/cancelHotel/"+reservation.ID)
+                    .then(res => {
+                        this.$router.go();
+                    })
+            },
+            cancelRAC(reservation){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/cancelVehicle/"+reservation.ID)
+                    .then(res => {
+                        this.$router.go();
+                    })
             },
             sendRate(){
                 switch (this.rateType) {
