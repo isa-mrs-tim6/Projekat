@@ -75,6 +75,7 @@ type HotelReservationParamsDTO struct {
 	From           string
 	To             string
 	Rooms          []Room
+	Features       []Feature
 	IsQuickReserve bool
 }
 
@@ -82,6 +83,7 @@ type HotelReservationParams struct {
 	From           time.Time
 	To             time.Time
 	Rooms          []Room
+	Features       []*Feature
 	IsQuickReserve bool
 }
 
