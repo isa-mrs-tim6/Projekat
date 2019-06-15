@@ -183,7 +183,7 @@
                                 Price: {{this.hPrice}}
                             </v-flex>
                             <v-flex class="center" xs2 style="text-align: right">
-                                <v-btn color="error" :disabled="!checkHotel(hBeginning)" @click="cancelHotel(resDetails)">cancel</v-btn>
+                                <v-btn color="error" :disabled="!checkHotel(hBeginning, resDetails)" @click="cancelHotel(resDetails)">cancel</v-btn>
                             </v-flex>
                         </v-layout>
                     </v-expansion-panel-content>
@@ -256,7 +256,7 @@
                                     Price: {{this.rPrice}}
                                 </v-flex>
                                 <v-flex class="center" xs2 style="text-align: right">
-                                    <v-btn color="error" :disabled="!checkHotel(vBeginning)" @click="cancelRAC(resDetails)">cancel</v-btn>
+                                    <v-btn color="error" :disabled="!checkHotel(vBeginning, resDetails)" @click="cancelRAC(resDetails)">cancel</v-btn>
                                 </v-flex>
                             </v-layout>
                         </v-card>
