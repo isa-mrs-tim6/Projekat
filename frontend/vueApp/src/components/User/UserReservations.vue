@@ -15,7 +15,7 @@
                 <v-flex style="text-align: right">
                     <v-btn class="button" @click="details(index)">details</v-btn><br/>
                     <v-btn class="button" color="error"
-                           :disabled="!checkFlight(item.Master.ReservationFlight.Flight.Departure, item.Master)"
+                           :disabled="!checkFlight(item.Master.ReservationFlight.Flight.Departure)"
                     @click="cancelFlight(item.Master)">cancel</v-btn>
                 </v-flex>
             </v-layout>
@@ -96,7 +96,7 @@
                                     Price: {{this.fPrice}}
                                 </v-flex>
                                 <v-flex class="center" xs2 style="text-align: right">
-                                    <v-btn color="error" :disabled="!checkFlight(departure, resDetails)" @click="cancelFlight(resDetails.ID)">cancel</v-btn>
+                                    <v-btn color="error" :disabled="!checkFlight(departure)" @click="cancelFlight(resDetails)">cancel</v-btn>
                                 </v-flex>
                             </v-layout>
                         </v-card>
@@ -277,7 +277,7 @@
                         Passport:<br/>{{slave.Passport}}
                     </v-flex>
                     <v-flex style="text-align: right">
-                        <v-btn color="error" :disabled="!checkFlight(departure, resDetails)" @click="cancelFlight(slave)">cancel</v-btn>
+                        <v-btn color="error" :disabled="!checkFlight(departure)" @click="cancelFlight(slave)">cancel</v-btn>
                     </v-flex>
                 </v-layout>
                 <v-layout row>
@@ -407,9 +407,9 @@
             })
         },
         methods : {
-            checkFlight(d, res){
+            checkFlight(d){
                 let date = moment(d, "DD.MM.YYYY");
-                return date.isAfter(moment().subtract({hours: 3})) && res.MasterRef === 0;
+                return date.isAfter(moment().subtract({hours: 3}));
             },
             checkHotel(d, res){
                 let date = moment(d, "DD.MM.YYYY");
