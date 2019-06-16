@@ -134,7 +134,6 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-
         <v-dialog v-model="QuickRes" persistent max-width="500px">
             <template v-slot:activator="{ on }">
                 <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
@@ -179,7 +178,6 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-
         <v-snackbar v-model="SuccessSnackbar" :timeout=2000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
         <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </v-container>
@@ -203,6 +201,8 @@
                     required: value => !!value || 'Required.'
                 },
                 dialog: false,
+                dialog2: false,
+                vID : '',
                 vehicles:[],
                 QuickReserveDays: [],
                 filter: {
@@ -444,6 +444,9 @@
                     this.editedItem = Object.assign({}, this.defaultItem);
                     this.editedIndex = -1;
                 }, 300);
+            },
+            close2(){
+                this.dialog2 = false;
             },
             save(){
                 if (!this.checkInput()){
