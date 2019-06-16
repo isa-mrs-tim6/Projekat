@@ -255,3 +255,15 @@ func (db *Store) AddLocation(location models.Location) error {
 	}
 	return nil
 }
+
+func (db *Store) UpdateQuickResRAC(days []models.RentACarReservation) {
+	for _, day := range days {
+		if day.Beginning.Before(day.End) {
+			if day.ID != 0 {
+				db.Save(&day)
+			} else {
+				db.Create(&day)
+			}
+		}
+	}
+}

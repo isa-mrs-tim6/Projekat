@@ -73,7 +73,7 @@
                                                 vehicles
                                             </v-btn>
                                             <br/>
-                                            <v-btn @click="searchVehicles(index)">
+                                            <v-btn @click="quickRes(index)">
                                                 quickres
                                             </v-btn>
                                         </v-flex>
@@ -119,6 +119,11 @@
             this.minDate = this.time.from;
         },
         methods: {
+            quickRes(index){
+                let location = 1;
+                this.$router.push({ path: `/vehiclesQuick/${this.items[index].ID}/${location}`,
+                    query: { reservationID: this.reservationID, passengers: this.passengers, start: this.time.from, end: this.time.to}})
+            },
             searchVehicles(index){
                 let location = 1;
                 this.$router.push({ path: `/vehiclesSearch/${this.items[index].ID}/${location}`, query: { reservationID: this.reservationID, passengers: this.passengers}})
