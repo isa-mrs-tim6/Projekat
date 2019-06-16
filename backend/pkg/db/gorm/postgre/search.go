@@ -35,7 +35,7 @@ func (db *Store) UserSearch(id uint, query models.UserQueryDto) ([]models.UserRe
 	return results, nil
 }
 
-func (db *Store) HotelSearch(query models.HotelQuery) ([]models.Hotel, error) {
+func (db *Store) HotelSearch(query models.HotelQuery) ([]models.HotelSearchResults, error) {
 	var hotels []models.Hotel
 	var retval []models.Hotel
 
