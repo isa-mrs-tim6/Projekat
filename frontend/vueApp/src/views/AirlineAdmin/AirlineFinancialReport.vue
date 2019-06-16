@@ -1,8 +1,18 @@
 <template>
-    <div id="main">
-        <AirlineAdminNavDrawer></AirlineAdminNavDrawer>
-        <AirlineFinance :graphData="graphData"></AirlineFinance>
-    </div>
+    <v-container fill-height fluid id="main">
+        <v-layout>
+            <v-flex>
+                <AirlineAdminNavDrawer/>
+            </v-flex>
+            <v-container>
+                <v-layout>
+                    <v-flex align-self-center>
+                        <AirlineFinance :graphData="graphData"></AirlineFinance>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
@@ -43,7 +53,4 @@
 </script>
 
 <style scoped>
-    #main {
-        background-image: linear-gradient(to right bottom, #142eae, #005bca, #007ed2, #009ccd, #0bb7c7, #47c0c6, #67c8c6, #81d0c7, #6ecac4, #58c4c3, #3cbdc2, #00b7c1);
-    }
 </style>

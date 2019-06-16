@@ -1,88 +1,92 @@
 <template>
-    <v-container style="height: 100vh;">
-        <v-card min-height="100%" class="flexcard" style="padding: 5px">
-            <v-card-title primary-title>
-                    <div class="headline font-weight-medium">Manage Vehicles:</div>
-            </v-card-title>
-            <v-card-text class="grow">
-                <v-layout row-wrap>
-                    <v-flex xs9 mr-5>
-                        <h2>Filters:</h2>
+    <v-container grid-list-xl text-xs-center fill-height>
+        <v-layout align-center justify-center column wrap fill-height>
+            <v-flex style="width: 90vw">
+                <v-card min-height="100%" class="flexcard" style="padding: 5px">
+                    <v-card-title primary-title>
+                        <div class="headline font-weight-medium">Manage Vehicles:</div>
+                    </v-card-title>
+                    <v-card-text class="grow">
                         <v-layout row-wrap>
-                            <v-flex ma-2>
-                                <v-text-field v-model="filter.Name" label="Name"></v-text-field>
+                            <v-flex xs9 mr-5>
+                                <h2>Filters:</h2>
+                                <v-layout row-wrap>
+                                    <v-flex ma-2>
+                                        <v-text-field v-model="filter.Name" label="Name"></v-text-field>
+                                    </v-flex>
+                                    <v-flex ma-2>
+                                        <v-text-field v-model="filter.Capacity" label="Capacity"></v-text-field>
+                                    </v-flex>
+                                    <v-flex ma-2>
+                                        <v-text-field v-model="filter.Type" label="Type"></v-text-field>
+                                    </v-flex>
+                                    <v-flex ma-2>
+                                        <v-text-field v-model="filter.PricePerDay" label="Price Per Day"></v-text-field>
+                                    </v-flex>
+                                </v-layout>
+                                <h2>Vehicles:</h2>
+                                <v-layout row-wrap>
+                                    <v-flex xs12>
+                                        <v-data-table :headers="headers" :items="vehiclesToShow" class="elevation-1">
+                                            <template v-slot:items="props">
+                                                <td>{{props.item.Name}}</td>
+                                                <td>{{props.item.Capacity}}</td>
+                                                <td>{{props.item.Type}}</td>
+                                                <td>{{props.item.PricePerDay}}</td>
+                                                <td>{{props.item.Discount | valueConversion}}</td>
+                                                <td>
+                                                    <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                                                    <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
+                                                </td>
+                                            </template>
+                                        </v-data-table>
+                                    </v-flex>
+                                </v-layout>
                             </v-flex>
-                            <v-flex ma-2>
-                                <v-text-field v-model="filter.Capacity" label="Capacity"></v-text-field>
-                            </v-flex>
-                            <v-flex ma-2>
-                                <v-text-field v-model="filter.Type" label="Type"></v-text-field>
-                            </v-flex>
-                            <v-flex ma-2>
-                                <v-text-field v-model="filter.PricePerDay" label="Price Per Day"></v-text-field>
+                            <v-flex xs3>
+                                <v-layout row-wrap>
+                                    <v-flex xs12>
+                                        <h2>Add Vehicle:</h2>
+                                        <v-form ref="form" class="align-center justify-center">
+                                            <v-text-field
+                                                    v-model="addedItem.Name"
+                                                    label="Name"
+                                                    :rules="[rules.required]"
+                                                    required
+                                            ></v-text-field>
+                                            <v-text-field
+                                                    v-model="addedItem.Capacity"
+                                                    label="Capacity"
+                                                    :rules="[rules.required]"
+                                                    required
+                                            ></v-text-field>
+                                            <v-text-field
+                                                    v-model="addedItem.Type"
+                                                    label="Type"
+                                                    :rules="[rules.required]"
+                                                    required
+                                            ></v-text-field>
+                                            <v-text-field
+                                                    v-model="addedItem.PricePerDay"
+                                                    label="Price Per Day"
+                                                    :rules="[rules.required]"
+                                                    required
+                                            ></v-text-field>
+                                            <v-checkbox
+                                                    v-model="addedItem.Discount"
+                                                    label="Discount"
+                                            ></v-checkbox>
+                                            <v-btn color="primary" style="float: left" @click="addVehicle">submit</v-btn>
+                                            <v-btn style="float: right" @click="clear">clear</v-btn>
+                                        </v-form>
+                                    </v-flex>
+                                </v-layout>
                             </v-flex>
                         </v-layout>
-                        <h2>Vehicles:</h2>
-                        <v-layout row-wrap>
-                            <v-flex xs12>
-                                <v-data-table :headers="headers" :items="vehiclesToShow" class="elevation-1">
-                                    <template v-slot:items="props">
-                                        <td>{{props.item.Name}}</td>
-                                        <td>{{props.item.Capacity}}</td>
-                                        <td>{{props.item.Type}}</td>
-                                        <td>{{props.item.PricePerDay}}</td>
-                                        <td>{{props.item.Discount | valueConversion}}</td>
-                                        <td>
-                                            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-                                            <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
-                                        </td>
-                                    </template>
-                                </v-data-table>
-                            </v-flex>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex xs3>
-                        <v-layout row-wrap>
-                            <v-flex xs12>
-                                <h2>Add Vehicle:</h2>
-                                <v-form ref="form" class="align-center justify-center">
-                                    <v-text-field
-                                            v-model="addedItem.Name"
-                                            label="Name"
-                                            :rules="[rules.required]"
-                                            required
-                                    ></v-text-field>
-                                    <v-text-field
-                                            v-model="addedItem.Capacity"
-                                            label="Capacity"
-                                            :rules="[rules.required]"
-                                            required
-                                    ></v-text-field>
-                                    <v-text-field
-                                            v-model="addedItem.Type"
-                                            label="Type"
-                                            :rules="[rules.required]"
-                                            required
-                                    ></v-text-field>
-                                    <v-text-field
-                                            v-model="addedItem.PricePerDay"
-                                            label="Price Per Day"
-                                            :rules="[rules.required]"
-                                            required
-                                    ></v-text-field>
-                                    <v-checkbox
-                                            v-model="addedItem.Discount"
-                                            label="Discount"
-                                    ></v-checkbox>
-                                    <v-btn color="primary" style="float: left" @click="addVehicle">submit</v-btn>
-                                    <v-btn style="float: right" @click="clear">clear</v-btn>
-                                </v-form>
-                            </v-flex>
-                        </v-layout>
-                    </v-flex>
-                </v-layout>
-            </v-card-text>
-        </v-card>
+                    </v-card-text>
+                </v-card>
+            </v-flex>
+        </v-layout>
         <v-dialog v-model="dialog" persistent max-width="500px">
             <v-card>
                 <v-card-title>

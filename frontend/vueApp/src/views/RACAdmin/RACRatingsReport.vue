@@ -1,8 +1,18 @@
 <template>
-    <div id="main">
-        <r-a-c-admin-nav-drawer/>
-        <rac-ratings style="height: 100vh;" v-bind:vehicles="Vehicles" v-bind:name="Name" v-bind:rating="Rating"></rac-ratings>
-    </div>
+    <v-container fill-height fluid id="main">
+        <v-layout>
+            <v-flex>
+                <r-a-c-admin-nav-drawer/>
+            </v-flex>
+            <v-container>
+                <v-layout>
+                    <v-flex align-self-center>
+                        <rac-ratings style="height: 100vh;" v-bind:vehicles="Vehicles" v-bind:name="Name" v-bind:rating="Rating"></rac-ratings>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
@@ -64,6 +74,6 @@
 
 <style scoped>
     #main {
-        background-image: linear-gradient(to right bottom, #02bb04, #00b824, #00b535, #00b141, #00ae4c, #00ab55, #00a75e, #00a465, #00a06d, #009b73, #009778, #00927c);
+        background-image: linear-gradient(to right bottom, #560579, #561a71, #56266a, #543062, #52395b, #594460, #604f64, #665a69, #796c7c, #8c7f8f, #9f93a3, #b3a7b7);
     }
 </style>
