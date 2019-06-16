@@ -4,6 +4,27 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+type RACQuickReserveDAO struct {
+	ID         uint
+	Beginning  string
+	End        string
+	VehicleID  uint
+	LocationID uint
+	CompanyID  uint
+	Price      float64
+}
+
+type VehicleQuickResParams struct {
+	CompanyID uint
+	StartDate string
+	EndDate   string
+}
+
+type CompleteQuickResVehParams struct {
+	ReservationID uint
+	MasterID      uint
+}
+
 type Vehicle struct {
 	gorm.Model
 	Name              string
@@ -73,6 +94,6 @@ type RentACarCompanyProfile struct {
 type RentACarCompany struct {
 	gorm.Model
 	RentACarCompanyProfile
-	Vehicles  []Vehicle        `gorm:"foreignkey:RentACarCompanyID"`
-	Locations []Location       `gorm:"foreignkey:RentACarCompanyID"`
+	Vehicles  []Vehicle  `gorm:"foreignkey:RentACarCompanyID"`
+	Locations []Location `gorm:"foreignkey:RentACarCompanyID"`
 }

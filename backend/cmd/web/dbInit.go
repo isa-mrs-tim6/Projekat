@@ -425,7 +425,7 @@ func addModels(db *gorm.DB) {
 			Name:        "H1_NAME",
 			Description: "H1_DESC",
 			Address: models.Address{
-				Address:    "H1_ADDRESS",
+				Address:    "A1_DEST1",
 				Coordinate: models.Coordinate{Latitude: 33.123214, Longitude: -5.21352},
 			},
 		},
