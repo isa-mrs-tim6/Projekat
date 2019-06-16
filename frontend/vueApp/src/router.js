@@ -47,6 +47,7 @@ import ReservationChoice from "./views/User/ReservationChoice";
 import RoomReservation from "./components/User/RoomReservation";
 import HotelReservationRewards from "./views/HotelAdmin/HotelReservationRewards";
 import QuickRoomReservation from "./components/User/QuickRoomReservation";
+import UserSearch from "./views/User/UserSearch";
 
 Vue.use(Router);
 
@@ -136,6 +137,10 @@ export default new Router({
     {
       path: "/user_cars",
       component: UserCars
+    },
+    {
+      path: "/user_search",
+      component: UserSearch
     },
     {
       path: "/userProfile",

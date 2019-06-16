@@ -41,6 +41,14 @@ func (db *Store) GetUser(email string) (models.User, error) {
 	return retVal, nil
 }
 
+func (db *Store) GetUserWithId(id uint) (models.User, error) {
+	var retVal models.User
+	if err := db.Where("id = ?", id).First(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
 func (db *Store) GetUserProfile(email string) (models.Profile, error) {
 	var retVal models.User
 	if err := db.Where("email = ?", email).First(&retVal).Error; err != nil {

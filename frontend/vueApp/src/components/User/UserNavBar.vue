@@ -18,6 +18,7 @@
             <v-btn class="button" flat @click="goFlights">Flights</v-btn>
             <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
             <v-btn class="button" flat @click="goCars">Cars</v-btn>
+            <v-btn class="button" flat @click="goUsers">Find a user</v-btn>
             <v-btn class="button" flat @click="goProfile">Profile</v-btn>
             <v-btn class="button" flat @click="goLogout">Logout</v-btn>
         </v-toolbar>
@@ -63,6 +64,10 @@
             goCars (e){
                 e.preventDefault();
                 this.$router.push("/user_cars");
+            },
+            goUsers(e){
+                e.preventDefault();
+                this.$router.push("/user_search");
             },
             goLogin (e){
                 e.preventDefault();

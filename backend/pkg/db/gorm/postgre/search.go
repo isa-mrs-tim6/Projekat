@@ -23,6 +23,18 @@ func (db *Store) OneWaySearch(query models.OneWayQuery) ([]models.Flight, error)
 	return flights, nil
 }
 
+func (db *Store) UserSearch(id uint, query models.UserQueryDto) ([]models.UserResultDTO, error) {
+	var results []models.UserResultDTO
+	if err := db.Table("users").
+		Where("users.id != ? AND (Lower(users.email) LIKE Lower(?) OR Lower(users.name) LIKE Lower(?)) AND (status is null or status = 'PENDING')", id, string('%')+query.Query+string('%'), string('%')+query.Query+string('%')).
+		Joins("LEFT JOIN friendships on (users.ID = friendships.user1_id) AND (friendships.user2_id = ?) OR (friendships.user1_id = ? AND friendships.user2_id = users.ID)", id, id).
+		Select("users.id as id, users.name as name, users.surname as surname, users.email as email, friendships.status as status").
+		Scan(&results).Error; err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
 func (db *Store) HotelSearch(query models.HotelQuery) ([]models.Hotel, error) {
 	var hotels []models.Hotel
 	var retval []models.Hotel
