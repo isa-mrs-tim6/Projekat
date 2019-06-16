@@ -26,6 +26,31 @@ func (app *Application) OneWaySearch(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (app *Application) UserSearch(w http.ResponseWriter, r *http.Request) {
+	var query models.UserQueryDto
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	err = json.NewDecoder(r.Body).Decode(&query)
+	if err != nil {
+		err = errors.New("Could not decode JSON")
+		return
+	}
+	var retUsers = make([]models.UserResultDTO, 0)
+	retUsers, err = app.Store.UserSearch(user.ID, query)
+
+	err = json.NewEncoder(w).Encode(retUsers)
+	if err != nil {
+		app.ErrorLog.Println("Cannot encode users into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+}
+
 func (app *Application) MultiSearch(w http.ResponseWriter, r *http.Request) {
 	flights, layoversString, err := app.FlightSearch(r)
 	if err != nil {

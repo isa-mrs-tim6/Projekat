@@ -2,6 +2,18 @@ package models
 
 import "time"
 
+type UserQueryDto struct{
+	Query string
+}
+
+type UserResultDTO struct {
+	ID uint
+	Name string
+	Surname string
+	Email string
+	Status string
+}
+
 type OneWayQueryDto struct {
 	From       string
 	To         string

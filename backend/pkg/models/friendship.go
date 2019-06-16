@@ -10,3 +10,9 @@ type Friendship struct {
 	User2   *User `gorm:"foreignkey:User2ID"`
 	User2ID uint
 }
+
+type FriendshipDto struct{
+	User1ID uint
+	User2ID uint
+	Status bool
+}
