@@ -308,6 +308,9 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	query.From = dateFrom
 	query.To = dateTo
 	query.IsQuickReserve = searchQuery.IsQuickReserve
+	for k := range searchQuery.Features {
+		query.Features = append(query.Features, &searchQuery.Features[k])
+	}
 
 	// RESERVE
 	reservationID, err := app.Store.ReserveHotel(uint(masterID), uint(hotelID), user.ID, query)

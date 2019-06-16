@@ -121,6 +121,10 @@ export default new Router({
     },
     {
       path: '/user',
+      component: UserFlights
+    },
+    {
+      path: '/user/reserve',
       component: ReservationChoice
     },
     {

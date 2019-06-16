@@ -270,8 +270,8 @@ func (db *Store) ReserveHotel(masterReservationID uint, hotelID uint, userID uin
 			End:       params.To,
 		},
 		Ratings:  nil,
-		Features: nil,
-		Price:    db.CalculateHotelReservationPrice(userID, params.Rooms, params.IsQuickReserve),
+		Features: params.Features,
+		Price:    db.CalculateHotelReservationPrice(userID, params.Rooms, params.Features, params.IsQuickReserve),
 	}
 	masterReservation.ReservationHotelID = hotelReservation.ID
 	masterReservation.ReservationHotel = hotelReservation
@@ -292,8 +292,8 @@ func (db *Store) ReserveHotel(masterReservationID uint, hotelID uint, userID uin
 				End:       params.To,
 			},
 			Ratings:  nil,
-			Features: nil,
-			Price:    db.CalculateHotelReservationPrice(userID, params.Rooms, params.IsQuickReserve),
+			Features: params.Features,
+			Price:    db.CalculateHotelReservationPrice(userID, params.Rooms, params.Features, params.IsQuickReserve),
 		}
 		reservation.ReservationHotel = hotelReservation
 		reservation.ReservationHotelID = hotelReservation.ID
@@ -304,7 +304,8 @@ func (db *Store) ReserveHotel(masterReservationID uint, hotelID uint, userID uin
 	return masterReservation.ID, nil
 }
 
-func (db *Store) CalculateHotelReservationPrice(userID uint, sent []models.Room, isQuickReserve bool) float64 {
+func (db *Store) CalculateHotelReservationPrice(userID uint, sent []models.Room, features []*models.Feature,
+	isQuickReserve bool) float64 {
 	var foundRooms []models.Room
 	var foundRoomIds []uint
 	price := float64(0.0)
@@ -317,6 +318,14 @@ func (db *Store) CalculateHotelReservationPrice(userID uint, sent []models.Room,
 	// Add room prices
 	for _, v := range foundRooms {
 		price += v.Price
+	}
+
+	for _, v := range features {
+		price += v.Price
+	}
+
+	if isQuickReserve {
+		price *= 0.9
 	}
 
 	// Add discount based on number of reservations

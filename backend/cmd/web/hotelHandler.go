@@ -263,7 +263,9 @@ func (app *Application) GetHotelFeatures(w http.ResponseWriter, r *http.Request)
 	} else {
 		// The request came from a regular user
 		// Hotel ID was sent as request payload
-		err := json.NewDecoder(r.Body).Decode(&hotelID)
+		id, _ := r.URL.Query()["hotel"]
+		idInt, err := strconv.ParseUint(id[0], 10, 64)
+		hotelID = uint(idInt)
 		if err != nil {
 			app.ErrorLog.Println("Could not decode JSON")
 			w.WriteHeader(http.StatusBadRequest)
