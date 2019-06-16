@@ -72,10 +72,24 @@ func (db *Store) HotelSearch(query models.HotelQuery) ([]models.Hotel, error) {
 		}
 	}
 
-	return retval, nil
+	var results []models.HotelSearchResults
+	for _, hotel := range hotels {
+		var hotelReservations []models.HotelReservation
+		if err := db.Find(&hotelReservations, "hotel_id = ?", hotel.ID).Error; err != nil {
+			return nil, err
+		}
+		rating := 0.0
+		for _, reservation := range hotelReservations {
+			rating += float64(reservation.HotelRating)
+		}
+		rating /= float64(len(hotelReservations))
+		results = append(results, models.HotelSearchResults{Hotel: hotel, Rating: rating})
+	}
+
+	return results, nil
 }
 
-func (db *Store) RoomSearch(query models.RoomQuery) ([]models.Room, error) {
+func (db *Store) RoomSearch(query models.RoomQuery, userID uint, isQuickReserve bool) ([]models.RoomSearchResults, error) {
 	var rooms []models.Room
 
 	if err := db.Joins("LEFT JOIN room_reservations on room_reservations.room_id = rooms.id").
@@ -86,10 +100,33 @@ func (db *Store) RoomSearch(query models.RoomQuery) ([]models.Room, error) {
 		Group("rooms.id").Find(&rooms).Error; err != nil {
 		return nil, err
 	}
-	return rooms, nil
+
+	var results []models.RoomSearchResults
+	for _, room := range rooms {
+		var rating []float64
+		db.Table("room_ratings").Where("room_id = ?", room.ID).Pluck("avg(rating)", &rating)
+
+		price := room.Price
+		if isQuickReserve {
+			price *= 0.9
+		}
+
+		// Add discount based on number of reservations
+		var numOfReservations uint
+		var reward models.ReservationReward
+		db.Table("reservations").Where("user_id = ?", userID).Count(&numOfReservations)
+		db.First(&reward, "required_number < ?", numOfReservations)
+		if reward.PriceScale != 0 {
+			price *= reward.PriceScale
+		}
+
+		results = append(results, models.RoomSearchResults{Room: room, Rating: rating[0], Price: price})
+	}
+
+	return results, nil
 }
 
-func (db *Store) QuickReservationRoomSearch(query models.RoomQuery) ([]models.Room, error) {
+func (db *Store) QuickReservationRoomSearch(query models.RoomQuery, userID uint, isQuickReserve bool) ([]models.RoomSearchResults, error) {
 	var rooms []models.Room
 
 	if err := db.Joins("JOIN room_quick_reserve_days ON room_quick_reserve_days.room_id = rooms.id AND"+
@@ -103,7 +140,30 @@ func (db *Store) QuickReservationRoomSearch(query models.RoomQuery) ([]models.Ro
 		Group("rooms.id").Find(&rooms).Error; err != nil {
 		return nil, err
 	}
-	return rooms, nil
+
+	var results []models.RoomSearchResults
+	for _, room := range rooms {
+		var rating []float64
+		db.Table("room_ratings").Where("room_id = ?", room.ID).Pluck("avg(rating)", &rating)
+
+		price := room.Price
+		if isQuickReserve {
+			price *= 0.9
+		}
+
+		// Add discount based on number of reservations
+		var numOfReservations uint
+		var reward models.ReservationReward
+		db.Table("reservations").Where("user_id = ?", userID).Count(&numOfReservations)
+		db.First(&reward, "required_number < ?", numOfReservations)
+		if reward.PriceScale != 0 {
+			price *= reward.PriceScale
+		}
+
+		results = append(results, models.RoomSearchResults{Room: room, Rating: rating[0], Price: price})
+	}
+
+	return results, nil
 }
 
 func (db *Store) RacSearch(query models.RacQuery) ([]models.RentACarCompany, error) {

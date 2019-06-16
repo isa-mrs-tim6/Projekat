@@ -1,8 +1,18 @@
 <template>
-    <div id="main">
-        <AirlineAdminNavDrawer></AirlineAdminNavDrawer>
-        <AdminProfile></AdminProfile>
-    </div>
+    <v-container fill-height fluid id="main">
+        <v-layout>
+            <v-flex>
+                <AirlineAdminNavDrawer/>
+            </v-flex>
+            <v-container>
+                <v-layout>
+                    <v-flex align-self-center>
+                        <AdminProfile/>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

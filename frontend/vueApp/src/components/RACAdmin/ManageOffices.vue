@@ -1,63 +1,70 @@
 <template>
-    <v-container style="height: 100vh;">
-        <v-card min-height="100%" class="flexcard" style="padding: 5px">
-            <v-card-title primary-title>
-                <div class="headline font-weight-medium">Manage Offices:</div>
-            </v-card-title>
-            <v-card-text class="grow">
-                <v-layout row-wrap>
-                    <v-flex xs9 mr-3>
-                        <h2>Filters:</h2>
+    <v-container grid-list-xl text-xs-center fill-height>
+        <v-layout align-center justify-center column wrap fill-height>
+            <v-flex style="width: 90vw">
+                <v-card min-height="100%" class="flexcard" style="padding: 5px">
+                    <v-card-title primary-title>
+                        <div class="headline font-weight-medium">Manage Offices:</div>
+                    </v-card-title>
+                    <v-card-text class="grow">
                         <v-layout row-wrap>
+                            <v-flex xs9 mr-3>
+                                <h2>Filters:</h2>
+                                <v-layout row-wrap>
+                                    <v-flex xs3>
+                                        <v-text-field v-model="filter.address" label="Address"></v-text-field>
+                                    </v-flex>
+                                </v-layout>
+                                <h2>Offices:</h2>
+                                <v-layout row-wrap>
+                                    <v-flex x12>
+                                        <v-data-table :headers="headers" :items="officesToShow" class="elevation-1">
+                                            <template v-slot:items="props">
+                                                <td>{{props.item.Address}}</td>
+                                                <td>{{props.item.Longitude}}</td>
+                                                <td>{{props.item.Latitude}}</td>
+                                                <td>
+                                                    <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                                                    <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
+                                                </td>
+                                            </template>
+                                        </v-data-table>
+                                    </v-flex>
+                                </v-layout>
+                            </v-flex>
                             <v-flex xs3>
-                                <v-text-field v-model="filter.address" label="Address"></v-text-field>
+                                <h2 style="margin-bottom: 10px">Add Office:</h2>
+                                <v-form ref="form" class="align-center justify-center">
+                                    <v-layout>
+                                        <v-icon medium style="margin-left: 10px; margin-right: 8px">location_on</v-icon>
+                                        <gmap-autocomplete
+                                                style="width: 85%; border-bottom: 1px solid gray"
+                                                placeholder="Address"
+                                                :value="addedItem.Address"
+                                                @input="value = $event.target.value"
+                                                @place_changed="getAddressDataAdd">
+                                        </gmap-autocomplete>
+                                    </v-layout>
+                                    <v-flex>
+                                        <gmap-map
+                                                :center="{lat: addedItem.Latitude, lng: addedItem.Longitude}"
+                                                :zoom="8"
+                                                style="width:100%;  height: 400px;"
+                                        >
+                                            <gmap-marker
+                                                    :position="{lat: addedItem.Latitude, lng: addedItem.Longitude}"
+                                            ></gmap-marker>
+                                        </gmap-map>
+                                    </v-flex>
+                                    <v-btn color="primary" style="float: left" @click="addLocation">submit</v-btn>
+                                    <v-btn style="float: right" @click="clear">clear</v-btn>
+                                </v-form>
                             </v-flex>
                         </v-layout>
-                        <h2>Offices:</h2>
-                        <v-layout row-wrap>
-                            <v-flex x12>
-                                <v-data-table :headers="headers" :items="officesToShow" class="elevation-1">
-                                    <template v-slot:items="props">
-                                        <td>{{props.item.Address}}</td>
-                                        <td>{{props.item.Longitude}}</td>
-                                        <td>{{props.item.Latitude}}</td>
-                                        <td>
-                                            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-                                            <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
-                                        </td>
-                                    </template>
-                                </v-data-table>
-                            </v-flex>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex xs3>
-                        <h2>Add Office:</h2>
-                        <v-form ref="form" class="align-center justify-center">
-                            <v-text-field
-                                    v-model="addedItem.Address"
-                                    label="Address"
-                                    :rules="[rules.required]"
-                                    required
-                            ></v-text-field>
-                            <v-text-field
-                                    v-model="addedItem.Longitude"
-                                    label="Longitude"
-                                    :rules="[rules.required]"
-                                    required
-                            ></v-text-field>
-                            <v-text-field
-                                    v-model="addedItem.Latitude"
-                                    label="Latitude"
-                                    :rules="[rules.required]"
-                                    required
-                            ></v-text-field>
-                            <v-btn color="primary" style="float: left" @click="addLocation">submit</v-btn>
-                            <v-btn style="float: right" @click="clear">clear</v-btn>
-                        </v-form>
-                    </v-flex>
-                </v-layout>
-            </v-card-text>
-        </v-card>
+                    </v-card-text>
+                </v-card>
+            </v-flex>
+        </v-layout>
         <v-dialog v-model="dialog" persistent max-width="500px">
             <v-card>
                 <v-card-title>
@@ -65,21 +72,27 @@
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-layout row-wrap>
-                            <v-flex xs6>
-                                <v-text-field v-model="editedItem.Address" label="Address" :rules="[rules.required]"></v-text-field>
-                            </v-flex>
+                        <v-layout>
+                            <v-icon medium style="margin-left: 10px; margin-right: 8px">location_on</v-icon>
+                            <gmap-autocomplete
+                                    style="width: 85%; border-bottom: 1px solid gray"
+                                    placeholder="Address"
+                                    :value="editedItem.Address"
+                                    @input="value = $event.target.value"
+                                    @place_changed="getAddressDataEdit">
+                            </gmap-autocomplete>
                         </v-layout>
-                        <v-layout row-wrap>
-                            <v-flex xs6>
-                                <v-text-field v-model="editedItem.Longitude" label="Longitude" :rules="[rules.required]"></v-text-field>
-                            </v-flex>
-                        </v-layout>
-                        <v-layout row-wrap>
-                            <v-flex xs6>
-                                <v-text-field v-model="editedItem.Latitude" label="Latitude" :rules="[rules.required]"></v-text-field>
-                            </v-flex>
-                        </v-layout>
+                        <v-flex>
+                            <gmap-map
+                                    :center="{lat: editedItem.Latitude, lng: editedItem.Longitude}"
+                                    :zoom="8"
+                                    style="width:100%;  height: 400px;"
+                            >
+                                <gmap-marker
+                                        :position="{lat: editedItem.Latitude, lng: editedItem.Longitude}"
+                                ></gmap-marker>
+                            </gmap-map>
+                        </v-flex>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
@@ -287,6 +300,16 @@
                         this.ErrorSnackbarText = 'Cannot edit office';
                     });
                 this.close()
+            },
+            getAddressDataAdd: function (addressData) {
+                this.addedItem.Address = addressData.formatted_address;
+                this.addedItem.Latitude = addressData.geometry.location.lat();
+                this.addedItem.Longitude = addressData.geometry.location.lng();
+            },
+            getAddressDataEdit: function (addressData) {
+                this.editedItem.Address = addressData.formatted_address;
+                this.editedItem.Latitude = addressData.geometry.location.lat();
+                this.editedItem.Longitude = addressData.geometry.location.lng();
             }
         },
         watch:{

@@ -199,12 +199,27 @@ func (db *Store) Rate(rating models.ResRatingDAO) error {
 		}
 		break
 	case "room":
-		if err := db.Table("room_ratings").
-			Where("room_id = ?", rating.RoomID).
-			Where("reservation_id = ?", rating.ResID).
-			Update("rating", int(rating.Rating)).
-			Error; err != nil {
-			return err
+		var ratings []models.RoomRating
+		db.Table("room_ratings").Find(&ratings)
+		found := false
+		for _, r := range ratings {
+			if r.ReservationID == rating.ResID && r.RoomID == rating.RoomID {
+				r.Rating = int(rating.Rating)
+				db.Table("room_ratings").
+					Where("room_id = ?", rating.RoomID).
+					Where("reservation_id = ?", rating.ResID).
+					Update("rating", int(rating.Rating))
+				found = true
+				break
+			}
+		}
+		if !found {
+			var rating = models.RoomRating{
+				Rating:        int(rating.Rating),
+				RoomID:        rating.RoomID,
+				ReservationID: rating.ResID,
+			}
+			db.Create(&rating)
 		}
 		break
 	case "vehicle":

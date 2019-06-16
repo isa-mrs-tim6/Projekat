@@ -53,15 +53,16 @@ type FlightReservation struct {
 type RentACarReservation struct {
 	gorm.Model
 	Occupation
-	Location        string
-	RentACarCompany RentACarCompany `gorm:"foreignkey:CompanyID"`
-	CompanyID       uint
-	Vehicle         Vehicle `gorm:"foreignkey:VehicleID"`
-	VehicleID       uint
-	Price           float64
-	CompanyRating   uint
-	VehicleRating   uint
-	IsQuickReserve  bool
+	Location                   string
+	RentACarCompany            RentACarCompany `gorm:"foreignkey:CompanyID"`
+	CompanyID                  uint
+	Vehicle                    Vehicle `gorm:"foreignkey:VehicleID"`
+	VehicleID                  uint
+	Price                      float64
+	CompanyRating              uint
+	VehicleRating              uint
+	IsQuickReserve             bool
+	QuickReservationPriceScale float64
 }
 
 type HotelReservation struct {

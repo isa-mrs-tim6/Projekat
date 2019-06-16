@@ -1,5 +1,5 @@
 <template>
-    <v-container grid-list-xl text-xs-center style="height: 100vh;">
+    <v-container grid-list-xl text-xs-center>
         <v-layout align-center justify-center column wrap fill-height>
             <v-flex style="width: 60vw">
                 <v-card min-height="100%" class="flexcard">
@@ -15,32 +15,26 @@
                                     prepend-icon="business"
                                     class="body-2"
                             ></v-text-field>
-                            <v-text-field
-                                    v-model="hotelProfile.Address"
-                                    label="Address"
-                                    required
-                                    prepend-icon="location_on"
-                                    class="body-2"
-                            ></v-text-field>
+                            <v-layout>
+                                <v-icon medium style="margin-left: 10px; margin-right: 8px">location_on</v-icon>
+                                <gmap-autocomplete
+                                        style="width: 95%; border-bottom: 1px solid gray"
+                                        placeholder="Address"
+                                        :value="hotelProfile.Address"
+                                        @input="value = $event.target.value"
+                                        @place_changed="getAddressData">
+                                </gmap-autocomplete>
+                            </v-layout>
                             <v-flex>
-                                <v-layout row wrap fill-height>
-                                    <v-text-field
-                                            v-model="hotelProfile.Latitude"
-                                            label="Latitude"
-                                            required
-                                            class="body-2"
-                                            prepend-icon="satellite"
-                                            :rules="[rules.required, rules.numeric]"
-                                    ></v-text-field>
-                                    <v-text-field
-                                            v-model="hotelProfile.Longitude"
-                                            label="Longitude"
-                                            required
-                                            class="body-2"
-                                            prepend-icon="satellite"
-                                            :rules="[rules.required, rules.numeric]"
-                                    ></v-text-field>
-                                </v-layout>
+                                <gmap-map
+                                        :center="{lat: hotelProfile.Latitude, lng: hotelProfile.Longitude}"
+                                        :zoom="8"
+                                        style="width:100%;  height: 400px;"
+                                >
+                                    <gmap-marker
+                                            :position="{lat: hotelProfile.Latitude, lng: hotelProfile.Longitude}"
+                                    ></gmap-marker>
+                                </gmap-map>
                             </v-flex>
                             <v-text-field
                                     v-model="hotelProfile.Description"
@@ -104,6 +98,11 @@
             },
             revert () {
                 this.hotelProfile = JSON.parse(JSON.stringify(this.backupHotelProfile))
+            },
+            getAddressData: function (addressData) {
+                this.hotelProfile.Address = addressData.formatted_address;
+                this.hotelProfile.Latitude = addressData.geometry.location.lat();
+                this.hotelProfile.Longitude = addressData.geometry.location.lng();
             }
         },
     }

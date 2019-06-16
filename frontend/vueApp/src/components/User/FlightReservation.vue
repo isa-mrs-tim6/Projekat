@@ -249,7 +249,7 @@
                             this.snackbar_fields.text = "Reservation successful";
                             this.snackbar_fields.color = "success";
                             this.snackbar_fields.snackbar = true;
-                            this.$router.push({ path: '/user', query: { reservationID: res.data, passengers: payload.Users.length.toString() }});
+                            this.$router.push({ path: '/user/reserve', query: { reservationID: res.data, passengers: payload.Users.length.toString() }});
                         }
                     })
                     .catch(err => {

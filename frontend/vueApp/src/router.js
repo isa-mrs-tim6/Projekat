@@ -47,6 +47,8 @@ import ReservationChoice from "./views/User/ReservationChoice";
 import RoomReservation from "./components/User/RoomReservation";
 import HotelReservationRewards from "./views/HotelAdmin/HotelReservationRewards";
 import QuickRoomReservation from "./components/User/QuickRoomReservation";
+import HotelList from "./views/User/HotelList";
+import ShowQuickVehicle from "./views/User/ShowQuickVehicle";
 import UserSearch from "./views/User/UserSearch";
 
 Vue.use(Router);
@@ -120,6 +122,10 @@ export default new Router({
     },
     {
       path: '/user',
+      component: UserFlights
+    },
+    {
+      path: '/user/reserve',
       component: ReservationChoice
     },
     {
@@ -133,6 +139,10 @@ export default new Router({
     {
       path: "/user_hotels",
       component: UserHotels
+    },
+    {
+      path: '/user/hotels',
+      component: HotelList
     },
     {
       path: "/user_cars",
@@ -225,6 +235,10 @@ export default new Router({
     {
       path: '/vehiclesSearch/:id/:locID',
       component: ShowVehicleSearch
+    },
+    {
+      path: '/vehiclesQuick/:id/:locID',
+      component: ShowQuickVehicle
     },
     {
       path: '/confirmRegistration/:type/:email/',

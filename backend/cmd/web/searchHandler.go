@@ -167,6 +167,15 @@ func (app *Application) RoomSearch(w http.ResponseWriter, r *http.Request) {
 	var searchQuery models.RoomQueryDTO
 	var query models.RoomQuery
 
+	// FIND LOGGED USER
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	// GET HOTEL ID
 	vars := mux.Vars(r)
 	hotelID, err := strconv.ParseUint(vars["id"], 10, 64)
@@ -200,7 +209,7 @@ func (app *Application) RoomSearch(w http.ResponseWriter, r *http.Request) {
 	query.From = dateFrom
 	query.To = dateTo
 
-	if rooms, err := app.Store.RoomSearch(query); err != nil {
+	if rooms, err := app.Store.RoomSearch(query, user.ID, false); err != nil {
 		app.ErrorLog.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {
@@ -215,6 +224,15 @@ func (app *Application) QuickReserveRoomSearch(w http.ResponseWriter, r *http.Re
 	var searchQuery models.RoomQueryDTO
 	var query models.RoomQuery
 
+	// FIND LOGGED USER
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	// GET HOTEL ID
 	vars := mux.Vars(r)
 	hotelID, err := strconv.ParseUint(vars["id"], 10, 64)
@@ -248,7 +266,7 @@ func (app *Application) QuickReserveRoomSearch(w http.ResponseWriter, r *http.Re
 	query.From = dateFrom
 	query.To = dateTo
 
-	if rooms, err := app.Store.QuickReservationRoomSearch(query); err != nil {
+	if rooms, err := app.Store.QuickReservationRoomSearch(query, user.ID, false); err != nil {
 		app.ErrorLog.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {

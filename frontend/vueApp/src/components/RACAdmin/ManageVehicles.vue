@@ -33,6 +33,7 @@
                                         <td>{{props.item.PricePerDay}}</td>
                                         <td>{{props.item.Discount | valueConversion}}</td>
                                         <td>
+                                            <v-icon small class="mr-2" @click="openQuickRes(props.item)">add_box</v-icon>
                                             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                                             <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
                                         </td>
@@ -133,6 +134,50 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="QuickRes" persistent max-width="500px">
+            <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+            </template>
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Manage quick reservations</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+                            <v-flex xs12 v-for="(value, index) in this.QuickReserveDays" v-bind:key="index">
+                                <v-layout align-center justify-center row-wrap>
+                                    <v-flex xs6>
+                                        <v-menu v-model="menuFrom[index]" :close-on-content-click="false" lazy transition="scale-transition"
+                                                :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field :value="computedDateFormattedMomentjs(value.Beginning)" label="Beginning" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                            </template>
+                                            <v-date-picker no-title scrollable v-model = "value.Beginning" @input="menuFrom[index] = false"></v-date-picker>
+                                        </v-menu>
+                                    </v-flex>
+                                    <v-flex xs6>
+                                        <v-menu v-model="menuTo[index]" :close-on-content-click="false" lazy transition="scale-transition"
+                                                :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field :value="computedDateFormattedMomentjs(value.End)" label="End" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                            </template>
+                                            <v-date-picker no-title scrollable v-model = "value.End " @input="menuTo[index] = false"></v-date-picker>
+                                        </v-menu>
+                                    </v-flex>
+                                </v-layout>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click="addNewQuickReserve">Add new date</v-btn>
+                    <v-btn color="blue darken-1" flat @click="closeQuickReserve">Cancel</v-btn>
+                    <v-btn color="blue darken-1" flat @click="saveQuickReserve">Save</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-snackbar v-model="SuccessSnackbar" :timeout=2000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
         <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </v-container>
@@ -140,19 +185,26 @@
 
 <script>
     import axios from "axios";
+    import moment from "moment";
     export default {
         name: "ManageVehicles",
         data () {
             return {
+                QuickRes: false,
                 SuccessSnackbar: false,
                 SuccessSnackbarText: '',
                 ErrorSnackbar: false,
                 ErrorSnackbarText: '',
+                menuFrom: [],
+                menuTo: [],
                 rules:{
                     required: value => !!value || 'Required.'
                 },
                 dialog: false,
+                dialog2: false,
+                vID : '',
                 vehicles:[],
+                QuickReserveDays: [],
                 filter: {
                     Name: '',
                     Capacity: '',
@@ -197,7 +249,7 @@
                     {
                         text: 'Type',
                         value: "Type",
-                        width: '25%'
+                        width: '15%'
                     },
                     {
                         text: 'Price/Day',
@@ -212,7 +264,7 @@
                     {
                         text: 'Action',
                         sortable: false,
-                        width: '20%'
+                        width: '30%'
                     }
                 ]
             }
@@ -317,6 +369,70 @@
                 }
                 return ind !== true;
             },
+            openQuickRes(item){
+                this.editedIndex = this.vehicles.indexOf(item);
+                this.editedItem = Object.assign({}, item);
+                this.menuFrom = [];
+                this.menuTo = [];
+
+                axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/'+item.ID+'/quickReservations')
+                    .then(res =>{
+                            this.QuickReserveDays = res.data;
+
+                            console.log(this.QuickReserveDays);
+
+                            for (let i = 0; i < this.QuickReserveDays.length; i++) {
+                                this.menuFrom.push(false);
+                                this.menuTo.push(false);
+                            }
+
+                            this.QuickRes = true
+                    });
+            },
+            computedDateFormattedMomentjs(date) {
+                return date ? moment(date).format('DD-MM-YYYY') : ''
+            },
+            addNewQuickReserve() {
+                this.QuickReserveDays.push(
+                    {
+                        "VehicleID": this.editedItem.ID,
+                        "Start": null,
+                        "End": null,
+                    },
+                );
+            },
+            closeQuickReserve () {
+                this.QuickReserveDays = [];
+                this.QuickRes = false;
+            },
+            saveQuickReserve() {
+                this.QuickReserveDays = this.QuickReserveDays.filter(
+                    quickReserve => quickReserve.Beginning != null && quickReserve.End != null &&
+                        moment(quickReserve.Beginning).isBefore(moment(quickReserve.End)));
+                this.QuickRes = false;
+
+                let quickReserveDays = [];
+                this.QuickReserveDays.forEach(item => {
+
+                    let a = moment(moment(item.Beginning));
+                    let b = moment(moment(item.End));
+                    let days = b.diff(a, 'days') + 1;
+
+                    quickReserveDays.push({
+                        ID: item.ID == null ? 0 : item.ID,
+                        Beginning: moment(moment(item.Beginning).format('DD-MM-YYYY'), 'DD-MM-YYYY').valueOf().toString(),
+                        End: moment(moment(item.End).format('DD-MM-YYYY'), 'DD-MM-YYYY').valueOf().toString(),
+                        VehicleID: this.editedItem.ID,
+                        LocationID: "",
+                        CompanyID: this.editedItem.RentACarCompanyID,
+                        Price: this.editedItem.PricePerDay * days,
+                        IsQuickReserve: true
+                    })
+                });
+
+                axios.create({withCredentials: true})
+                    .post('http://localhost:8000/api/rentACarCompany/updateQuickReservations', quickReserveDays);
+            },
             editItem (item) {
                 this.editedIndex = this.vehicles.indexOf(item);
                 this.editedItem = Object.assign({}, item);
@@ -328,6 +444,9 @@
                     this.editedItem = Object.assign({}, this.defaultItem);
                     this.editedIndex = -1;
                 }, 300);
+            },
+            close2(){
+                this.dialog2 = false;
             },
             save(){
                 if (!this.checkInput()){

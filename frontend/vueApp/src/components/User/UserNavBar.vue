@@ -59,7 +59,7 @@
             },
             goHotels (e){
                 e.preventDefault();
-                this.$router.push("/user_hotels");
+                this.$router.push("/user/hotels");
             },
             goCars (e){
                 e.preventDefault();
@@ -79,7 +79,7 @@
             },
             goReserve (e){
                 e.preventDefault();
-                this.$router.push("/user");
+                this.$router.push("/user/reserve");
             }
         }
     }

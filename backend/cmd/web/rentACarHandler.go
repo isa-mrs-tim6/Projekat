@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
+	"github.com/jinzhu/gorm"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
@@ -372,4 +374,47 @@ func (app *Application) AddLocation(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+}
+
+func (app *Application) UpdateQuickReservationsRAC(w http.ResponseWriter, r *http.Request) {
+	var days []models.RACQuickReserveDAO
+	var fixedReservations []models.RentACarReservation
+
+	data, err := ioutil.ReadAll(r.Body)
+	if err == nil && data != nil {
+		err = json.Unmarshal(data, &days)
+	} else {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	scale := 0.9
+
+	for _, day := range days {
+		startInt, err := strconv.ParseInt(day.Beginning, 10, 64)
+		if err != nil {
+			app.ErrorLog.Println("Invalid from date")
+			w.WriteHeader(http.StatusBadRequest)
+		}
+
+		endInt, err := strconv.ParseInt(day.End, 10, 64)
+		if err != nil {
+			app.ErrorLog.Println("Invalid to date")
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		fixedReservations = append(fixedReservations, models.RentACarReservation{
+			Model:     gorm.Model{ID: day.ID},
+			VehicleID: day.VehicleID,
+			Occupation: models.Occupation{
+				Beginning: time.Unix(0, startInt*int64(time.Millisecond)),
+				End:       time.Unix(0, endInt*int64(time.Millisecond)),
+			},
+			CompanyID:                  day.CompanyID,
+			QuickReservationPriceScale: scale,
+			Price:                      day.Price * scale,
+			IsQuickReserve:             true,
+		})
+	}
+	app.Store.UpdateQuickResRAC(fixedReservations)
 }

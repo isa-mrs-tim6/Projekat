@@ -118,6 +118,9 @@ func (db *Store) FindVehicles(params models.FindVehicleParams) ([]models.Vehicle
 			return nil, err
 		}
 		for _, res := range reservations {
+			if res.IsQuickReserve {
+				continue
+			}
 			if !(res.Occupation.Beginning.After(endDate) ||
 				res.Occupation.End.Before(startDate)) {
 				taken = true
@@ -180,15 +183,17 @@ func (db *Store) UpdateVehicle(id uint, newVehicle models.Vehicle) error {
 func (db *Store) DeleteVehicle(id uint) error {
 	var retVal models.Vehicle
 	var res []models.RentACarReservation
-	if err := db.Set("gorm:auto_preload", true).Find(&res).Error; err != nil {
-		return err
-	}
+
 	if err := db.Set("gorm:auto_preload", true).First(&retVal, id).Error; err != nil {
 		return err
 	}
 
+	if err := db.Where("vehicle_id = ?", retVal.ID).Find(&res, id).Error; err != nil {
+		return err
+	}
+
 	for _, r := range res {
-		if r.ID == id && r.Occupation.End.After(time.Now()) {
+		if r.ID == id && r.End.After(time.Now()) {
 			return errors.New("Vehicle is reserved and cannot be deleted")
 		}
 	}
@@ -254,4 +259,16 @@ func (db *Store) AddLocation(location models.Location) error {
 		return err
 	}
 	return nil
+}
+
+func (db *Store) UpdateQuickResRAC(days []models.RentACarReservation) {
+	for _, day := range days {
+		if day.Beginning.Before(day.End) {
+			if day.ID != 0 {
+				db.Save(&day)
+			} else {
+				db.Create(&day)
+			}
+		}
+	}
 }
