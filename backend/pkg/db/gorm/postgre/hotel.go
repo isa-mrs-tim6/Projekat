@@ -167,6 +167,18 @@ func (db *Store) UpdateRoom(room models.Room) error {
 	return nil
 }
 
+func (db *Store) UpdateQuickReservationDays(days []models.RoomQuickReserveDays) {
+	for _, day := range days {
+		if day.Start.Before(day.End) {
+			if day.ID != 0 {
+				db.Save(&day)
+			} else {
+				db.Create(&day)
+			}
+		}
+	}
+}
+
 func (db *Store) GetHotelFeatures(id uint) ([]models.Feature, error) {
 	var retVal []models.Feature
 	if err := db.Set("gorm:auto_preload", true).Where("hotel_id = ?", id).Find(&retVal).Error; err != nil {

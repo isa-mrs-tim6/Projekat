@@ -169,28 +169,28 @@ func (app *Application) UpdateAdminProfile(w http.ResponseWriter, r *http.Reques
 			app.ErrorLog.Printf("Could not update system profile")
 			w.WriteHeader(http.StatusInternalServerError)
 		}
-		UpdateToken(w, profile.Email)
+		UpdateToken(w, profile.Email, "AirlineAdmin")
 	case "HotelAdmin":
 		err = app.Store.UpdateHotelAdmin(email, profile)
 		if err != nil {
 			app.ErrorLog.Printf("Could not update hotel admin profile")
 			w.WriteHeader(http.StatusInternalServerError)
 		}
-		UpdateToken(w, profile.Email)
+		UpdateToken(w, profile.Email, "HotelAdmin")
 	case "Rent-A-CarAdmin":
 		err = app.Store.UpdateRACAdmin(email, profile)
 		if err != nil {
 			app.ErrorLog.Printf("Could not update rac admin profile")
 			w.WriteHeader(http.StatusInternalServerError)
 		}
-		UpdateToken(w, profile.Email)
+		UpdateToken(w, profile.Email, "Rent-A-CarAdmin")
 	case "SystemAdmin":
 		err = app.Store.UpdateSystemAdmin(email, profile)
 		if err != nil {
 			app.ErrorLog.Printf("Could not update system profile")
 			w.WriteHeader(http.StatusInternalServerError)
 		}
-		UpdateToken(w, profile.Email)
+		UpdateToken(w, profile.Email, "SystemAdmin")
 	default:
 		app.ErrorLog.Printf("Invalid user type")
 		w.WriteHeader(http.StatusExpectationFailed)
@@ -198,11 +198,11 @@ func (app *Application) UpdateAdminProfile(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-func UpdateToken(w http.ResponseWriter, Email string) {
+func UpdateToken(w http.ResponseWriter, Email string, Type string) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &Claims{
 		Email: Email,
-		Type:  "User",
+		Type:  Type,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},

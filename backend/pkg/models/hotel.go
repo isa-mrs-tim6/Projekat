@@ -12,6 +12,13 @@ type RoomQuickReserveDays struct {
 	RoomID uint
 }
 
+type RoomQuickReserveDaysDAO struct {
+	ID     uint
+	Start  string
+	End    string
+	RoomID uint
+}
+
 type Room struct {
 	gorm.Model
 	Number           int
@@ -68,6 +75,7 @@ type HotelReservationParamsDTO struct {
 	From           string
 	To             string
 	Rooms          []Room
+	Features       []Feature
 	IsQuickReserve bool
 }
 
@@ -75,5 +83,17 @@ type HotelReservationParams struct {
 	From           time.Time
 	To             time.Time
 	Rooms          []Room
+	Features       []*Feature
 	IsQuickReserve bool
+}
+
+type HotelSearchResults struct {
+	Hotel  Hotel
+	Rating float64
+}
+
+type RoomSearchResults struct {
+	Room   Room
+	Rating float64
+	Price  float64
 }

@@ -1,8 +1,8 @@
 <template>
     <div>
-    <HotelAdminNavDrawer height="100%"/>
-    <HotelFinance v-bind:reservations="Reservations"></HotelFinance>
-</div>
+        <HotelAdminNavDrawer/>
+        <HotelFinance v-bind:reservations="Reservations"></HotelFinance>
+    </div>
 </template>
 
 <script>

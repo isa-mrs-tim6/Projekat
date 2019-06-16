@@ -1,65 +1,67 @@
 <template>
-    <v-container grid-list-xl text-xs-center style="height: 100vh;">
+    <v-container grid-list-xl text-xs-center fill-height>
         <v-layout align-center justify-center row wrap fill-height>
             <v-flex xs12>
-                <v-card min-height="100%" class="flexcard">
+                <v-card class="flexcard">
                     <v-card-title primary-title>
                         <div class="headline font-weight-medium">Add new rent-a-car companies</div>
                     </v-card-title>
-                    <v-card-text class="grow">
-                        <v-layout align-center justify-center row wrap fill-height>
-                            <v-flex xs4>
-                                <v-form ref="form" class="align-center justify-center">
-                                    <v-text-field
-                                            v-model="Name"
-                                            label="Name"
-                                            :rules="[rules.required]"
-                                            prepend-icon="business"
-                                            class="body-2"
-                                            required
-                                    ></v-text-field>
-                                    <v-text-field
-                                            v-model="Address"
-                                            label="Address"
-                                            prepend-icon="location_on"
-                                            class="body-2"
-                                            :rules="[rules.required]"
-                                            required
-                                    ></v-text-field>
-                                    <v-flex>
-                                        <v-layout row wrap fill-height>
-                                            <v-text-field
-                                                    v-model="Latitude"
-                                                    label="Latitude"
-                                                    class="body-2"
-                                                    prepend-icon="satellite"
-                                                    :rules="[rules.required, rules.numeric]"
-                                                    required
-                                            ></v-text-field>
-                                            <v-text-field
-                                                    v-model="Longitude"
-                                                    label="Longitude"
-                                                    class="body-2"
-                                                    prepend-icon="satellite"
-                                                    :rules="[rules.required, rules.numeric]"
-                                                    required
-                                            ></v-text-field>
-                                        </v-layout>
-                                    </v-flex>
-                                    <v-text-field
-                                            v-model="Promo"
-                                            label="Promo"
-                                            prepend-icon="message"
-                                            class="body-2"
-                                            :rules="[rules.required]"
-                                            required
-                                    ></v-text-field>
-                                </v-form>
-                            </v-flex>
-                            <v-flex xs8>
-                                <RentACarCompanies v-bind:rentACarCompanies="RentACarCompanies"/>
-                            </v-flex>
-                        </v-layout>
+                    <v-card-text>
+                        <v-container>
+                            <v-layout align-center justify-start row wrap>
+                                <v-flex xs4>
+                                    <v-form ref="form" class="align-center justify-center">
+                                        <v-text-field
+                                                v-model="Name"
+                                                label="Name"
+                                                :rules="[rules.required]"
+                                                prepend-icon="business"
+                                                class="body-2"
+                                                required
+                                        ></v-text-field>
+                                        <v-text-field
+                                                v-model="Address"
+                                                label="Address"
+                                                prepend-icon="location_on"
+                                                class="body-2"
+                                                :rules="[rules.required]"
+                                                required
+                                        ></v-text-field>
+                                        <v-flex>
+                                            <v-layout row wrap fill-height>
+                                                <v-text-field
+                                                        v-model="Latitude"
+                                                        label="Latitude"
+                                                        class="body-2"
+                                                        prepend-icon="satellite"
+                                                        :rules="[rules.required, rules.numeric]"
+                                                        required
+                                                ></v-text-field>
+                                                <v-text-field
+                                                        v-model="Longitude"
+                                                        label="Longitude"
+                                                        class="body-2"
+                                                        prepend-icon="satellite"
+                                                        :rules="[rules.required, rules.numeric]"
+                                                        required
+                                                ></v-text-field>
+                                            </v-layout>
+                                        </v-flex>
+                                        <v-text-field
+                                                v-model="Promo"
+                                                label="Promo"
+                                                prepend-icon="message"
+                                                class="body-2"
+                                                :rules="[rules.required]"
+                                                required
+                                        ></v-text-field>
+                                    </v-form>
+                                </v-flex>
+                                <v-flex xs8>
+                                    <RentACarCompanies v-bind:rentACarCompanies="RentACarCompanies"/>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn color="primary" @click="addRentACarCompany">submit</v-btn>

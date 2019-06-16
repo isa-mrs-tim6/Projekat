@@ -79,6 +79,62 @@ func (app *Application) GetReservation(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (app *Application) CompleteQuickResVehicle(w http.ResponseWriter, r *http.Request) {
+	var params models.CompleteQuickResVehParams
+	err := json.NewDecoder(r.Body).Decode(&params)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = app.Store.CompleteQuickResVehicle(params)
+
+	if err != nil {
+		app.ErrorLog.Printf("Cannot complete quick reservation")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetCompanyQuickVehicle(w http.ResponseWriter, r *http.Request) {
+	var params models.VehicleQuickResParams
+	err := json.NewDecoder(r.Body).Decode(&params)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	data, err := app.Store.GetCompanyQuickVehicle(params)
+
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetQuickVehRes(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	vehicleID, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		app.ErrorLog.Println("Could not get vehicle ID")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	data, err := app.Store.GetQuickVehRes(uint(vehicleID))
+
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *Application) GetAirlineGraphData(w http.ResponseWriter, r *http.Request) {
 	email := getEmail(r)
 	user, err := app.Store.GetAirlineAdmin(email)
@@ -103,6 +159,12 @@ func (app *Application) GetAirlineGraphData(w http.ResponseWriter, r *http.Reque
 func (app *Application) ReserveVehicle(w http.ResponseWriter, r *http.Request) {
 	var params models.VehicleReservationParams
 
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+	}
+
 	// GET RESERVATION ID
 	vars := mux.Vars(r)
 	reservationID, err := strconv.ParseUint(vars["id"], 10, 64)
@@ -119,7 +181,7 @@ func (app *Application) ReserveVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := app.Store.ReserveVehicle(uint(reservationID), params); err != nil {
+	if err := app.Store.ReserveVehicle(uint(reservationID), params, user.ID); err != nil {
 		app.ErrorLog.Printf("Could not complete reservation")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
@@ -246,6 +308,9 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	query.From = dateFrom
 	query.To = dateTo
 	query.IsQuickReserve = searchQuery.IsQuickReserve
+	for k := range searchQuery.Features {
+		query.Features = append(query.Features, &searchQuery.Features[k])
+	}
 
 	// RESERVE
 	reservationID, err := app.Store.ReserveHotel(uint(masterID), uint(hotelID), user.ID, query)
