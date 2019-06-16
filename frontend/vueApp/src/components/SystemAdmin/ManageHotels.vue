@@ -18,34 +18,16 @@
                                             class="body-2"
                                             required
                                     ></v-text-field>
-                                    <v-text-field
-                                            v-model="Address"
-                                            label="Address"
-                                            prepend-icon="location_on"
-                                            class="body-2"
-                                            :rules="[rules.required]"
-                                            required
-                                    ></v-text-field>
-                                    <v-flex>
-                                        <v-layout row wrap fill-height>
-                                            <v-text-field
-                                                    v-model="Latitude"
-                                                    label="Latitude"
-                                                    class="body-2"
-                                                    prepend-icon="satellite"
-                                                    :rules="[rules.required, rules.numeric]"
-                                                    required
-                                            ></v-text-field>
-                                            <v-text-field
-                                                    v-model="Longitude"
-                                                    label="Longitude"
-                                                    class="body-2"
-                                                    prepend-icon="satellite"
-                                                    :rules="[rules.required, rules.numeric]"
-                                                    required
-                                            ></v-text-field>
-                                        </v-layout>
-                                    </v-flex>
+                                    <v-layout>
+                                        <v-icon medium style="margin-left: 10px; margin-right: 8px">location_on</v-icon>
+                                        <gmap-autocomplete
+                                                style="width: 95%; border-bottom: 1px solid gray"
+                                                placeholder="Address"
+                                                :value="Address"
+                                                @input="value = $event.target.value"
+                                                @place_changed="getAddressData">
+                                        </gmap-autocomplete>
+                                    </v-layout>
                                     <v-text-field
                                             v-model="Description"
                                             label="Description"
@@ -117,6 +99,11 @@
             },
             clear() {
                 this.$refs.form.reset();
+            },
+            getAddressData: function (addressData) {
+                this.Address = addressData.formatted_address;
+                this.Latitude = addressData.geometry.location.lat();
+                this.Longitude = addressData.geometry.location.lng();
             }
         }
     }

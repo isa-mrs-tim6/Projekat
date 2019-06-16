@@ -1,8 +1,18 @@
 <template>
-    <div id="main">
-        <AirlineAdminNavDrawer></AirlineAdminNavDrawer>
-        <AirlineRatings style="height: 100vh;" v-bind:flights="Flights" v-bind:name="Name" v-bind:rating="Rating"></AirlineRatings>
-    </div>
+    <v-container fill-height fluid id="main">
+        <v-layout>
+            <v-flex>
+                <AirlineAdminNavDrawer/>
+            </v-flex>
+            <v-container>
+                <v-layout>
+                    <v-flex align-self-center>
+                        <AirlineRatings v-bind:flights="Flights" v-bind:name="Name" v-bind:rating="Rating"></AirlineRatings>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

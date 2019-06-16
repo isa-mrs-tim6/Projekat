@@ -494,9 +494,9 @@ func (db *Store) CancelVehicle(resID uint) error {
 		db.Table("reservations").Where("id=?", slave.ID).
 			Update("reservation_rent_a_car_id", 0)
 	}
-  return nil
+	return nil
 }
-  
+
 func (db *Store) GetQuickVehRes(id uint) ([]models.RentACarReservation, error) {
 	var reservations []models.RentACarReservation
 
@@ -563,5 +563,5 @@ func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams
 	if err := db.Save(&master).Error; err != nil {
 		return err
 	}
-  return nil
+	return nil
 }
