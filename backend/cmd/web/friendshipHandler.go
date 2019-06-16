@@ -123,7 +123,7 @@ func (app *Application) RemoveAFriend(w http.ResponseWriter, r *http.Request) {
 
 	err = app.Store.RemoveAFriend(friendshipDto)
 	if err != nil {
-		app.ErrorLog.Printf("Cannot remova a friend")
+		app.ErrorLog.Printf("Cannot remove a friend")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

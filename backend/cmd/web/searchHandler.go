@@ -45,7 +45,7 @@ func (app *Application) UserSearch(w http.ResponseWriter, r *http.Request) {
 
 	err = json.NewEncoder(w).Encode(retUsers)
 	if err != nil {
-		app.ErrorLog.Println("Cannot encode flights into JSON object")
+		app.ErrorLog.Println("Cannot encode users into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
