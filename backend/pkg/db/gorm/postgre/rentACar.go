@@ -51,13 +51,17 @@ func (db *Store) GetVehicleRatings(id uint) ([]models.VehicleRatingsDAO, error) 
 			return nil, err
 		}
 		sumRating := 0
-		lenRating := 1
-		if len(reservations) > 0 {
-			lenRating = len(reservations)
-		}
+		lenRating := 0
 
 		for _, res := range reservations {
-			sumRating += int(res.VehicleRating)
+			if res.VehicleRating != 0 {
+				lenRating += 1
+				sumRating += int(res.VehicleRating)
+			}
+		}
+
+		if lenRating == 0 {
+			lenRating = 1
 		}
 		retVal = append(retVal, models.VehicleRatingsDAO{Vehicle: v, Rating: sumRating / lenRating})
 	}
@@ -129,14 +133,19 @@ func (db *Store) FindVehicles(params models.FindVehicleParams) ([]models.Vehicle
 		}
 		if !taken {
 			sumRating := 0
-			lenRating := 1
-			if len(reservations) > 0 {
-				lenRating = len(reservations)
-			}
+			lenRating := 0
 
 			for _, res := range reservations {
-				sumRating += int(res.VehicleRating)
+				if res.VehicleRating != 0 {
+					lenRating += 1
+					sumRating += int(res.VehicleRating)
+				}
 			}
+
+			if lenRating == 0 {
+				lenRating = 1
+			}
+
 			vehicle.PricePerDay *= math.Ceil(endDate.Sub(startDate).Hours() / 24.0)
 			vehicles = append(vehicles, models.VehicleRatingsDAO{Vehicle: vehicle, Rating: sumRating / lenRating})
 		}
