@@ -1,0 +1,7 @@
+organization=isa-mrs-tim6
+projectKey=isa-mrs-tim6_Projekat
+serverUrl=https://sonarcloud.io
+serverVersion=7.8.0.26123
+dashboardUrl=https://sonarcloud.io/dashboard?id=isa-mrs-tim6_Projekat
+ceTaskId=AWth4tYfofqQKQbrnflv
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWth4tYfofqQKQbrnflv
