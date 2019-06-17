@@ -36,7 +36,7 @@ func (app *Application) GetFlight(w http.ResponseWriter, r *http.Request) {
 	}
 	flight, err := app.Store.GetFlight(uint(id))
 	if err != nil {
-		app.ErrorLog.Println("Could not retrive flight")
+		app.ErrorLog.Println("Could not retrieve flight")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -58,6 +58,29 @@ func (app *Application) GetFlight(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(flight)
 	if err != nil {
 		app.ErrorLog.Println("Cannot encode flight into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetQuickReservations(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idStr := vars["id"]
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		app.ErrorLog.Println("Id is not a valid")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	quickReservations, err := app.Store.GetFlightQuickReservations(uint(id))
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve quick reservations")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	err = json.NewEncoder(w).Encode(quickReservations)
+	if err != nil {
+		app.ErrorLog.Println("Cannot encode quick reservations into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

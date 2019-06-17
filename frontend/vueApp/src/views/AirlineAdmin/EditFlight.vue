@@ -198,6 +198,9 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
+            <v-dialog v-model="dialogQuickReservation" max-width="1000px" persistent>
+                <FlightQuickReservation :flightID=this.editedItem.ID :flightSeats=this.editedSeats @closeReservationDialog="close"></FlightQuickReservation>
+            </v-dialog>
             <v-layout row-wrap mt-2>
                 <v-flex x12>
                     <v-data-table :headers="headers" :items="flightsToShow" class="elevation-1">
@@ -211,8 +214,9 @@
                             <td>{{props.item.SmallSuitcase}}</td>
                             <td>{{props.item.BigSuitcase}}</td>
                             <td>
-                                <v-icon class="ma-1" small @click="editItem(props.item, 0)">attach_money</v-icon>
+                                <v-icon class="ma-1" small @click="editItem(props.item, 2)">add_box</v-icon>
                                 <v-icon class="ma-1" small @click="editItem(props.item, 1)">event_seat</v-icon>
+                                <v-icon class="ma-1" small @click="editItem(props.item, 0)">attach_money</v-icon>
                             </td>
                         </template>
                     </v-data-table>
@@ -229,14 +233,14 @@
 </template>
 
 <script>
-    import AirlineAdminNavbar from "../../components/AirlineAdmin/AirlineAdminNavbar";
     import axios from 'axios';
     import moment from 'moment';
     import SeatMap from "../../components/AirlineAdmin/SeatMap";
     import AirlineAdminNavDrawer from "../../components/AirlineAdmin/AirlineAdminNavDrawer";
+    import FlightQuickReservation from "../../components/AirlineAdmin/FlightQuickReservation";
     export default {
         name: "EditFlight",
-        components: {AirlineAdminNavDrawer, SeatMap, AirlineAdminNavbar},
+        components: {FlightQuickReservation, AirlineAdminNavDrawer, SeatMap},
         predicate : (a, b) => {
             const map = {};
             map["FIRST"] = 1;
@@ -266,6 +270,7 @@
                 seatNumber: 0,
                 idx: 0,
                 dialogSeat: false,
+                dialogQuickReservation: false,
                 flights:[],
                 filter: {
                     fromDestination: '',
@@ -406,14 +411,18 @@
                 this.editedItem = Object.assign({}, item);
                 if(this.idx === 0){
                     this.dialog = true;
+                    return;
                 }else if(this.idx === 1){
                     this.tab = "addSeat";
                     this.dialogSeat = true;
-                    this.editedSeats.RowWidth = item.Airplane.RowWidth;
-                    this.editedSeats.Seats = Object.assign(this.editedSeats.Seats, {});
-                    this.editedSeats.Seats = JSON.parse(JSON.stringify(item.Airplane.Seats));
-                    this.editedSeats.Seats.sort(this.$options.predicate);
+                }else if( this.idx === 2){
+                    this.dialogQuickReservation = true;
+                    this.$emit("getReservation")
                 }
+                this.editedSeats.RowWidth = item.Airplane.RowWidth;
+                this.editedSeats.Seats = Object.assign(this.editedSeats.Seats, {});
+                this.editedSeats.Seats = JSON.parse(JSON.stringify(item.Airplane.Seats));
+                this.editedSeats.Seats.sort(this.$options.predicate);
 
             },
             changeSeat(){
@@ -431,6 +440,7 @@
             close() {
                 this.dialogSeat = false;
                 this.dialog = false;
+                this.dialogQuickReservation = false;
                 this.editedItem = Object.assign({}, this.defaultItem);
                 this.editedSeats = JSON.parse(JSON.stringify(this.defaultSeats));
                 this.editedIndex = -1;
