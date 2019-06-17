@@ -6,6 +6,6 @@
       "npm": "4.2.0"
     },
     "scripts": {
-      "postinstall": "npm --prefix ./frontend install ./frontend && cd ./frontend && npm run build"
+      "postinstall": "npm --prefix ./frontend/vueApp install ./frontend/vueApp && cd ./frontend/vueApp && npm run build"
     }
   }
