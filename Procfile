@@ -1,1 +1,1 @@
-web: backend/cmd/web/main
+web: backend
