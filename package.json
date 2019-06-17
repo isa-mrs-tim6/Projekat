@@ -6,7 +6,6 @@
     "npm": "4.2.0"
   },
   "scripts": {
-    "postinstall": "npm --prefix ./frontend/vueApp install . && cd ./frontend/vueApp && npm run build"
   },
   "dependencies": {
     "@vue/cli": "^3.8.4"
