@@ -86,18 +86,22 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 	var vehicle models.Vehicle
 	var location models.Location
 
+	tx := db.Begin()
+
 	reservation.CompanyID = params.CompanyID
 
-	if err := db.Where("id=?", params.VehicleID).First(&vehicle).Error; err != nil {
+	if err := tx.Raw("SELECT * FROM vehicles WHERE id = ? FOR UPDATE", params.VehicleID).Scan(&vehicle).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
 
-	if err := db.Where("id=?", params.LocationID).First(&location).Error; err != nil {
+	if err := tx.Where("id=?", params.LocationID).First(&location).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
 
 	reservation.Vehicle = vehicle
-	reservation.Price = params.Price
+	reservation.Price = db.CalculatePriceVehicle(userID, params.Price)
 	reservation.Location = location.Address.Address
 
 	start, _ := strconv.ParseInt(params.StartDate, 10, 64)
@@ -111,15 +115,39 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 
 	// Grab master reservation
 	var masterReservation models.Reservation
-	db.First(&masterReservation, masterRef)
+
+	if err := tx.First(&masterReservation, masterRef).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	var racReservations []models.RentACarReservation
+	if err := tx.Where("vehicle_id = ?", vehicle.ID).Find(&racReservations).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	for _, res := range racReservations {
+		if !(res.Occupation.Beginning.After(endDate) ||
+			res.Occupation.End.Before(startDate)) {
+			tx.Rollback()
+			return errors.New("vehicle taken")
+		}
+	}
 
 	masterReservation.ReservationRentACar = reservation
 	masterReservation.ReservationRentACarID = reservation.ID
-	db.Save(&masterReservation)
+
+	if err := tx.Save(&masterReservation).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
 
 	// Get all associated reservations
 	var reservations []models.Reservation
-	db.Where("master_ref = ?", masterRef).Find(&reservations)
+	if err := tx.Where("master_ref = ?", masterRef).Find(&reservations).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
 
 	for _, associatedReservation := range reservations {
 		reservation := models.RentACarReservation{
@@ -134,8 +162,13 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 		}
 		associatedReservation.ReservationRentACar = reservation
 		associatedReservation.ReservationRentACarID = reservation.ID
-		db.Save(&associatedReservation)
+		if err := tx.Save(&associatedReservation).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
 	}
+
+	tx.Commit()
 
 	return nil
 }
