@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/smtp"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -294,6 +293,7 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.ErrorLog.Println("Invalid from date")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	dateFrom := time.Unix(0, dateFromInt*int64(time.Millisecond))
 
@@ -301,6 +301,7 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.ErrorLog.Println("Invalid to date")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	dateTo := time.Unix(0, dateToInt*int64(time.Millisecond))
 
@@ -320,6 +321,7 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.ErrorLog.Println("Could not complete reservation")
 		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 	if err := json.NewEncoder(w).Encode(reservationID); err != nil {
 		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
@@ -327,22 +329,7 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// SEND CONFIRMATION EMAIL
-	var wg sync.WaitGroup
-	wg.Add(1)
-
-	c := make(chan error)
-	go app.HotelReservationEmail(email, hotel, users, rooms, features, from, to, price, c)
-	wg.Done()
-
-	if err := <-c; err != nil {
-		app.ErrorLog.Printf("Could not send reservation confirmation email")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusCreated)
-
+	go app.HotelReservationEmail(email, hotel, users, rooms, features, from, to, price)
 }
 
 func (app *Application) CancelFlight(w http.ResponseWriter, r *http.Request) {
@@ -382,7 +369,7 @@ func (app *Application) CancelVehicle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) HotelReservationEmail(receiver string, hotel string, user string, hotelRooms string,
-	hotelFeatures string, dateFrom string, dateTo string, price string, result chan error) {
+	hotelFeatures string, dateFrom string, dateTo string, price string) {
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	message := "From: " + app.EmailAddress + "\n" +
 		"To: " + receiver + "\n" +
@@ -401,8 +388,7 @@ func (app *Application) HotelReservationEmail(receiver string, hotel string, use
 		Price: ` + price + `<br>
 		</body></html>`
 
-	err := smtp.SendMail("smtp.gmail.com:587",
+	_ = smtp.SendMail("smtp.gmail.com:587",
 		smtp.PlainAuth("", app.EmailAddress, app.EmailPassword, "smtp.gmail.com"),
 		app.EmailAddress, []string{receiver}, []byte(message))
-	result <- err
 }

@@ -8,7 +8,6 @@ import (
 	"net/mail"
 	"net/smtp"
 	"strings"
-	"sync"
 )
 
 func (app *Application) CompleteRegistration(w http.ResponseWriter, r *http.Request) {
@@ -66,22 +65,12 @@ func (app *Application) RegisterAdmin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// SEND CONFIRMATION EMAIL
-	var wg sync.WaitGroup
-	wg.Add(1)
+	go app.SendRegistrationEmail(emailAddress.Address, requestObject.AccountType, requestObject.Credentials)
 
-	c := make(chan error)
-	go app.SendRegistrationEmail(emailAddress.Address, requestObject.AccountType, requestObject.Credentials, c)
-	wg.Done()
-
-	if err := <-c; err != nil {
-		app.ErrorLog.Printf("Could not send confirmation email")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (app *Application) SendRegistrationEmail(receiver string, accountType string, credentials models.Credentials, result chan error) {
+func (app *Application) SendRegistrationEmail(receiver string, accountType string, credentials models.Credentials) {
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	message := "From: " + app.EmailAddress + "\n" +
 		"To: " + receiver + "\n" +
@@ -95,10 +84,9 @@ func (app *Application) SendRegistrationEmail(receiver string, accountType strin
 		PASSWORD: ` + credentials.Password + `
 		</body></html>`
 
-	err := smtp.SendMail("smtp.gmail.com:587",
+	_ = smtp.SendMail("smtp.gmail.com:587",
 		smtp.PlainAuth("", app.EmailAddress, app.EmailPassword, "smtp.gmail.com"),
 		app.EmailAddress, []string{receiver}, []byte(message))
-	result <- err
 }
 
 func (app *Application) RegisterUser(w http.ResponseWriter, r *http.Request) {
@@ -138,17 +126,65 @@ func (app *Application) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// SEND EMAIL
-	var wg sync.WaitGroup
-	wg.Add(1)
+	go app.SendRegistrationEmail(emailAddress.Address, "User", user.Credentials)
+	w.WriteHeader(http.StatusCreated)
+}
 
-	c := make(chan error)
-	go app.SendRegistrationEmail(emailAddress.Address, "User", user.Credentials, c)
+func (app *Application) ResendEmail(w http.ResponseWriter, r *http.Request) {
+	type Query struct {
+		models.Credentials
+		Type string
+	}
+	var query Query
 
-	wg.Done()
-	if err := <-c; err != nil {
-		app.ErrorLog.Printf("Could not send confirmation email")
+	// DECODE REQUEST
+	err := json.NewDecoder(r.Body).Decode(&query)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusCreated)
+
+	switch query.Type {
+	case "SystemAdmin":
+		admin, err := app.Store.GetSystemAdmin(query.Email)
+		if err != nil {
+			app.ErrorLog.Println("No such system admin")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		app.SendRegistrationEmail(query.Email, "SystemAdmin", admin.Credentials)
+	case "AirlineAdmin":
+		admin, err := app.Store.GetAirlineAdmin(query.Email)
+		if err != nil {
+			app.ErrorLog.Println("No such airline admin")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		app.SendRegistrationEmail(query.Email, "AirlineAdmin", admin.Credentials)
+	case "HotelAdmin":
+		admin, err := app.Store.GetHotelAdmin(query.Email)
+		if err != nil {
+			app.ErrorLog.Println("No such hotel admin")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		app.SendRegistrationEmail(query.Email, "HotelAdmin", admin.Credentials)
+	case "Rent-A-CarAdmin":
+		admin, err := app.Store.GetRACAdmin(query.Email)
+		if err != nil {
+			app.ErrorLog.Println("No such rent-a-car admin")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		app.SendRegistrationEmail(query.Email, "Rent-A-CarAdmin", admin.Credentials)
+	case "User":
+		admin, err := app.Store.GetUser(query.Email)
+		if err != nil {
+			app.ErrorLog.Println("No such user")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		app.SendRegistrationEmail(query.Email, "User", admin.Credentials)
+	}
 }
