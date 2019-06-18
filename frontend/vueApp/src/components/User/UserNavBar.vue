@@ -48,6 +48,8 @@
             goLogout (e){
                 e.preventDefault();
                 this.isLogIn = false;
+                this.$cookies.remove("token");
+                this.$router.push("/user")
             },
             goProfile (e){
                 e.preventDefault();

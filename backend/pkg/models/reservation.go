@@ -32,6 +32,26 @@ type ReservationGraphData struct {
 	Price     float64
 }
 
+func (r *Reservation) BeforeCreate(scope *gorm.Scope) (err error) {
+	scope.DB().Where("is_expiring = true and expire_time < ?", time.Now()).Delete(Reservation{})
+
+	var ids []uint
+
+	scope.DB().Table("reservations").
+		Joins("JOIN flight_reservations on reservations.reservation_flight_id = flight_reservations.id").
+		Joins("JOIN flights on flight_reservations.flight_id = flights.id").
+		Where("reservations.is_expiring = true AND flights.departure < ?", time.Now().Add(time.Hour*2)).
+		Pluck("reservations.id", &ids)
+
+	if ids != nil {
+		scope.DB().Table("reservations").
+			Where("id in ?", ids).
+			Delete(Reservation{})
+	}
+
+	return
+}
+
 type Reservation struct {
 	gorm.Model
 	Passenger
@@ -42,7 +62,8 @@ type Reservation struct {
 	ReservationRentACarID uint
 	ReservationHotel      HotelReservation `gorm:"foreignkey:ReservationHotelID"`
 	ReservationHotelID    uint
-	Expiring              *time.Time `gorm:"default:NULL"`
+	IsExpiring            bool
+	ExpireTime            time.Time
 }
 
 type FlightReservation struct {

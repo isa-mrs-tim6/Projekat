@@ -64,7 +64,6 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 	var invitedBy models.User
 	var reservation models.Reservation
 
-	db.LogMode(true)
 	for _, res := range masters {
 		if res.MasterRef != 0 {
 			db.Where("id = ?", res.MasterRef).
@@ -189,7 +188,7 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 func (db *Store) GetPriceScale(userID uint) (float64, uint, error) {
 	var numOfReservations uint
 	var reward models.ReservationReward
-	db.Table("reservations").Where("user_id = ?", userID).Count(&numOfReservations)
+	db.Table("reservations").Where("user_id = ? AND deleted_at IS NULL", userID).Count(&numOfReservations)
 	db.First(&reward, "required_number < ?", numOfReservations)
 	return reward.PriceScale, numOfReservations, nil
 }
@@ -231,6 +230,9 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 	}
 	db.Create(&masterReservation)
 
+	var expireTime time.Time
+	var isExpiring bool
+
 	for i := 1; i < len(params.Users); i++ {
 		var friend models.User
 		if params.Users[i].Email != "" { // Registered user
@@ -239,6 +241,8 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 			params.Users[i].Name = friend.Name
 			params.Users[i].Surname = friend.Surname
 			params.Users[i].Passport = friend.Passport
+			expireTime = time.Now().AddDate(0, 0, 3)
+			isExpiring = true
 		}
 
 		reservation := models.Reservation{
@@ -255,7 +259,9 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 				Price:          db.CalculatePriceFlight(uint(flightID), params.Seats[i].ID, params.Users[i].ID, nil, params.IsQuickReserve), // TODO Add support for features
 				Features:       nil,                                                                                                         // TODO Add support for features
 			},
-			MasterRef: masterReservation.ID,
+			MasterRef:  masterReservation.ID,
+			IsExpiring: isExpiring,
+			ExpireTime: expireTime,
 		}
 		db.Create(&reservation)
 	}

@@ -18,7 +18,7 @@
                 <v-flex style="text-align: right">
                     <v-btn class="button" @click="details(index)">details</v-btn><br/>
                     <v-btn class="button" color="blue" @click="accept(item.Master)" :disabled="checkAccept(item.Master)">accept</v-btn>
-                    <v-btn class="button" color="error"
+                    <v-btn class="button" color="error"accept
                            :disabled="!checkFlight(item.Master.ReservationFlight.Flight.Departure)"
                     @click="cancelFlight(item.Master)">cancel</v-btn>
                 </v-flex>
@@ -557,11 +557,13 @@
                 this.rateDialog = false;
             },
             accept(reservation){
-
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/accept/"+reservation.ID)
+                    .then(res => {
+                        this.$router.go();
+                    })
             },
             checkAccept(reservation){
-                console.log(reservation);
-                return reservation.Expiring === null
+                return reservation.IsExpiring === false
             },
             cancelFlight(reservation){
                 axios.create({withCredentials: true}).get("http://localhost:8000/api/user/cancelFlight/"+reservation.ID)

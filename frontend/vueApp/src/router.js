@@ -50,8 +50,11 @@ import QuickRoomReservation from "./components/User/QuickRoomReservation";
 import HotelList from "./views/User/HotelList";
 import ShowQuickVehicle from "./views/User/ShowQuickVehicle";
 import UserSearch from "./views/User/UserSearch";
+import VueCookies from 'vue-cookies'
+
 
 Vue.use(Router);
+Vue.use(VueCookies);
 
 export default new Router({
   mode: 'history',
