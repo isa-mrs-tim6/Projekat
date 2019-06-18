@@ -131,12 +131,14 @@ func (app *Application) HotelSearch(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&searchQuery); err != nil {
 		app.ErrorLog.Println("Cannot decode JSON object")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	dateFromInt, err := strconv.ParseInt(searchQuery.From, 10, 64)
 	if err != nil {
 		app.ErrorLog.Println("Invalid from date")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	dateFrom := time.Unix(0, dateFromInt*int64(time.Millisecond))
 
@@ -144,6 +146,7 @@ func (app *Application) HotelSearch(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.ErrorLog.Println("Invalid to date")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	dateTo := time.Unix(0, dateToInt*int64(time.Millisecond))
 
@@ -188,12 +191,14 @@ func (app *Application) RoomSearch(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&searchQuery); err != nil {
 		app.ErrorLog.Println("Cannot decode JSON object")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	dateFromInt, err := strconv.ParseInt(searchQuery.From, 10, 64)
 	if err != nil {
 		app.ErrorLog.Println("Invalid from date")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	dateFrom := time.Unix(0, dateFromInt*int64(time.Millisecond))
 
@@ -201,6 +206,7 @@ func (app *Application) RoomSearch(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.ErrorLog.Println("Invalid to date")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	dateTo := time.Unix(0, dateToInt*int64(time.Millisecond))
 

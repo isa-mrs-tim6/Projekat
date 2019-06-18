@@ -34,7 +34,11 @@
                 this.start = query["From"];
                 this.end = query["To"];
                 axios.post('http://localhost:8000/api/search/hotels', query)
-                    .then(res => this.items = res.data)
+                    .then(res => {
+                        this.items = res.data;
+                        localStorage.setItem("hotelStart", this.start);
+                        localStorage.setItem("hotelEnd", this.end)
+                    })
                     .catch(err => alert(err));
             }
         }

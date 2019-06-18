@@ -30,7 +30,7 @@ func initTables(db *gorm.DB) {
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
 		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{},
 		&models.VehicleRating{}, &models.FeatureAirline{}, &models.HotelReservationReward{}, &models.RoomQuickReserveDays{},
-		"user_reservations", "room_reservations", "flight_reservation_feature", "hotel_reservation_feature", "vehicle_reservations", "reward_features")
+		"user_reservations", "room_reservations", "flight_reservation_feature", "room_reservation_feature", "vehicle_reservations", "reward_features")
 	fmt.Printf("DATABASE: Finished dropping, time taken: %f seconds\n", time.Since(timeDroppingTables).Seconds())
 
 	fmt.Println("DATABASE: Auto migrating schema")
