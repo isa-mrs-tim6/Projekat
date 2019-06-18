@@ -502,8 +502,6 @@ func (db *Store) CancelFlight(resID uint) error {
 		db.Where("id=?", master.ID).Delete(master.ReservationRentACar)
 	}
 
-	db.Where("id=?", master.ID).Delete(master.ReservationRentACar)
-
 	if master.MasterRef != 0 {
 		db.Delete(&master)
 		return nil
