@@ -80,8 +80,18 @@
                         this.$router.push({ path: '/user', query: { reservationID: this.reservationID, passengers: this.passengers }});
                     })
                     .catch(err => {
-                        this.ErrorSnackbar = true;
-                        this.ErrorSnackbarText = 'Please log in to use this feature.';
+                        let vm = this
+                        if(err.response.status === 401){
+                            vm.ErrorSnackbar = true;
+                            vm.ErrorSnackbarText = 'Please log in to use this feature.';
+                        }else if(err.response.status === 400){
+                            setTimeout(function () {
+                                vm.ErrorSnackbar = true;
+                                vm.ErrorSnackbarText = 'Someone else has already taken that vehicle.';
+                                vm.$router.go()
+                            }, 4000);
+                        }
+
                     })
             },
             goLogin (e){
