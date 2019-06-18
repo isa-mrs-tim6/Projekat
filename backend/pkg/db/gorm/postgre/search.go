@@ -74,16 +74,13 @@ func (db *Store) HotelSearch(query models.HotelQuery) ([]models.HotelSearchResul
 
 	var results []models.HotelSearchResults
 	for _, hotel := range hotels {
-		var hotelReservations []models.HotelReservation
-		if err := db.Find(&hotelReservations, "hotel_id = ?", hotel.ID).Error; err != nil {
+		var rating []float64
+
+		if err := db.Table("hotel_reservations").Where("hotel_id = ? AND hotel_rating != 0", hotel.ID).
+			Pluck("avg(hotel_rating)", &rating).Error; err != nil {
 			return nil, err
 		}
-		rating := 0.0
-		for _, reservation := range hotelReservations {
-			rating += float64(reservation.HotelRating)
-		}
-		rating /= float64(len(hotelReservations))
-		results = append(results, models.HotelSearchResults{Hotel: hotel, Rating: rating})
+		results = append(results, models.HotelSearchResults{Hotel: hotel, Rating: rating[0]})
 	}
 
 	return results, nil
@@ -92,19 +89,31 @@ func (db *Store) HotelSearch(query models.HotelQuery) ([]models.HotelSearchResul
 func (db *Store) RoomSearch(query models.RoomQuery, userID uint, isQuickReserve bool) ([]models.RoomSearchResults, error) {
 	var rooms []models.Room
 
-	if err := db.Joins("LEFT JOIN room_reservations on room_reservations.room_id = rooms.id").
-		Joins("LEFT JOIN hotel_reservations ON hotel_reservations.id = room_reservations.hotel_reservation_id"+
-			" AND (hotel_reservations.beginning NOT BETWEEN ? AND ?) AND (hotel_reservations.end NOT BETWEEN ? AND ?)",
-			query.From, query.To, query.From, query.To).
-		Where("rooms.hotel_id = ? AND rooms.capacity in (?)", query.HotelID, query.Capacities).
-		Group("rooms.id").Find(&rooms).Error; err != nil {
+	if err := db.Raw(`
+			SELECT "rooms".* FROM "rooms" WHERE (("rooms"."deleted_at" IS NULL AND (rooms.hotel_id = ? AND rooms.capacity in (?))))
+			EXCEPT (
+				SELECT "rooms".* FROM "rooms"
+			    JOIN room_reservations on room_reservations.room_id = rooms.id
+			    JOIN hotel_reservations ON hotel_reservations.id = room_reservations.hotel_reservation_id
+				WHERE "rooms"."deleted_at" IS NULL AND
+					((hotel_reservations.beginning BETWEEN ? AND ?) OR
+					 (hotel_reservations.end BETWEEN ? AND ?)) AND
+						rooms.hotel_id = ? AND rooms.capacity in (?)
+					GROUP BY rooms.id
+			)
+			EXCEPT (
+				SELECT "rooms".* FROM "rooms"
+			    JOIN room_quick_reserve_days ON room_quick_reserve_days.room_id = rooms.id
+			);`, query.HotelID, query.Capacities,
+		query.From, query.To, query.From, query.To, query.HotelID, query.Capacities).Scan(&rooms).Error; err != nil {
 		return nil, err
 	}
 
 	var results []models.RoomSearchResults
 	for _, room := range rooms {
 		var rating []float64
-		db.Table("room_ratings").Where("room_id = ?", room.ID).Pluck("avg(rating)", &rating)
+		db.Table("room_ratings").Where("room_id = ? AND rating != 0", room.ID).
+			Pluck("avg(rating)", &rating)
 
 		price := room.Price
 		if isQuickReserve {
@@ -129,22 +138,39 @@ func (db *Store) RoomSearch(query models.RoomQuery, userID uint, isQuickReserve 
 func (db *Store) QuickReservationRoomSearch(query models.RoomQuery, userID uint, isQuickReserve bool) ([]models.RoomSearchResults, error) {
 	var rooms []models.Room
 
-	if err := db.Joins("JOIN room_quick_reserve_days ON room_quick_reserve_days.room_id = rooms.id AND"+
-		" (? BETWEEN room_quick_reserve_days.start AND room_quick_reserve_days.end) AND"+
-		" (? BETWEEN room_quick_reserve_days.start AND room_quick_reserve_days.end)", query.From, query.To).
-		Joins("LEFT JOIN room_reservations ON room_reservations.room_id = rooms.id").
-		Joins("LEFT JOIN hotel_reservations ON hotel_reservations.id = room_reservations.hotel_reservation_id"+
-			" AND (hotel_reservations.beginning NOT BETWEEN ? AND ?) AND (hotel_reservations.end NOT BETWEEN ? AND ?)",
-			query.From, query.To, query.From, query.To).
-		Where("rooms.hotel_id = ?", query.HotelID).
-		Group("rooms.id").Find(&rooms).Error; err != nil {
+	if err := db.Raw(`
+			SELECT "rooms".* FROM "rooms"
+			JOIN room_quick_reserve_days ON room_quick_reserve_days.room_id = rooms.id
+			WHERE (("rooms"."deleted_at" IS NULL AND (rooms.hotel_id = ?)))
+				EXCEPT (
+					SELECT "rooms".* FROM "rooms"
+											  JOIN room_reservations on room_reservations.room_id = rooms.id
+											  JOIN hotel_reservations ON hotel_reservations.id = room_reservations.hotel_reservation_id
+					WHERE "rooms"."deleted_at" IS NULL AND
+						((hotel_reservations.beginning BETWEEN ? AND ?) OR
+						 (hotel_reservations.end BETWEEN ? AND ?)) AND
+							rooms.hotel_id = ?
+						GROUP BY rooms.id
+				)
+				EXCEPT (
+					SELECT "rooms".* FROM "rooms"
+											  JOIN room_quick_reserve_days ON room_quick_reserve_days.room_id = rooms.id
+											  LEFT JOIN room_reservations ON room_reservations.room_id = rooms.id
+					WHERE "rooms"."deleted_at" IS NULL AND ((rooms.hotel_id = ?)) AND
+						  ((? BETWEEN room_quick_reserve_days.start AND room_quick_reserve_days.end) OR
+						(? BETWEEN room_quick_reserve_days.start AND room_quick_reserve_days.end))
+					GROUP BY rooms.id
+				);`, query.HotelID,
+		query.From, query.To, query.From, query.To, query.HotelID,
+		query.HotelID, query.From, query.To,
+	).Scan(&rooms).Error; err != nil {
 		return nil, err
 	}
-
 	var results []models.RoomSearchResults
 	for _, room := range rooms {
 		var rating []float64
-		db.Table("room_ratings").Where("room_id = ?", room.ID).Pluck("avg(rating)", &rating)
+		db.Table("room_ratings").Where("room_id = ? AND rating != 0", room.ID).
+			Pluck("avg(rating)", &rating)
 
 		price := room.Price
 		if isQuickReserve {

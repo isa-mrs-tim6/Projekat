@@ -8,6 +8,7 @@ import (
 	"net/mail"
 	"net/smtp"
 	"strings"
+	"sync"
 )
 
 func (app *Application) CompleteRegistration(w http.ResponseWriter, r *http.Request) {
@@ -65,15 +66,22 @@ func (app *Application) RegisterAdmin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// SEND CONFIRMATION EMAIL
-	if err := app.SendRegistrationEmail(emailAddress.Address, requestObject.AccountType, requestObject.Credentials); err != nil {
-		app.ErrorLog.Printf("Could not add send confirmation email")
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	c := make(chan error)
+	go app.SendRegistrationEmail(emailAddress.Address, requestObject.AccountType, requestObject.Credentials, c)
+	wg.Done()
+
+	if err := <-c; err != nil {
+		app.ErrorLog.Printf("Could not send confirmation email")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (app *Application) SendRegistrationEmail(receiver string, accountType string, credentials models.Credentials) error {
+func (app *Application) SendRegistrationEmail(receiver string, accountType string, credentials models.Credentials, result chan error) {
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	message := "From: " + app.EmailAddress + "\n" +
 		"To: " + receiver + "\n" +
@@ -90,7 +98,7 @@ func (app *Application) SendRegistrationEmail(receiver string, accountType strin
 	err := smtp.SendMail("smtp.gmail.com:587",
 		smtp.PlainAuth("", app.EmailAddress, app.EmailPassword, "smtp.gmail.com"),
 		app.EmailAddress, []string{receiver}, []byte(message))
-	return err
+	result <- err
 }
 
 func (app *Application) RegisterUser(w http.ResponseWriter, r *http.Request) {
@@ -129,9 +137,16 @@ func (app *Application) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// SEND CONFIRMATION EMAIL
-	if err := app.SendRegistrationEmail(emailAddress.Address, "User", user.Credentials); err != nil {
-		app.ErrorLog.Printf("Could not add send confirmation email")
+	// SEND EMAIL
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	c := make(chan error)
+	go app.SendRegistrationEmail(emailAddress.Address, "User", user.Credentials, c)
+
+	wg.Done()
+	if err := <-c; err != nil {
+		app.ErrorLog.Printf("Could not send confirmation email")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
