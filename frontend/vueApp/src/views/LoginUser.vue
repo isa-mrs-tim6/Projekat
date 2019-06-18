@@ -24,6 +24,9 @@
                             ></v-text-field>
                         </v-form>
                     </v-card-text>
+                    <div v-if="notActivated">
+                        <v-btn block @click="resend">Resend verification email</v-btn>
+                    </div>
                     <v-card-actions>
                         <v-btn dark @click="loginUser">Login</v-btn>
                         <v-spacer></v-spacer>
@@ -31,6 +34,20 @@
                     </v-card-actions>
                 </v-card>
             </v-flex>
+            <v-snackbar
+                    v-model="snackbar_fields.snackbar"
+                    :timeout="4000"
+                    :top="true"
+                    :color="snackbar_fields.color"
+            >
+                {{ snackbar_fields.text }}
+                <v-btn
+                        flat
+                        @click="snackbar_fields.snackbar = false"
+                >
+                    Close
+                </v-btn>
+            </v-snackbar>
         </v-layout>
     </v-container>
 </template>
@@ -44,7 +61,13 @@
         data() {
             return {
                 Email:"",
-                Password:""
+                Password:"",
+                notActivated: false,
+                snackbar_fields: {
+                    snackbar: false,
+                    text: null,
+                    color: null,
+                },
             }
         },
         methods:{
@@ -60,13 +83,41 @@
                             this.$router.replace("user");
                         }
                         )
-                    .catch(
-                        err => alert("Invalid credentials")
-                    );
+                    .catch( err => {
+                        if (err.response.status === 400) {
+                            this.notActivated = true;
+                            this.snackbar_fields.text = "Account not verified";
+                            this.snackbar_fields.color = "error";
+                            this.snackbar_fields.snackbar = true;
+                        } else {
+                            this.snackbar_fields.text = "Wrong login info";
+                            this.snackbar_fields.color = "error";
+                            this.snackbar_fields.snackbar = true;
+                        }
+                    })
             },
             admin(e){
                 e.preventDefault();
                 this.$router.replace("admin_login");
+            },
+            resend(){
+                this.notActivated = false;
+                const credentials = {
+                    Email: this.Email,
+                    Password: this.Password,
+                    Type: "User",
+                };
+                axios.post("http://localhost:8000/api/mail/resend", credentials)
+                    .then(res => {
+                        this.snackbar_fields.text = "Email resent";
+                        this.snackbar_fields.color = "success";
+                        this.snackbar_fields.snackbar = true;
+                    })
+                    .catch(err => {
+                        this.snackbar_fields.text = "Account not found";
+                        this.snackbar_fields.color = "error";
+                        this.snackbar_fields.snackbar = true;
+                    })
             }
         }
     }

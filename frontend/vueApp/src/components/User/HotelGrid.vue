@@ -9,26 +9,45 @@
                                 v-model=value.Rating
                                 background-color="orange lighten-3"
                                 color="orange"
+                                half-increments
                                 readonly
                                 medium
                         ></v-rating>
                     </v-card-title>
                     <v-layout row>
-                        <v-flex xs10>
+                        <v-flex xs12>
                             <v-card-title primary-title>
-                                <v-layout row>
-                                    <v-flex xs8>
-                                        <div>
-                                            <div class="title"> <v-icon>place</v-icon> Address: {{value.Hotel.Address}}</div>
-                                        </div>
-                                    </v-flex>
+                                <v-layout column>
+                                    <v-layout row>
+                                        <v-flex xs3>
+                                            <img src="../../assets/hotel_placeholder.png">
+                                        </v-flex>
+                                        <v-flex xs6 style="margin-right: -25px"></v-flex>
+                                        <v-flex xs3>
+                                            <gmap-map
+                                                    :center="{lat: value.Hotel.Latitude, lng: value.Hotel.Longitude}"
+                                                    :zoom="12"
+                                                    style="width:360px;  height: 240px;"
+                                            >
+                                                <gmap-marker
+                                                        :position="{lat: value.Hotel.Latitude, lng: value.Hotel.Longitude}"
+                                                ></gmap-marker>
+                                            </gmap-map>
+                                        </v-flex>
+                                    </v-layout>
+                                    <v-layout row>
+                                        <v-flex xs3>
+                                            <div class="title">
+                                                Description:<br> {{value.Hotel.Description}}
+                                            </div>
+                                        </v-flex>
+                                        <v-flex xs6 style="margin-right: -25px"></v-flex>
+                                        <v-flex xs3>
+                                            <div class="title">Address:<br> {{value.Hotel.Address}}</div>
+                                        </v-flex>
+                                    </v-layout>
                                 </v-layout>
                             </v-card-title>
-                        </v-flex>
-                        <v-flex xs2>
-                            <div class="subheading">
-                                Description: {{value.Hotel.Description}}
-                            </div>
                         </v-flex>
                     </v-layout>
                     <v-divider light/>
@@ -51,7 +70,7 @@
                 this.$router.push({ path: `/reserve_room/${id}/${this.reservationID}/${this.passengers}` });
             },
             quickReserve(id) {
-                this.$router.push({ path: `/quick_reserve_room/${id}/${this.reservationID}/${this.start}/${this.end}` });
+                this.$router.push({ path: `/quick_reserve_room/${id}/${this.reservationID}/${this.passengers}` });
             }
         }
     }

@@ -164,7 +164,7 @@ export default new Router({
       component: RoomReservation
     },
     {
-      path: "/quick_reserve_room/:hotel_id/:reservation/:start/:end",
+      path: "/quick_reserve_room/:hotel_id/:reservation/:tickets",
       component: QuickRoomReservation
     },
     {

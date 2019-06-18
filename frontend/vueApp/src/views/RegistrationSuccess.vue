@@ -26,7 +26,14 @@
         },
         created() {
             axios.get('http://localhost:8000/api/admin/'+this.$route.params.type+'/completeRegistration/q='+this.$route.params.email)
-                .then(res => this.regSuccess = true)
+                .then(res => {
+                    this.regSuccess = true;
+                    if (this.$route.params.type === 'User') {
+                        this.$router.push({ path: `/login` });
+                    } else {
+                        this.$router.push({ path: `/admin_login` });
+                    }
+                })
                 .catch(err => this.regSuccess = false);
         }
     }

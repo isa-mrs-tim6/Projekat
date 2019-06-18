@@ -77,7 +77,7 @@
                     .then(res =>{
                         this.SuccessSnackbar = true;
                         this.SuccessSnackbarText = 'Reservation complete';
-                        this.$router.push({ path: '/user', query: { reservationID: this.reservationID, passengers: this.passengers }});
+                        this.$router.push({ path: '/user/reserve', query: { reservationID: this.reservationID, passengers: this.passengers }});
                     })
                     .catch(err => {
                         let vm = this

@@ -18,9 +18,26 @@
 <script>
     import SystemAdminNavDrawer from "../../components/SystemAdmin/SystemAdminNavDrawerr";
     import ManageReservationRewards from "../../components/SystemAdmin/ManageReservationRewards";
+    import axios from 'axios';
+
     export default {
         name: "SystemAdminReservationRewards",
-        components: {ManageReservationRewards, SystemAdminNavDrawer}
+        components: {ManageReservationRewards, SystemAdminNavDrawer},
+        mounted(){
+            this.checkFirstPass();
+        },
+        methods: {
+            checkFirstPass(){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/admin/checkFirstPass")
+                    .then(
+                        res =>{
+                            if(res.data === false){
+                                alert("Please update your password");
+                            }
+                        }
+                    )
+            }
+        },
     }
 </script>
 
