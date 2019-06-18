@@ -1,5 +1,8 @@
 <template>
     <div>
+        <v-card style="margin: 5px; padding: 5px" dark>
+            Number of reservations: {{this.ResCount}}<br/>Total discount: {{this.PriceScale * 100.0}}%
+        </v-card>
         <v-card style="margin: 5px" dark v-for="(item, index) in this.reservations" :key="item.Master.ID">
             <v-layout row wrap>
                 <v-flex xs2 class="resCenter">
@@ -324,6 +327,8 @@
         name: "UserReservations",
         data (){
             return {
+                ResCount: 0,
+                PriceScale: 0,
                 SuccessSnackbar: false,
                 SuccessSnackbarText: '',
                 ErrorSnackbar: false,
@@ -380,7 +385,6 @@
         beforeCreate() {
             axios.create({withCredentials: true}).get("http://localhost:8000/api/reservations/getReservations").
             then(res => {
-                console.log(res.data);
                 this.reservations = res.data;
                 for(let i = 0; i < this.reservations.length; i++) {
                     var date = moment(this.reservations[i].Master.CreatedAt).format('DD.MM.YYYY HH:mm');
@@ -404,7 +408,13 @@
                     date = moment(this.reservations[i].Master.ReservationHotel.End).format('DD.MM.YYYY');
                     this.reservations[i].Master.ReservationHotel.End = date.toString();
                 }
-            })
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getScale")
+                    .then(res2 => {
+                        this.ResCount = res2.data.Count;
+                        this.PriceScale = res2.data.Scale;
+                    });
+            });
+
         },
         methods : {
             checkFlight(d){
@@ -494,6 +504,8 @@
 
             },
             close(){
+                this.ResCount = 0;
+                this.PriceScale = 0;
                 this.dialog = false;
                 this.rateIndex = '';
                 this.rateTitle = '';

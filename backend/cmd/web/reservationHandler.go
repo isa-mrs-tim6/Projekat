@@ -360,3 +360,26 @@ func (app *Application) CancelVehicle(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func (app *Application) GetPriceScale(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var ret models.ReservationScaleDAO
+
+	if ret.Scale, ret.Count, err = app.Store.GetPriceScale(uint(user.ID)); err != nil {
+		app.ErrorLog.Printf("Could not get scale")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	if err := json.NewEncoder(w).Encode(ret); err != nil {
+		app.ErrorLog.Printf("Cannot encode scale data into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}

@@ -15,6 +15,11 @@ type ReservationReward struct {
 	PriceScale     float64
 }
 
+type ReservationScaleDAO struct {
+	Count uint
+	Scale float64
+}
+
 type ReservationDAO struct {
 	Master Reservation
 	Slaves []Reservation

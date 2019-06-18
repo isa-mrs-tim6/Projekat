@@ -74,6 +74,7 @@ func (app *Application) Routes() *mux.Router {
 	// USER API
 	router.HandleFunc("/api/user/login", app.LoginUser).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/user/getUsers", Validate(app.GetUser, []string{"User"})).Methods("GET")
+	router.HandleFunc("/api/user/getScale", Validate(app.GetPriceScale, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/getFriends", Validate(app.GetFriends, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/friendRequests", Validate(app.GetPendingRequests, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/friendRequests", Validate(app.CreateFriendRequest, []string{"User"})).Methods("POST", "OPTIONS")

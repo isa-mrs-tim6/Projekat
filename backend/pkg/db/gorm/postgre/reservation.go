@@ -140,6 +140,14 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 	return nil
 }
 
+func (db *Store) GetPriceScale(userID uint) (float64, uint, error) {
+	var numOfReservations uint
+	var reward models.ReservationReward
+	db.Table("reservations").Where("user_id = ?", userID).Count(&numOfReservations)
+	db.First(&reward, "required_number < ?", numOfReservations)
+	return reward.PriceScale, numOfReservations, nil
+}
+
 func (db *Store) CalculatePriceVehicle(userID uint, originalPrice float64) float64 {
 	price := float64(0.0)
 
