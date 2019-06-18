@@ -61,7 +61,20 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 		return nil, err
 	}
 
+	var invitedBy models.User
+	var reservation models.Reservation
+
+	db.LogMode(true)
 	for _, res := range masters {
+		if res.MasterRef != 0 {
+			db.Where("id = ?", res.MasterRef).
+				First(&reservation)
+
+			db.Table("users").
+				Where("id = ?", reservation.UserID).
+				First(&invitedBy)
+		}
+
 		db.Where("master_ref = ?", res.ID).
 			Preload("ReservationFlight.Flight.Origin").
 			Preload("ReservationFlight.Flight.Destination").
@@ -75,7 +88,7 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 			Preload("ReservationRentACar.RentACarCompany").
 			Preload("ReservationRentACar.Vehicle").
 			Find(&slaves)
-		reservations = append(reservations, models.ReservationDAO{Master: res, Slaves: slaves})
+		reservations = append(reservations, models.ReservationDAO{Master: res, Slaves: slaves, InvitedBy: invitedBy})
 	}
 
 	return reservations, nil

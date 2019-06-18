@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-card style="margin: 5px; padding: 5px" dark>
-            Number of reservations: {{this.ResCount}}<br/>Total discount: {{this.PriceScale * 100.0}}%
+            Number of reservations: {{this.ResCount}}<br/>Total discount: {{Math.floor((1.0 - this.PriceScale) * 100.0)}}%
         </v-card>
         <v-card style="margin: 5px" dark v-for="(item, index) in this.reservations" :key="item.Master.ID">
             <v-layout row wrap>
@@ -13,10 +13,11 @@
                 </v-flex>
                 <v-spacer></v-spacer>
                 <v-flex xs2 class="resCenter" v-if="item.Master.MasterRef !== 0">
-                    INVITED BY:
+                    INVITED BY:<br/>{{item.InvitedBy.Name}}<br/>{{item.InvitedBy.Surname}}
                 </v-flex>
                 <v-flex style="text-align: right">
                     <v-btn class="button" @click="details(index)">details</v-btn><br/>
+                    <v-btn class="button" color="blue" @click="accept(item.Master)" :disabled="checkAccept(item.Master)">accept</v-btn>
                     <v-btn class="button" color="error"
                            :disabled="!checkFlight(item.Master.ReservationFlight.Flight.Departure)"
                     @click="cancelFlight(item.Master)">cancel</v-btn>
@@ -554,6 +555,13 @@
             },
             close2(){
                 this.rateDialog = false;
+            },
+            accept(reservation){
+
+            },
+            checkAccept(reservation){
+                console.log(reservation);
+                return reservation.Expiring === null
             },
             cancelFlight(reservation){
                 axios.create({withCredentials: true}).get("http://localhost:8000/api/user/cancelFlight/"+reservation.ID)

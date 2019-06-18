@@ -21,8 +21,9 @@ type ReservationScaleDAO struct {
 }
 
 type ReservationDAO struct {
-	Master Reservation
-	Slaves []Reservation
+	Master    Reservation
+	InvitedBy User
+	Slaves    []Reservation
 }
 
 type ReservationGraphData struct {
@@ -41,6 +42,7 @@ type Reservation struct {
 	ReservationRentACarID uint
 	ReservationHotel      HotelReservation `gorm:"foreignkey:ReservationHotelID"`
 	ReservationHotelID    uint
+	Expiring              *time.Time `gorm:"default:NULL"`
 }
 
 type FlightReservation struct {
