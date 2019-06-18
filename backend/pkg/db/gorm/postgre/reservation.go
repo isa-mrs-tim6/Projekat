@@ -360,8 +360,16 @@ func (db *Store) CancelFlight(resID uint) error {
 	db.Table("seats").Where("reservation_id = ?", master.ReservationFlight.Seat.ReservationID).
 		Update("reservation_id", 0)
 
-	db.Where("id=?", master.ID).Delete(master.ReservationFlight)
-	db.Where("id=?", master.ID).Delete(master.ReservationHotel)
+	if !master.ReservationFlight.IsQuickReserve {
+		db.Where("id=?", master.ID).Delete(master.ReservationFlight)
+	}
+	if !master.ReservationHotel.IsQuickReserve {
+		db.Where("id=?", master.ID).Delete(master.ReservationHotel)
+	}
+	if !master.ReservationRentACar.IsQuickReserve {
+		db.Where("id=?", master.ID).Delete(master.ReservationRentACar)
+	}
+
 	db.Where("id=?", master.ID).Delete(master.ReservationRentACar)
 
 	if master.MasterRef != 0 {
@@ -387,9 +395,15 @@ func (db *Store) CancelFlight(resID uint) error {
 		db.Table("seats").Where("reservation_id = ?", slave.ReservationFlight.Seat.ReservationID).
 			Update("reservation_id", 0)
 
-		db.Where("id=?", slave.ID).Delete(slave.ReservationFlight)
-		db.Where("id=?", slave.ID).Delete(slave.ReservationHotel)
-		db.Where("id=?", slave.ID).Delete(slave.ReservationRentACar)
+		if !slave.ReservationFlight.IsQuickReserve {
+			db.Where("id=?", slave.ID).Delete(slave.ReservationFlight)
+		}
+		if !slave.ReservationHotel.IsQuickReserve {
+			db.Where("id=?", slave.ID).Delete(slave.ReservationHotel)
+		}
+		if !slave.ReservationRentACar.IsQuickReserve {
+			db.Where("id=?", slave.ID).Delete(slave.ReservationRentACar)
+		}
 		db.Delete(slave)
 	}
 
@@ -419,8 +433,11 @@ func (db *Store) CancelHotel(resID uint) error {
 		return nil
 	}
 
-	db.Table("hotel_reservations").Where("id = ?", master.ReservationHotelID).
-		Delete(master.ReservationHotel)
+	if !master.ReservationHotel.IsQuickReserve {
+		db.Table("hotel_reservations").Where("id = ?", master.ReservationHotelID).
+			Delete(master.ReservationHotel)
+	}
+
 	db.Table("reservations").Where("id=?", master.ID).
 		Update("reservation_hotel_id", 0)
 
@@ -439,8 +456,11 @@ func (db *Store) CancelHotel(resID uint) error {
 		Find(&slaves)
 
 	for _, slave := range slaves {
-		db.Table("hotel_reservations").Where("id = ?", slave.ReservationHotelID).
-			Delete(slave.ReservationHotel)
+		if !slave.ReservationHotel.IsQuickReserve {
+			db.Table("hotel_reservations").Where("id = ?", slave.ReservationHotelID).
+				Delete(slave.ReservationHotel)
+		}
+
 		db.Table("reservations").Where("id=?", slave.ID).
 			Update("reservation_hotel_id", 0)
 	}
@@ -469,8 +489,11 @@ func (db *Store) CancelVehicle(resID uint) error {
 		return nil
 	}
 
-	db.Table("rent_a_car_reservations").Where("id=?", master.ReservationRentACarID).
-		Delete(master.ReservationRentACar)
+	if !master.ReservationRentACar.IsQuickReserve {
+		db.Table("rent_a_car_reservations").Where("id=?", master.ReservationRentACarID).
+			Delete(master.ReservationRentACar)
+	}
+
 	db.Table("reservations").Where("id=?", master.ID).
 		Update("reservation_rent_a_car_id", 0)
 
@@ -489,8 +512,11 @@ func (db *Store) CancelVehicle(resID uint) error {
 		Find(&slaves)
 
 	for _, slave := range slaves {
-		db.Table("rent_a_car_reservations").Where("id=?", slave.ReservationRentACarID).
-			Delete(slave.ReservationRentACar)
+		if !slave.ReservationRentACar.IsQuickReserve {
+			db.Table("rent_a_car_reservations").Where("id=?", slave.ReservationRentACarID).
+				Delete(slave.ReservationRentACar)
+		}
+
 		db.Table("reservations").Where("id=?", slave.ID).
 			Update("reservation_rent_a_car_id", 0)
 	}

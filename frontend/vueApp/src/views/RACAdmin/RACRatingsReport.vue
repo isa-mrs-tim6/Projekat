@@ -44,11 +44,18 @@
             axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getReservations')
                 .then(res => {
                     this.Reservations = res.data;
+                    let len = 0;
                     for (let i = 0; i < this.Reservations.length; i++) {
-                        this.Rating += this.Reservations[i].CompanyRating;
+                        if (this.Reservations[i].CompanyRating !== 0){
+                            this.Rating += this.Reservations[i].CompanyRating;
+                            len += 1;
+                        }
+                    }
+                    if(len === 0){
+                        len = 1;
                     }
                     if (this.Reservations.length > 0) {
-                        this.Rating /= this.Reservations.length;
+                        this.Rating /= len;
                     }
                 } )
                 .catch(err => alert("Could not retrieve company reservations"));
