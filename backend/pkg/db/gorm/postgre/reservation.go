@@ -704,6 +704,7 @@ func (db *Store) GetCompanyQuickVehicle(params models.VehicleQuickResParams) ([]
 func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams) error {
 	var master models.Reservation
 	var slave models.RentACarReservation
+	var loc models.Location
 
 	if err := db.Preload("ReservationRentACar").
 		Where("id = ?", params.MasterID).First(&master).Error; err != nil {
@@ -713,8 +714,13 @@ func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams
 		return err
 	}
 
+	if err := db.Where("id = ?", params.LocationID).First(&loc).Error; err != nil {
+		return err
+	}
+
 	master.ReservationRentACar = slave
 	master.ReservationRentACarID = slave.ID
+	master.ReservationRentACar.Location = loc.Address.Address
 
 	if err := db.Save(&master).Error; err != nil {
 		return err

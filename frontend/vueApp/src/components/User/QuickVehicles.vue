@@ -93,6 +93,7 @@
                 let res = {
                     ReservationID: this.Reservations[index].ID,
                     MasterID: Number.parseInt(this.$route.query.reservationID),
+                    LocationId: this.LocationID
                 };
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/reservation/rac/completeQuickRes', res)
                     .then(res =>{
