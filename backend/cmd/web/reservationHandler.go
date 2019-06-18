@@ -171,7 +171,7 @@ func (app *Application) ReserveVehicle(w http.ResponseWriter, r *http.Request) {
 	reservationID, err := strconv.ParseUint(vars["id"], 10, 64)
 	if err != nil {
 		app.ErrorLog.Println("Could not get reservation ID")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 

@@ -85,11 +85,14 @@
                             vm.ErrorSnackbar = true;
                             vm.ErrorSnackbarText = 'Please log in to use this feature.';
                         }else if(err.response.status === 400){
+                            vm.ErrorSnackbar = true;
+                            vm.ErrorSnackbarText = 'Someone else has already taken that vehicle.';
                             setTimeout(function () {
-                                vm.ErrorSnackbar = true;
-                                vm.ErrorSnackbarText = 'Someone else has already taken that vehicle.';
                                 vm.$router.go()
                             }, 4000);
+                        }else if(err.response.status === 500){
+                            vm.ErrorSnackbar = true;
+                            vm.ErrorSnackbarText = 'Please reserve a flight first';
                         }
 
                     })

@@ -35,8 +35,6 @@ type ReservationGraphData struct {
 func (r *Reservation) BeforeCreate(scope *gorm.Scope) (err error) {
 	var reservations []Reservation
 
-	scope.DB().LogMode(true)
-
 	scope.DB().Where("is_expiring = true and expire_time < ?", time.Now()).Find(&reservations)
 
 	for _, res := range reservations {
