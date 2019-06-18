@@ -8,10 +8,16 @@
                             <v-text-field label="Name" prepend-icon="directions_car" v-model="query.name"></v-text-field>
                         </v-flex>
                         <v-flex xs3>
-                            <v-text-field label="Address" prepend-icon="place" v-model="query.address" readonly></v-text-field>
+                            <v-text-field label="Address" prepend-icon="place" v-model="query.address" :readonly="checkReadonly()"></v-text-field>
                         </v-flex>
                         <v-flex xs2>
-                            <v-text-field v-model="time.from" label="From" prepend-icon="event" readonly></v-text-field>
+                            <v-menu v-model="menuFrom" :close-on-content-click="false" lazy transition="scale-transition"
+                                    :nudge-right="40" offset-y full-width max-width="290px" min-width="290px">
+                                <template v-slot:activator="{ on }">
+                                    <v-text-field v-model="time.from" label="From" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                </template>
+                                <v-date-picker no-title scrollable v-model = "time.from" @input="menuFrom = false" :readonly="checkReadonly()"></v-date-picker>
+                            </v-menu>
                         </v-flex>
                         <v-flex xs2>
                             <template v-if = "returnDate === null">
@@ -99,6 +105,7 @@
             return {
                 items: [],
                 menuTo: false,
+                menuFrom: false,
                 query: {
                     name: null,
                     address: null,
@@ -119,6 +126,9 @@
             this.minDate = this.time.from;
         },
         methods: {
+            checkReadonly(){
+                return !isNaN(parseInt(this.reservationID))
+            },
             quickRes(index){
                 let location = 1;
                 this.$router.push({ path: `/vehiclesQuick/${this.items[index].ID}/${location}`,
