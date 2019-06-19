@@ -77,7 +77,6 @@
                     Passport: this.Passport,
                     Password: this.Password
                 };
-                console.log(newUserProfile)
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/user/updateProfile", newUserProfile)
                     .then(res =>{
                         this.SuccessSnackbar = true;
