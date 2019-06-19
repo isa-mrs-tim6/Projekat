@@ -52,6 +52,7 @@ type HotelProfile struct {
 	Name string
 	Address
 	Description string
+	Picture     string `gorm:"default:'hotelPlaceholder.png'"`
 }
 
 type Hotel struct {

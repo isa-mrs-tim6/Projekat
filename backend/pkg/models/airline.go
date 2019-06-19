@@ -108,7 +108,8 @@ type FlightDto struct {
 type AirlineProfile struct {
 	Name string
 	Address
-	Promo string
+	Promo   string
+	Picture string `gorm:"default:'airlinePlaceholder.png'"`
 }
 
 type Airline struct {

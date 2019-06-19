@@ -29,17 +29,30 @@
                                                                 @place_changed="getAddressData">
                                                         </gmap-autocomplete>
                                                     </v-layout>
-                                                    <v-flex>
-                                                        <gmap-map
-                                                                :center="{lat: AirlineProfile.Latitude, lng: AirlineProfile.Longitude}"
-                                                                :zoom="8"
-                                                                style="width:100%;  height: 400px;"
-                                                        >
-                                                            <gmap-marker
-                                                                    :position="{lat: AirlineProfile.Latitude, lng: AirlineProfile.Longitude}"
-                                                            ></gmap-marker>
-                                                        </gmap-map>
-                                                    </v-flex>
+                                                    <v-layout row>
+                                                        <v-flex xs6>
+                                                            <gmap-map
+                                                                    :center="{lat: AirlineProfile.Latitude, lng: AirlineProfile.Longitude}"
+                                                                    :zoom="8"
+                                                                    style="width:100%;  height: 400px;"
+                                                            >
+                                                                <gmap-marker
+                                                                        :position="{lat: AirlineProfile.Latitude, lng: AirlineProfile.Longitude}"
+                                                                ></gmap-marker>
+                                                            </gmap-map>
+                                                        </v-flex>
+                                                        <v-flex xs6>
+                                                            <form
+                                                                    enctype="multipart/form-data"
+                                                                    action="http://localhost:8080/upload"
+                                                                    method="post">
+                                                                <div class="col-md-4 centered align-items-center mx-auto text-center">
+                                                                    <img class="centered mx-auto text-center" height="400" width="100%" v-on:click="fileUpload" style="margin-bottom:50px;"  v-if="this.PictureLink" v-bind:src="this.PictureLink">
+                                                                    <input type="file" accept="image/*," @change="updatePicture" id="picture" style="display: none">
+                                                                </div>
+                                                            </form>
+                                                        </v-flex>
+                                                    </v-layout>
                                                     <v-textarea label="Airline description" v-model="AirlineProfile.Promo" prepend-icon="description"></v-textarea>
                                                 </v-container>
                                             </v-form>
@@ -73,12 +86,14 @@
                 SuccessSnackbar: false,
                 ErrorSnackbar: false,
                 AirlineProfile: {},
+                PictureLink: '',
             }
         },
         mounted() {
             axios.create({withCredentials:true}).get('http://localhost:8000/api/airline/getProfile')
                 .then(res => {
                         this.AirlineProfile = res.data;
+                        this.PictureLink = 'http://localhost:8000/'+this.AirlineProfile.Picture;
                         this.BackupAirlineProfile = JSON.parse(JSON.stringify(this.AirlineProfile))
                     }
                 )
@@ -113,6 +128,32 @@
                 this.AirlineProfile.Address = addressData.formatted_address;
                 this.AirlineProfile.Latitude = addressData.geometry.location.lat();
                 this.AirlineProfile.Longitude = addressData.geometry.location.lng();
+            },
+            updatePicture(e){
+                const file = e.target.files[0];
+
+                let formData = new FormData();
+                formData.append('file', file);
+
+                let a = null;
+
+                axios.create({withCredentials: true}).post( 'http://localhost:8000/api/upload/updateAirlineProfilePicture',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                ).then(res => {
+                    a = res.data.toString();
+                    a = a.substr(a.lastIndexOf(":")+2, a.lastIndexOf(`"`)-a.lastIndexOf(":")-2);
+                    this.PictureLink = "1" + this.PictureLink;
+                    this.PictureLink = this.PictureLink.substr(1, this.PictureLink.lastIndexOf("/")) + "/" + a;
+                    this.AirlineProfile.Picture = a;
+                });
+            },
+            fileUpload(e) {
+                document.getElementById("picture").click();
             }
         },
     }

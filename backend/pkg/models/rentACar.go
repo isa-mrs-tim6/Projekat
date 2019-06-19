@@ -89,7 +89,8 @@ type LocationParams struct {
 type RentACarCompanyProfile struct {
 	Name string
 	Address
-	Promo string
+	Promo   string
+	Picture string `gorm:"default:'racPlaceholder.png'"`
 }
 
 type RentACarCompany struct {

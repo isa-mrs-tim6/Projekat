@@ -7,6 +7,15 @@
                         <div class="headline font-weight-medium">Admin account</div>
                     </v-card-title>
                     <v-card-text class="grow">
+                        <form
+                                enctype="multipart/form-data"
+                                action="http://localhost:8080/upload"
+                                method="post">
+                            <div class="col-md-4 centered align-items-center mx-auto text-center">
+                                <img class="centered mx-auto text-center" height="184" width="184" v-on:click="fileUpload" style="margin-bottom:50px;"  v-if="this.PictureLink" v-bind:src="this.PictureLink">
+                                <input type="file" accept="image/*," @change="updatePicture" id="picture" style="display: none">
+                            </div>
+                        </form>
                         <v-form>
                             <v-flex>
                                 <v-layout align-center justify-space-around row fill-height>
@@ -69,6 +78,8 @@
                 OldPassword:"",
                 Address:"",
                 Phone:"",
+                Picture:"",
+                PictureLink:"",
                 emailRules: [
                     v => !!v || 'E-mail is required',
                     v => /.+@.+/.test(v) || 'E-mail must be valid'
@@ -88,6 +99,8 @@
                     this.Email = res.data.Email;
                     this.Address = res.data.Address;
                     this.Phone = res.data.Phone;
+                    this.Picture = res.data.Picture;
+                    this.PictureLink = 'http://localhost:8000/'+this.Picture;
                     this.OldPassword = res.data.Password;
                 })
         },
@@ -106,12 +119,39 @@
                     Phone: this.Phone,
                     Password: this.OldPassword,
                     FirstPassChanged: true,
+                    Picture: this.Picture,
                 };
                 if(this.Password !== "") {
                     newUserProfile.Password = this.Password;
                 }
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/admin/updateProfile", newUserProfile)
                     .then(res => this.SuccessSnackbar = true);
+            },
+            updatePicture(e){
+                const file = e.target.files[0];
+
+                let formData = new FormData();
+                formData.append('file', file);
+
+                let a = null;
+
+                axios.create({withCredentials: true}).post( 'http://localhost:8000/api/upload/updateProfilePicture',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                ).then(res => {
+                    a = res.data.toString();
+                    a = a.substr(a.lastIndexOf(":")+2, a.lastIndexOf(`"`)-a.lastIndexOf(":")-2);
+                    this.PictureLink = "1" + this.PictureLink;
+                    this.PictureLink = this.PictureLink.substr(1, this.PictureLink.lastIndexOf("/")) + "/" + a;
+                    this.Picture = a;
+                });
+            },
+            fileUpload(e) {
+                document.getElementById("picture").click();
             }
         }
     }
