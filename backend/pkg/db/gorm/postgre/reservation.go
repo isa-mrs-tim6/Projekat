@@ -718,15 +718,38 @@ func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams
 	var slave models.RentACarReservation
 	var loc models.Location
 
-	if err := db.Preload("ReservationRentACar").
+	var masters []models.Reservation
+
+	tx := db.Begin()
+
+	if err := tx.Preload("ReservationRentACar").
 		Where("id = ?", params.MasterID).First(&master).Error; err != nil {
-		return err
-	}
-	if err := db.Where("id = ?", params.ReservationID).First(&slave).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
 
-	if err := db.Where("id = ?", params.LocationID).First(&loc).Error; err != nil {
+	if err := tx.Raw("SELECT * from rent_a_car_reservations WHERE id = ? FOR UPDATE", params.ReservationID).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Preload("ReservationRentACar").Where("reservation_rent_a_car_id = ?", params.ReservationID).Find(&masters).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if len(masters) != 0 {
+		tx.Rollback()
+		return errors.New("reservation taken")
+	}
+
+	if err := tx.Where("id = ?", params.ReservationID).First(&slave).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Where("id = ?", params.LocationID).First(&loc).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
 
@@ -734,8 +757,11 @@ func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams
 	master.ReservationRentACarID = slave.ID
 	master.ReservationRentACar.Location = loc.Address.Address
 
-	if err := db.Save(&master).Error; err != nil {
+	if err := tx.Save(&master).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+
+	tx.Commit()
 	return nil
 }

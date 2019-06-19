@@ -49,8 +49,8 @@
                 </v-layout>
             </v-card-text>
         </v-card>
-        <v-snackbar v-model="SuccessSnackbar" :timeout=2000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
-        <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
+        <v-snackbar v-model="SuccessSnackbar" :timeout=3000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
+        <v-snackbar v-model="ErrorSnackbar" :timeout=3000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </div>
 </template>
 
@@ -83,6 +83,9 @@
             axios.create({withCredentials: true}).post("http://localhost:8000/api/reservations/rac/quickReservationsCompany", params)
                 .then(res => {
                     this.Reservations = res.data;
+                    if(this.Reservations === null){
+                        this.Reservations = [];
+                    }
                 })
         },
         methods: {
@@ -102,8 +105,17 @@
                         this.$router.push({ path: '/user/reserve', query: { reservationID: this.reservationID, passengers: this.passengers }});
                     })
                     .catch(err => {
-                        this.ErrorSnackbar = true;
-                        this.ErrorSnackbarText = 'Please log in to use this feature.';
+                        let vm = this;
+                        if(err.response.status === 401){
+                            vm.ErrorSnackbar = true;
+                            vm.ErrorSnackbarText = 'Please log in to use this feature';
+                        }else if(err.response.status === 500){
+                            vm.ErrorSnackbar = true;
+                            vm.ErrorSnackbarText = 'Someone else has already taken that vehicle';
+                            setTimeout(function () {
+                                vm.$router.go()
+                            }, 3500);
+                        }
                     })
             },
         }
