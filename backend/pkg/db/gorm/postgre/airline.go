@@ -33,7 +33,7 @@ func (db *Store) GetAirlinesProfiles() ([]models.AirlineProfileDTO, error) {
 		return nil, err
 	}
 	var retVal = make([]models.AirlineProfileDTO, 0)
-	for _, element := range airlines{
+	for _, element := range airlines {
 		retVal = append(retVal, models.AirlineProfileDTO{ID: element.ID, AirlineProfile: element.AirlineProfile})
 	}
 	return retVal, nil

@@ -26,27 +26,27 @@ type ReservationDAO struct {
 	Slaves    []Reservation
 }
 
-type QuickFlightReservationDTO struct{
-	SeatID uint
+type QuickFlightReservationDTO struct {
+	SeatID   uint
 	FlightID uint
 	Discount uint
 }
 
-type QuickFlightReservationGDTO struct{
-	Number uint
-	Price float64
+type QuickFlightReservationGDTO struct {
+	Number        uint
+	Price         float64
 	ReservationID uint
-	ID uint
+	ID            uint
 }
 
-type QuickFlightReservationGDTOV2 struct{
-	Class string
-	Price float64
-	ID uint
-	OriginName string
-	DestName string
-	Departure time.Time
-	FlightID uint
+type QuickFlightReservationGDTOV2 struct {
+	Class           string
+	Price           float64
+	ID              uint
+	OriginName      string
+	DestName        string
+	Departure       time.Time
+	FlightID        uint
 	PriceECONOMY    string
 	PriceBUSINESS   string
 	PriceFIRSTCLASS string

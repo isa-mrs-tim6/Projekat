@@ -68,6 +68,7 @@
                     text: null,
                     color: null,
                 },
+                isInv: this.$route.query.inv
             }
         },
         methods:{
@@ -80,7 +81,11 @@
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/user/login", creds)
                     .then(
                         res => {
-                            this.$router.replace("user");
+                            if (this.isInv){
+                                this.$router.push("/userReservations")
+                            }else{
+                                this.$router.push("/user")
+                            }
                         }
                         )
                     .catch( err => {

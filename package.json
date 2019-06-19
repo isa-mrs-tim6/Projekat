@@ -5,8 +5,7 @@
     "node": "10.16.0",
     "npm": "6.4.1"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "dependencies": {
     "@vue/cli": "^3.8.4"
   }

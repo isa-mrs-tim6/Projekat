@@ -43,7 +43,7 @@ func initTables(db *gorm.DB) {
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
 		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{},
-		&models.VehicleRating{}, &models.FeatureAirline{}, &models.HotelReservationReward{}, &models.RoomQuickReserveDays{},models.SeatQuickReservation{},models.FlightQuickReserveSeats{})
+		&models.VehicleRating{}, &models.FeatureAirline{}, &models.HotelReservationReward{}, &models.RoomQuickReserveDays{}, models.SeatQuickReservation{}, models.FlightQuickReserveSeats{})
 	fmt.Printf("DATABASE: Finished automigration, time taken: %f seconds\n", time.Since(timeAutoMigration).Seconds())
 }
 
@@ -195,7 +195,7 @@ func addModels(db *gorm.DB) {
 	// CREATING AIRLINES
 	airline := models.Airline{
 		AirlineProfile: models.AirlineProfile{
-			Name:  "Air France",
+			Name: "Air France",
 			Promo: "Air France is a leading global player in its three main areas of activity: " +
 				"passenger transport, cargo transport and aircraft maintenance. From its hubs at Paris-Orly and " +
 				"Paris-Charles de Gaulle airports, the airline operates flights to 195 destinations and 91 countries. " +

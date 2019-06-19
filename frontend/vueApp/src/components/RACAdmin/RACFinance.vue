@@ -24,6 +24,7 @@
             <div id="wrapper1" style="position: relative; height: 40vh; width: 80vw">
                 <FinanceGraph v-bind:item="item.visitors" ref="chart" :chart-data="dataCollectionVisitors"></FinanceGraph>
             </div>
+            <div style="height: 20vh;"></div>
             <div id="wrapper2" style="position: relative; height: 40vh; width: 80vw">
                 <FinanceGraph v-bind:item="item.currency" ref="chart" :chart-data="dataCollectionFinances"></FinanceGraph>
             </div>

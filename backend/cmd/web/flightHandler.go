@@ -111,24 +111,24 @@ func (app *Application) CreateQuickFlightReservation(w http.ResponseWriter, r *h
 	}
 
 	var price float64
-	if seat.Class == "FIRST"{
+	if seat.Class == "FIRST" {
 		price = flight.PriceFIRSTCLASS
-	}else if seat.Class == "BUSINESS"{
+	} else if seat.Class == "BUSINESS" {
 		price = flight.PriceBUSINESS
-	}else{
+	} else {
 		price = flight.PriceECONOMY
 	}
 
-	price = price - price * (float64(reservationDTO.Discount) / 100.0)
+	price = price - price*(float64(reservationDTO.Discount)/100.0)
 
 	var quickReservation = models.FlightReservation{
-		Flight: &flight,
-		FlightID: flight.ID,
-		Price: price,
-		Seat: &seat,
-		CompanyRating: 0,
-		FlightRating:  0,
-		Features: []*models.FeatureAirline{},
+		Flight:         &flight,
+		FlightID:       flight.ID,
+		Price:          price,
+		Seat:           &seat,
+		CompanyRating:  0,
+		FlightRating:   0,
+		Features:       []*models.FeatureAirline{},
 		IsQuickReserve: true,
 	}
 
@@ -157,7 +157,6 @@ func (app *Application) RemoveQuickFlightReservation(w http.ResponseWriter, r *h
 		return
 	}
 }
-
 
 func (app *Application) UpdatePriceList(w http.ResponseWriter, r *http.Request) {
 	var flightDTO models.FlightDto
@@ -281,7 +280,7 @@ func (app *Application) GetCompanyFlights(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		app.ErrorLog.Println("Could not retrive flights")
 	}
-	for _, element := range flights{
+	for _, element := range flights {
 		sort.SliceStable(element.Airplane.Seats, func(i, j int) bool {
 			var m = make(map[string]int)
 			m["FIRST"] = 1

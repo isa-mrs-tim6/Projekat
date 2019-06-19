@@ -26,13 +26,7 @@
             axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getReservations')
                 .then(res => {
                     this.Reservations = res.data;
-                    for (let i = 0; i < this.Reservations.length; i++) {
-                        this.Rating += this.Reservations[i].Rating;
-                    }
-                    if (this.Reservations.length > 0) {
-                        this.Rating /= this.Reservations.length;
-                    }
-                } )
+                    } )
                 .catch(err => alert("Could not retrieve vehicle reservations"));
         },
         mounted(){
