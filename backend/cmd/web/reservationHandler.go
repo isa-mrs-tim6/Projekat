@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"io/ioutil"
@@ -277,15 +278,31 @@ func (app *Application) ReserveFlight(w http.ResponseWriter, r *http.Request) {
 	query.Users[0].ID = user.ID
 
 	// RESERVE
-	reservationID, err := app.Store.ReserveFlight(flightID, query)
+	reservation, err := app.Store.ReserveFlight(flightID, query)
 	if err != nil {
 		app.ErrorLog.Println("Could not complete reservation")
 		w.WriteHeader(http.StatusBadRequest)
 	}
-	if err := json.NewEncoder(w).Encode(reservationID); err != nil {
+	if err := json.NewEncoder(w).Encode(reservation.ID); err != nil {
 		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
+	}
+	flight, _ := app.Store.GetFlight(reservation.ReservationFlight.FlightID)
+	AirlineName := flight.Airline.Name
+	price := fmt.Sprintf("%.2f", reservation.ReservationFlight.Price)
+	name := reservation.Name + string(" ") +  reservation.Surname
+	seatClass := reservation.ReservationFlight.Seat.Class
+	seatNumber := fmt.Sprint(reservation.ReservationFlight.Seat.Number)
+	from := flight.Origin.Name
+	to := flight.Destination.Name
+	departureDate := flight.Departure.Format("15:04 02.01.2006")
+	go app.FlightReservationEmail(email, AirlineName, name, seatClass, seatNumber, departureDate, from, to, price)
+	for i := 1; i < len(query.Users); i++ {
+		if query.Users[i].Email != "" {
+			name2 := query.Users[i].Name + string(" ") +query.Users[i].Surname
+			go app.FlightInvitationEmail(query.Users[i].Email, AirlineName, name, name2, departureDate, from, to)
+		}
 	}
 }
 
@@ -400,6 +417,56 @@ func (app *Application) CancelVehicle(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
+}
+
+func (app *Application) FlightReservationEmail(receiver string, airline string, user string, SeatClass string,
+	SeatNumber string, dateFrom string,from string, to string, price string) {
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	message := "From: " + app.EmailAddress + "\n" +
+		"To: " + receiver + "\n" +
+		"Subject: Flight reservation\n" +
+		mime +
+		`<html><head></head>
+		<body><h1>ISA/MRS TIM6</h1>
+		Your reservation is successful!
+		Reservation details: <br>
+		Name: ` + user + `<br>
+		Airline: ` + airline + `<br>
+		Seat Class: ` + SeatClass + `<br>
+		Seat Number: ` + SeatNumber + `<br>
+		From: ` + from + `<br>
+		To: ` + to + `<br>
+		Departure Date: ` + dateFrom + `<br>
+		Price: ` + price + `<br>
+		</body></html>`
+
+	_ = smtp.SendMail("smtp.gmail.com:587",
+		smtp.PlainAuth("", app.EmailAddress, app.EmailPassword, "smtp.gmail.com"),
+		app.EmailAddress, []string{receiver}, []byte(message))
+}
+
+func (app *Application) FlightInvitationEmail(receiver string, airline string, user string, user2,
+	dateFrom string,from string, to string) {
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	message := "From: " + app.EmailAddress + "\n" +
+		"To: " + receiver + "\n" +
+		"Subject: Flight reservation\n" +
+		mime +
+		`<html><head></head>
+		<body><h1>ISA/MRS TIM6</h1>
+		You have been invited to flight by ` + user + `
+		<br>Flight details: <br>
+		Airline: ` + airline + `<br>
+		From: ` + from + `<br>
+		To: ` + to + `<br>
+		Departure Date: ` + dateFrom + `<br>
+		You can accept invitation on next link and look for more details about it: <br> 
+		<a href="http://localhost:8080/login?inv=true">here</a>
+		</body></html>`
+
+	_ = smtp.SendMail("smtp.gmail.com:587",
+		smtp.PlainAuth("", app.EmailAddress, app.EmailPassword, "smtp.gmail.com"),
+		app.EmailAddress, []string{receiver}, []byte(message))
 }
 
 func (app *Application) HotelReservationEmail(receiver string, hotel string, user string, hotelRooms string,

@@ -147,7 +147,7 @@ export default new Router({
     },
     {
       path: '/user_flights',
-      component: UserFlights
+      component: Reserve
     },
     {
       path: "/user_hotels",

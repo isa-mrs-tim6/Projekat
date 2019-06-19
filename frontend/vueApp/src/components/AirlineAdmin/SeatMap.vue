@@ -32,7 +32,7 @@
         methods:{
             airplaneClassBinding(){
                 var retVal = "";
-                if (this.tab === "reservation" || this.tab === "quickReservation"){
+                if (this.tab === "reservation" || this.tab === "quickReservation" || this.tab === "explore"){
                     retVal += "airplane2";
                 }else{
                     retVal += "airplane";
@@ -41,7 +41,7 @@
             },
             passageClassBinding(){
                 var retVal = "";
-                if (this.tab === "reservation" || this.tab === "quickReservation"){
+                if (this.tab === "reservation" || this.tab === "quickReservation" || this.tab === "explore"){
                     retVal += "passage2";
                 }else{
                     retVal += "passage";
@@ -50,7 +50,7 @@
             },
             occupiedClassBinding(){
                 var retVal = "";
-                if (this.tab === "reservation" || this.tab === "quickReservation"){
+                if (this.tab === "reservation" || this.tab === "quickReservation" || this.tab === "explore"){
                     retVal +=" occupied2";
                 }else{
                     retVal += " occupied";
@@ -61,7 +61,7 @@
                 let seatClass = this.editedSeats.Seats[index].Class;
                 let disabled = this.editedSeats.Seats[index].Disabled;
                 let retVal = "";
-                if (this.tab === "reservation" || this.tab === "quickReservation"){
+                if (this.tab === "reservation" || this.tab === "quickReservation" || this.tab === "explore"){
                     retVal += "seat2";
                     if(disabled){
                     retVal += " disabled2";
@@ -121,7 +121,7 @@
                 return retVal;
             },
             chooseSeat(index){
-                if(this.tab === "addSeat"){
+                if(this.tab === "addSeat" || this.tab === "explore"){
                     return;
                 }else if(this.tab === "reservation"){
                     if(this.editedSeats.Seats[index].Disabled){
