@@ -201,6 +201,16 @@ func (app *Application) Routes() *mux.Router {
 	// RESEND MAIL API
 	router.HandleFunc("/api/mail/resend", app.ResendEmail).Methods("POST", "OPTIONS")
 
+	// UPLOAD FILES API
+	router.HandleFunc("/api/upload/updateProfilePicture", Validate(app.UpdateProfilePicture, []string{"User",
+		"SystemAdmin", "AirlineAdmin", "Rent-A-CarAdmin", "HotelAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/upload/updateAirlineProfilePicture",
+		Validate(app.UpdateAirlineProfilePicture, []string{"AirlineAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/upload/updateHotelProfilePicture",
+		Validate(app.UpdateHotelProfilePicture, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/upload/updateRACProfilePicture",
+		Validate(app.UpdateRACProfilePicture, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
+
 	// STATIC FILE HANDLER
 	staticFileDirectory := http.Dir("./ui/")
 	staticFileHandler := http.StripPrefix("/", http.FileServer(staticFileDirectory))
