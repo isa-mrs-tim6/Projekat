@@ -291,7 +291,7 @@
 </script>
 
 <style scoped>
-    @import '../../assets/css/SeatMap2.css';
+    @import '../../assets/css/SeatMap.css';
    .self_field {
        margin-right: 10px
    }

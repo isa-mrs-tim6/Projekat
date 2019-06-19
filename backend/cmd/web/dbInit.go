@@ -31,6 +31,7 @@ func initTables(db *gorm.DB) {
 		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{},
 		&models.VehicleRating{}, &models.FeatureAirline{}, &models.HotelReservationReward{}, &models.RoomQuickReserveDays{},
 		"user_reservations", "room_reservations", "flight_reservation_feature", "room_reservation_feature", "vehicle_reservations", "reward_features")
+
 	fmt.Printf("DATABASE: Finished dropping, time taken: %f seconds\n", time.Since(timeDroppingTables).Seconds())
 
 	fmt.Println("DATABASE: Auto migrating schema")
@@ -42,7 +43,7 @@ func initTables(db *gorm.DB) {
 		&models.AirlineAdmin{}, &models.Airplane{}, &models.Layovers{}, &models.Airline{}, &models.Seat{}, &models.Flight{},
 		&models.SystemAdmin{}, &models.Friendship{}, &models.User{}, &models.Reservation{}, &models.RentACarReservation{},
 		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{},
-		&models.VehicleRating{}, &models.FeatureAirline{}, &models.HotelReservationReward{}, &models.RoomQuickReserveDays{})
+		&models.VehicleRating{}, &models.FeatureAirline{}, &models.HotelReservationReward{}, &models.RoomQuickReserveDays{},models.SeatQuickReservation{},models.FlightQuickReserveSeats{})
 	fmt.Printf("DATABASE: Finished automigration, time taken: %f seconds\n", time.Since(timeAutoMigration).Seconds())
 }
 
@@ -194,11 +195,16 @@ func addModels(db *gorm.DB) {
 	// CREATING AIRLINES
 	airline := models.Airline{
 		AirlineProfile: models.AirlineProfile{
-			Name:  "A1_NAME",
-			Promo: "A1_PROMO",
+			Name:  "Air France",
+			Promo: "Air France is a leading global player in its three main areas of activity: " +
+				"passenger transport, cargo transport and aircraft maintenance. From its hubs at Paris-Orly and " +
+				"Paris-Charles de Gaulle airports, the airline operates flights to 195 destinations and 91 countries. " +
+				"Air France is a founding member of the SkyTeam global alliance, alongside Korean Air, Aeromexico and Delta. " +
+				"With the North American airline, Air France has also set up a joint venture dedicated to the joint operation of " +
+				"several hundred transatlantic flights every day.",
 			Address: models.Address{
 				Address:    "A1_ADDRESS 1",
-				Coordinate: models.Coordinate{Latitude: 123, Longitude: 432}},
+				Coordinate: models.Coordinate{Latitude: 48.8566, Longitude: 2.3522}},
 		},
 		Admins: []*models.AirlineAdmin{
 			&airlineAdmin,
@@ -208,50 +214,50 @@ func addModels(db *gorm.DB) {
 			{Name: "Airplane1",
 				RowWidth: 6,
 				Seats: []models.Seat{
-					{Number: 1, Class: "ECONOMIC", QuickReserve: false},
-					{Number: 2, Class: "BUSINESS", QuickReserve: false},
+					{Number: 1, Class: "FIRST", QuickReserve: false},
+					{Number: 2, Class: "FIRST", QuickReserve: false},
 					{Number: 3, Class: "FIRST", QuickReserve: false},
-					{Number: 4, Class: "ECONOMIC", QuickReserve: false},
-					{Number: 5, Class: "BUSINESS", QuickReserve: false},
+					{Number: 4, Class: "FIRST", QuickReserve: false},
+					{Number: 5, Class: "FIRST", QuickReserve: false},
 					{Number: 6, Class: "FIRST", QuickReserve: false},
-					{Number: 7, Class: "ECONOMIC", QuickReserve: false},
-					{Number: 8, Class: "BUSINESS", QuickReserve: false},
+					{Number: 7, Class: "FIRST", QuickReserve: false},
+					{Number: 8, Class: "FIRST", QuickReserve: false},
 					{Number: 9, Class: "FIRST", QuickReserve: false},
-					{Number: 10, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 10, Class: "BUSINESS", QuickReserve: false},
 					{Number: 11, Class: "BUSINESS", QuickReserve: false},
-					{Number: 12, Class: "FIRST", QuickReserve: false},
-					{Number: 13, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 12, Class: "BUSINESS", QuickReserve: false},
+					{Number: 13, Class: "BUSINESS", QuickReserve: false},
 					{Number: 14, Class: "BUSINESS", QuickReserve: false},
-					{Number: 15, Class: "FIRST", QuickReserve: false},
+					{Number: 15, Class: "BUSINESS", QuickReserve: false},
 					{Number: 16, Class: "ECONOMIC", QuickReserve: false, Disabled: true},
-					{Number: 17, Class: "BUSINESS", QuickReserve: false},
-					{Number: 18, Class: "FIRST", QuickReserve: false},
+					{Number: 17, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 18, Class: "ECONOMIC", QuickReserve: false},
 					{Number: 19, Class: "ECONOMIC", QuickReserve: false, Disabled: true},
-					{Number: 20, Class: "BUSINESS", QuickReserve: false},
-					{Number: 21, Class: "FIRST", QuickReserve: false},
-					{Number: 21, Class: "FIRST", QuickReserve: false}},
+					{Number: 20, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 21, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 21, Class: "ECONOMIC", QuickReserve: false}},
 			},
 			{Name: "Airplane2",
 				RowWidth: 2,
 				Seats: []models.Seat{
-					{Number: 1, Class: "ECONOMIC", QuickReserve: false},
-					{Number: 2, Class: "BUSINESS", QuickReserve: false},
+					{Number: 1, Class: "FIRST", QuickReserve: false},
+					{Number: 2, Class: "FIRST", QuickReserve: false},
 					{Number: 3, Class: "FIRST", QuickReserve: false},
-					{Number: 4, Class: "ECONOMIC", QuickReserve: false},
-					{Number: 5, Class: "BUSINESS", QuickReserve: false},
+					{Number: 4, Class: "FIRST", QuickReserve: false},
+					{Number: 5, Class: "FIRST", QuickReserve: false},
 					{Number: 6, Class: "FIRST", QuickReserve: false},
-					{Number: 7, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 7, Class: "BUSINESS", QuickReserve: false},
 					{Number: 8, Class: "BUSINESS", QuickReserve: false},
-					{Number: 9, Class: "FIRST", QuickReserve: false},
-					{Number: 10, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 9, Class: "BUSINESS", QuickReserve: false},
+					{Number: 10, Class: "BUSINESS", QuickReserve: false},
 					{Number: 11, Class: "BUSINESS", QuickReserve: false},
-					{Number: 12, Class: "FIRST", QuickReserve: false},
-					{Number: 13, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 12, Class: "BUSINESS", QuickReserve: false},
+					{Number: 13, Class: "BUSINESS", QuickReserve: false},
 					{Number: 14, Class: "BUSINESS", QuickReserve: false},
-					{Number: 15, Class: "FIRST", QuickReserve: false},
+					{Number: 15, Class: "ECONOMIC", QuickReserve: false},
 					{Number: 16, Class: "ECONOMIC", QuickReserve: false},
-					{Number: 17, Class: "BUSINESS", QuickReserve: false},
-					{Number: 18, Class: "FIRST", QuickReserve: false}},
+					{Number: 17, Class: "ECONOMIC", QuickReserve: false},
+					{Number: 18, Class: "ECONOMIC", QuickReserve: false}},
 			},
 		},
 		Destinations: []models.Destination{
