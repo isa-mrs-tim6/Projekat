@@ -565,3 +565,18 @@ func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams
 	}
 	return nil
 }
+
+func (db *Store) CreateMaterQuickReservation(reservation *models.Reservation) error {
+	if err := db.Create(&reservation).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db *Store) GetFlightReservation(id uint) (models.FlightReservation, error) {
+	var retVal models.FlightReservation
+	if err := db.First(&retVal, id).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}

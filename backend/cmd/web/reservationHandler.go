@@ -97,6 +97,40 @@ func (app *Application) CompleteQuickResVehicle(w http.ResponseWriter, r *http.R
 	}
 }
 
+func (app *Application) CompleteQuickResFlight(w http.ResponseWriter, r *http.Request) {
+	var reservationDTO models.QuickFlightReservationGDTOV2
+	err := json.NewDecoder(r.Body).Decode(&reservationDTO)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	flightRes, err := app.Store.GetFlightReservation(reservationDTO.ID)
+	var reservation = models.Reservation{
+		MasterRef: 0,
+		Passenger: models.Passenger{
+			user.ID,
+			user.UserInfo,
+		},
+		ReservationFlight: flightRes,
+		ReservationFlightID: flightRes.ID,
+	}
+	err = app.Store.CreateMaterQuickReservation(&reservation)
+
+	if err != nil {
+		app.ErrorLog.Printf("Cannot complete quick reservation")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *Application) GetCompanyQuickVehicle(w http.ResponseWriter, r *http.Request) {
 	var params models.VehicleQuickResParams
 	err := json.NewDecoder(r.Body).Decode(&params)

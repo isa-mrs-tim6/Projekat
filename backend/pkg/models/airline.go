@@ -126,6 +126,11 @@ type AirlineProfile struct {
 	Promo string
 }
 
+type AirlineProfileDTO struct{
+	ID uint
+	AirlineProfile
+}
+
 type Airline struct {
 	gorm.Model
 	AirlineProfile

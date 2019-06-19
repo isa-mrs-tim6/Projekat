@@ -198,8 +198,8 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-dialog v-model="dialogQuickReservation" max-width="1000px" persistent>
-                <FlightQuickReservation :flightID=this.editedItem.ID :flightSeats=this.editedSeats @closeReservationDialog="close"></FlightQuickReservation>
+            <v-dialog v-model="dialogQuickReservation" max-width="1200px" persistent>
+                <FlightQuickReservation :flight=this.editedItem :seats=this.editedSeats @closeReservationDialog="close" ref="QuickResComponent"></FlightQuickReservation>
             </v-dialog>
             <v-layout row-wrap mt-2>
                 <v-flex x12>
@@ -284,7 +284,10 @@
                     PriceBUSINESS: '',
                     PriceECONOMY: '',
                     SmallSuitcase: '',
-                    BigSuitcase: ''
+                    BigSuitcase: '',
+                    Airplane:{
+                        Seats:[]
+                    }
                 },
                 defaultItem:{
                     ID: '',
@@ -292,7 +295,10 @@
                     PriceBUSINESS: '',
                     PriceECONOMY: '',
                     SmallSuitcase: '',
-                    BigSuitcase: ''
+                    BigSuitcase: '',
+                    Airplane:{
+                        Seats:[]
+                    }
                 },
                 editedSeats:{
                     RowWidth: 0,
@@ -409,6 +415,10 @@
                 this.idx = idx;
                 this.editedIndex = this.flights.indexOf(item);
                 this.editedItem = Object.assign({}, item);
+                this.editedSeats.RowWidth = item.Airplane.RowWidth;
+                this.editedSeats.Seats = Object.assign(this.editedSeats.Seats, {});
+                this.editedSeats.Seats = JSON.parse(JSON.stringify(item.Airplane.Seats));
+                this.editedSeats.Seats.sort(this.$options.predicate);
                 if(this.idx === 0){
                     this.dialog = true;
                     return;
@@ -417,13 +427,8 @@
                     this.dialogSeat = true;
                 }else if( this.idx === 2){
                     this.dialogQuickReservation = true;
-                    this.$emit("getReservation")
+                    this.$refs.QuickResComponent.getReservation(this.editedItem.ID);
                 }
-                this.editedSeats.RowWidth = item.Airplane.RowWidth;
-                this.editedSeats.Seats = Object.assign(this.editedSeats.Seats, {});
-                this.editedSeats.Seats = JSON.parse(JSON.stringify(item.Airplane.Seats));
-                this.editedSeats.Seats.sort(this.$options.predicate);
-
             },
             changeSeat(){
                 if(this.editedSeats.SelectedSeat === -1){
@@ -431,7 +436,6 @@
                 }
                 this.editedSeats.Seats[this.editedSeats.SelectedSeat].Number = this.editedSeats.Number;
                 this.editedSeats.Seats[this.editedSeats.SelectedSeat].Class = this.editedSeats.Class;
-                this.editedSeats.Seats.sort(this.$options.predicate);
                 this.editedSeats.SelectedSeat = -1;
                 this.editedSeats.Number = "";
                 this.editedSeats.Class = "";
@@ -444,6 +448,10 @@
                 this.editedItem = Object.assign({}, this.defaultItem);
                 this.editedSeats = JSON.parse(JSON.stringify(this.defaultSeats));
                 this.editedIndex = -1;
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/flight/getCompanyFlights")
+                .then(res => {
+                    this.flights = res.data;
+                });
             },
             save(){
                 if (!this.checkNumbers()) {
@@ -503,7 +511,7 @@
                         this.ErrorSnackbar = true;
                     });
                 this.close();
-            }
+            },
         },
         watch:{
           tab: function(val){
@@ -541,7 +549,7 @@
     #main {
         background-image: linear-gradient(to right bottom, #142eae, #005bca, #007ed2, #009ccd, #0bb7c7, #47c0c6, #67c8c6, #81d0c7, #6ecac4, #58c4c3, #3cbdc2, #00b7c1);
     }
-    @import '../../assets/css/SeatMap.css';
+    @import '../../assets/css/SeatMap.css';    
     .flexcard {
         display: flex;
         flex-direction: column;

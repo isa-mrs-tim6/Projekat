@@ -1,5 +1,5 @@
 <template>
-    <v-container fill-height fluid id="main">
+    <v-container fill-height fluid>
         <v-layout>
             <v-flex>
                 <AirlineAdminNavDrawer/>

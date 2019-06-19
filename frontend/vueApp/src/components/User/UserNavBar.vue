@@ -4,6 +4,7 @@
             <v-toolbar-title>Front page</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn class="button" flat @click="goFlights">Flights</v-btn>
+            <v-btn class="button" flat @click="goAirlines">Airline</v-btn>
             <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
             <v-btn class="button" flat @click="goCars">Cars</v-btn>
             <v-btn class="button" flat @click="goLogin">Login</v-btn>
@@ -16,6 +17,7 @@
             <v-spacer></v-spacer>
             <v-btn class="button" flat @click="goReserve">Reserve</v-btn>
             <v-btn class="button" flat @click="goFlights">Flights</v-btn>
+            <v-btn class="button" flat @click="goAirlines">Airlines</v-btn>
             <v-btn class="button" flat @click="goHotels">Hotels</v-btn>
             <v-btn class="button" flat @click="goCars">Cars</v-btn>
             <v-btn class="button" flat @click="goUsers">Find a user</v-btn>
@@ -52,6 +54,10 @@
             goProfile (e){
                 e.preventDefault();
                 this.$router.push("/userProfile");
+            },
+            goAirlines (e){
+                e.preventDefault();
+                this.$router.push("/user_airlines");
             },
             goFlights (e){
                 e.preventDefault();
