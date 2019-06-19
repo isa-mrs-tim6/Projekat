@@ -118,8 +118,6 @@
         methods: {
             findVehicles(e) {
                 e.preventDefault();
-                let start;
-                let end;
                 if(this.StartDate === '' || this.EndDate === ''){
                     this.ErrorSnackbar = true;
                     this.ErrorSnackbarText = 'Please fill start and end date';

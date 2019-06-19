@@ -15,15 +15,78 @@ type ReservationReward struct {
 	PriceScale     float64
 }
 
+type ReservationScaleDAO struct {
+	Count uint
+	Scale float64
+}
+
 type ReservationDAO struct {
-	Master Reservation
-	Slaves []Reservation
+	Master    Reservation
+	InvitedBy User
+	Slaves    []Reservation
 }
 
 type ReservationGraphData struct {
 	Id        uint
 	Departure time.Time
 	Price     float64
+}
+
+func (r *Reservation) BeforeCreate(scope *gorm.Scope) (err error) {
+	var reservations []Reservation
+
+	scope.DB().Where("is_expiring = true and expire_time < ?", time.Now()).Find(&reservations)
+
+	for _, res := range reservations {
+		Cancel(scope, res.ID)
+	}
+
+	scope.DB().Table("reservations").
+		Joins("JOIN flight_reservations on reservations.reservation_flight_id = flight_reservations.id").
+		Joins("JOIN flights on flight_reservations.flight_id = flights.id").
+		Where("reservations.is_expiring = true AND flights.departure < ?", time.Now().Add(time.Hour*3)).
+		Find(&reservations)
+
+	for _, res := range reservations {
+		Cancel(scope, res.ID)
+	}
+
+	return
+}
+
+func Cancel(scope *gorm.Scope, resID uint) {
+	var master Reservation
+
+	scope.DB().Where("id = ?", resID).
+		Preload("ReservationFlight.Flight.Origin").
+		Preload("ReservationFlight.Flight.Destination").
+		Preload("ReservationFlight.Flight.Layovers").
+		Preload("ReservationFlight.Seat").
+		Preload("ReservationFlight.Features").
+		Preload("ReservationHotel.Rooms").
+		Preload("ReservationHotel.Ratings").
+		Preload("ReservationHotel.Features").
+		Preload("ReservationHotel.Hotel").
+		Preload("ReservationRentACar.RentACarCompany").
+		Preload("ReservationRentACar.Vehicle").
+		First(&master)
+	scope.DB().Table("seats").Where("reservation_id = ?", master.ReservationFlight.Seat.ReservationID).
+		Update("reservation_id", 0)
+
+	if !master.ReservationFlight.IsQuickReserve {
+		scope.DB().Where("id=?", master.ID).Delete(master.ReservationFlight)
+	}
+	if !master.ReservationHotel.IsQuickReserve {
+		scope.DB().Where("id=?", master.ID).Delete(master.ReservationHotel)
+	}
+	if !master.ReservationRentACar.IsQuickReserve {
+		scope.DB().Where("id=?", master.ID).Delete(master.ReservationRentACar)
+	}
+
+	scope.DB().Delete(&master)
+
+	return
+
 }
 
 type Reservation struct {
@@ -36,6 +99,8 @@ type Reservation struct {
 	ReservationRentACarID uint
 	ReservationHotel      HotelReservation `gorm:"foreignkey:ReservationHotelID"`
 	ReservationHotelID    uint
+	IsExpiring            bool
+	ExpireTime            time.Time
 }
 
 type FlightReservation struct {

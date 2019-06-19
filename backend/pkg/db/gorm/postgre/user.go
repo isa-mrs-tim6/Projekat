@@ -245,3 +245,8 @@ func (db *Store) Rate(rating models.ResRatingDAO) error {
 	}
 	return nil
 }
+
+func (db *Store) Accept(id uint) error {
+	db.Table("reservations").Where("id = ?", id).Update("is_expiring", false)
+	return nil
+}

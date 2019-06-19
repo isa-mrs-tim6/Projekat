@@ -171,7 +171,7 @@ func (app *Application) ReserveVehicle(w http.ResponseWriter, r *http.Request) {
 	reservationID, err := strconv.ParseUint(vars["id"], 10, 64)
 	if err != nil {
 		app.ErrorLog.Println("Could not get reservation ID")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -391,4 +391,27 @@ func (app *Application) HotelReservationEmail(receiver string, hotel string, use
 	_ = smtp.SendMail("smtp.gmail.com:587",
 		smtp.PlainAuth("", app.EmailAddress, app.EmailPassword, "smtp.gmail.com"),
 		app.EmailAddress, []string{receiver}, []byte(message))
+}
+
+func (app *Application) GetPriceScale(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var ret models.ReservationScaleDAO
+
+	if ret.Scale, ret.Count, err = app.Store.GetPriceScale(uint(user.ID)); err != nil {
+		app.ErrorLog.Printf("Could not get scale")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	if err := json.NewEncoder(w).Encode(ret); err != nil {
+		app.ErrorLog.Printf("Cannot encode scale data into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }

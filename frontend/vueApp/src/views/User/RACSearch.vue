@@ -66,12 +66,13 @@
                                                 {{item.Promo}}
                                             </v-layout>
                                             <v-layout row>
-                                                <div class="center">
-                                                    Locations:
-                                                </div>
-                                                <div class="center" v-for="loc in item.Locations" :key="loc.ID">
-                                                    {{loc.Address}}
-                                                </div>
+                                                <v-select
+                                                        v-model = "selectedLoc[index]"
+                                                        :items=" item.Locations"
+                                                        item-text="Address"
+                                                        item-value="ID"
+                                                        label="Locations"
+                                                ></v-select>
                                             </v-layout>
                                         </v-flex>
                                         <v-flex xs2 class="center" style="text-align: right">
@@ -91,7 +92,9 @@
                 </v-container>
             </v-flex>
         </v-layout>
+        <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </div>
+
 </template>
 
 <script>
@@ -103,6 +106,9 @@
         props: ["reservationID", "passengers"],
         data() {
             return {
+                selectedLoc: [],
+                ErrorSnackbar: false,
+                ErrorSnackbarText: '',
                 items: [],
                 menuTo: false,
                 menuFrom: false,
@@ -130,13 +136,21 @@
                 return !isNaN(parseInt(this.reservationID))
             },
             quickRes(index){
-                let location = 1;
-                this.$router.push({ path: `/vehiclesQuick/${this.items[index].ID}/${location}`,
-                    query: { reservationID: this.reservationID, passengers: this.passengers, start: this.time.from, end: this.time.to}})
+                if(isNaN(parseInt(this.selectedLoc[index]))){
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Please select a location.';
+                }else{
+                    this.$router.push({ path: `/vehiclesQuick/${this.items[index].ID}/${this.selectedLoc[index]}`,
+                        query: { reservationID: this.reservationID, passengers: this.passengers, start: this.time.from, end: this.time.to}})
+                }
             },
             searchVehicles(index){
-                let location = 1;
-                this.$router.push({ path: `/vehiclesSearch/${this.items[index].ID}/${location}`, query: { reservationID: this.reservationID, passengers: this.passengers}})
+                if(isNaN(parseInt(this.selectedLoc[index]))){
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Please select a location.';
+                }else{
+                    this.$router.push({ path: `/vehiclesSearch/${this.items[index].ID}/${this.selectedLoc[index]}`, query: { reservationID: this.reservationID, passengers: this.passengers}})
+                }
             },
             racSearch(e) {
                 e.preventDefault();
@@ -149,6 +163,10 @@
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/search/rac", SearchQuery).
                     then(res => {
                         this.items = res.data;
+
+                        for(let i=0; i<this.items.length; i++){
+                            this.selectedLoc.push('');
+                        }
                 })
             }
         }

@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/mux"
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -236,6 +238,18 @@ func (app *Application) Rate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = app.Store.Rate(rating)
+	if err != nil {
+		app.ErrorLog.Println("Could not rate")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) Accept(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	reservationID, err := strconv.ParseUint(vars["id"], 10, 64)
+
+	err = app.Store.Accept(uint(reservationID))
 	if err != nil {
 		app.ErrorLog.Println("Could not rate")
 		w.WriteHeader(http.StatusInternalServerError)
