@@ -10,7 +10,7 @@
       HelloWorld
     },
     created() {
-      this.$router.push({ path: '/user/'});
+      this.$router.push({ path: '/user_flights/'});
     }
   }
 </script>
