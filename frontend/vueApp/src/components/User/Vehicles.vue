@@ -77,11 +77,24 @@
                     .then(res =>{
                         this.SuccessSnackbar = true;
                         this.SuccessSnackbarText = 'Reservation complete';
-                        this.$router.push({ path: '/user', query: { reservationID: this.reservationID, passengers: this.passengers }});
+                        this.$router.push({ path: '/user/reserve', query: { reservationID: this.reservationID, passengers: this.passengers }});
                     })
                     .catch(err => {
-                        this.ErrorSnackbar = true;
-                        this.ErrorSnackbarText = 'Please log in to use this feature.';
+                        let vm = this
+                        if(err.response.status === 401){
+                            vm.ErrorSnackbar = true;
+                            vm.ErrorSnackbarText = 'Please log in to use this feature.';
+                        }else if(err.response.status === 400){
+                            vm.ErrorSnackbar = true;
+                            vm.ErrorSnackbarText = 'Someone else has already taken that vehicle.';
+                            setTimeout(function () {
+                                vm.$router.go()
+                            }, 4000);
+                        }else if(err.response.status === 500){
+                            vm.ErrorSnackbar = true;
+                            vm.ErrorSnackbarText = 'Please reserve a flight first';
+                        }
+
                     })
             },
             goLogin (e){

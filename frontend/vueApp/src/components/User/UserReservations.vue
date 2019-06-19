@@ -1,5 +1,8 @@
 <template>
     <div>
+        <v-card style="margin: 5px; padding: 5px" dark>
+            Number of reservations: {{this.ResCount}}<br/>Total discount: {{Math.floor((1.0 - this.PriceScale) * 100.0)}}%
+        </v-card>
         <v-card style="margin: 5px" dark v-for="(item, index) in this.reservations" :key="item.Master.ID">
             <v-layout row wrap>
                 <v-flex xs2 class="resCenter">
@@ -10,11 +13,12 @@
                 </v-flex>
                 <v-spacer></v-spacer>
                 <v-flex xs2 class="resCenter" v-if="item.Master.MasterRef !== 0">
-                    INVITED BY:
+                    INVITED BY:<br/>{{item.InvitedBy.Name}}<br/>{{item.InvitedBy.Surname}}
                 </v-flex>
                 <v-flex style="text-align: right">
                     <v-btn class="button" @click="details(index)">details</v-btn><br/>
-                    <v-btn class="button" color="error"
+                    <v-btn class="button" color="blue" @click="accept(item.Master)" :disabled="checkAccept(item.Master)">accept</v-btn>
+                    <v-btn class="button" color="error"accept
                            :disabled="!checkFlight(item.Master.ReservationFlight.Flight.Departure)"
                     @click="cancelFlight(item.Master)">cancel</v-btn>
                 </v-flex>
@@ -324,6 +328,8 @@
         name: "UserReservations",
         data (){
             return {
+                ResCount: 0,
+                PriceScale: 0,
                 SuccessSnackbar: false,
                 SuccessSnackbarText: '',
                 ErrorSnackbar: false,
@@ -380,7 +386,6 @@
         beforeCreate() {
             axios.create({withCredentials: true}).get("http://localhost:8000/api/reservations/getReservations").
             then(res => {
-                console.log(res.data);
                 this.reservations = res.data;
                 for(let i = 0; i < this.reservations.length; i++) {
                     var date = moment(this.reservations[i].Master.CreatedAt).format('DD.MM.YYYY HH:mm');
@@ -404,7 +409,13 @@
                     date = moment(this.reservations[i].Master.ReservationHotel.End).format('DD.MM.YYYY');
                     this.reservations[i].Master.ReservationHotel.End = date.toString();
                 }
-            })
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getScale")
+                    .then(res2 => {
+                        this.ResCount = res2.data.Count;
+                        this.PriceScale = res2.data.Scale;
+                    });
+            });
+
         },
         methods : {
             checkFlight(d){
@@ -494,6 +505,8 @@
 
             },
             close(){
+                this.ResCount = 0;
+                this.PriceScale = 0;
                 this.dialog = false;
                 this.rateIndex = '';
                 this.rateTitle = '';
@@ -542,6 +555,15 @@
             },
             close2(){
                 this.rateDialog = false;
+            },
+            accept(reservation){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/accept/"+reservation.ID)
+                    .then(res => {
+                        this.$router.go();
+                    })
+            },
+            checkAccept(reservation){
+                return reservation.IsExpiring === false
             },
             cancelFlight(reservation){
                 axios.create({withCredentials: true}).get("http://localhost:8000/api/user/cancelFlight/"+reservation.ID)

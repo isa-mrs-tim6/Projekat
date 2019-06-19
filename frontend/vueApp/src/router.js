@@ -52,9 +52,11 @@ import ShowQuickVehicle from "./views/User/ShowQuickVehicle";
 import UserSearch from "./views/User/UserSearch";
 import AirlineList from "./views/User/AirlinesList";
 import AirlineProfile from "./views/User/AirlineProfile";
+import VueCookies from 'vue-cookies'
 
 
 Vue.use(Router);
+Vue.use(VueCookies);
 
 export default new Router({
   mode: 'history',
@@ -172,7 +174,7 @@ export default new Router({
       component: RoomReservation
     },
     {
-      path: "/quick_reserve_room/:hotel_id/:reservation/:start/:end",
+      path: "/quick_reserve_room/:hotel_id/:reservation/:tickets",
       component: QuickRoomReservation
     },
     {

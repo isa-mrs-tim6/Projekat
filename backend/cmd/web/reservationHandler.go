@@ -6,6 +6,7 @@ import (
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"io/ioutil"
 	"net/http"
+	"net/smtp"
 	"strconv"
 	"time"
 )
@@ -204,7 +205,7 @@ func (app *Application) ReserveVehicle(w http.ResponseWriter, r *http.Request) {
 	reservationID, err := strconv.ParseUint(vars["id"], 10, 64)
 	if err != nil {
 		app.ErrorLog.Println("Could not get reservation ID")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -309,7 +310,7 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	user, err := app.Store.GetUser(email)
 	if err != nil {
 		app.ErrorLog.Println("Could not retrieve user")
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -318,7 +319,7 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	err = json.NewDecoder(r.Body).Decode(&searchQuery)
 	if err != nil {
 		app.ErrorLog.Println("Could not decode JSON")
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -326,6 +327,7 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.ErrorLog.Println("Invalid from date")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	dateFrom := time.Unix(0, dateFromInt*int64(time.Millisecond))
 
@@ -333,6 +335,7 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.ErrorLog.Println("Invalid to date")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	dateTo := time.Unix(0, dateToInt*int64(time.Millisecond))
 
@@ -347,16 +350,20 @@ func (app *Application) ReserveHotel(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// RESERVE
-	reservationID, err := app.Store.ReserveHotel(uint(masterID), uint(hotelID), user.ID, query)
+	reservationID, hotel, users, rooms, features, price, from, to, err :=
+		app.Store.ReserveHotel(uint(masterID), uint(hotelID), user.ID, query)
 	if err != nil {
 		app.ErrorLog.Println("Could not complete reservation")
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 	if err := json.NewEncoder(w).Encode(reservationID); err != nil {
 		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	go app.HotelReservationEmail(email, hotel, users, rooms, features, from, to, price)
 }
 
 func (app *Application) CancelFlight(w http.ResponseWriter, r *http.Request) {
@@ -393,4 +400,52 @@ func (app *Application) CancelVehicle(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
+}
+
+func (app *Application) HotelReservationEmail(receiver string, hotel string, user string, hotelRooms string,
+	hotelFeatures string, dateFrom string, dateTo string, price string) {
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	message := "From: " + app.EmailAddress + "\n" +
+		"To: " + receiver + "\n" +
+		"Subject: Hotel reservation\n" +
+		mime +
+		`<html><head></head>
+		<body><h1>ISA/MRS TIM6</h1>
+		Your reservation is successful!
+		Reservation details: <br>
+		Name: ` + user + `<br>
+		Hotel: ` + hotel + `<br>
+		Rooms: ` + hotelRooms + `<br>
+		Features: ` + hotelFeatures + `<br>
+		From: ` + dateFrom + `<br>
+		To: ` + dateTo + `<br>
+		Price: ` + price + `<br>
+		</body></html>`
+
+	_ = smtp.SendMail("smtp.gmail.com:587",
+		smtp.PlainAuth("", app.EmailAddress, app.EmailPassword, "smtp.gmail.com"),
+		app.EmailAddress, []string{receiver}, []byte(message))
+}
+
+func (app *Application) GetPriceScale(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetUser(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var ret models.ReservationScaleDAO
+
+	if ret.Scale, ret.Count, err = app.Store.GetPriceScale(uint(user.ID)); err != nil {
+		app.ErrorLog.Printf("Could not get scale")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	if err := json.NewEncoder(w).Encode(ret); err != nil {
+		app.ErrorLog.Printf("Cannot encode scale data into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }

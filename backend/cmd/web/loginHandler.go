@@ -20,6 +20,11 @@ func (app *Application) LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	err = app.Store.LoginUser(credentials)
 	if err != nil {
+		if err.Error() == "not activated" {
+			app.ErrorLog.Printf("Account not activated")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 		app.ErrorLog.Printf("Invalid login")
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -56,7 +61,11 @@ func (app *Application) LoginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) LoginAdmin(w http.ResponseWriter, r *http.Request) {
-	var credentials models.Credentials
+	type Query struct {
+		models.Credentials
+		Type string
+	}
+	var credentials Query
 
 	err := json.NewDecoder(r.Body).Decode(&credentials)
 	if err != nil {
@@ -65,8 +74,13 @@ func (app *Application) LoginAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	typeUser, err := app.Store.LoginAdmin(credentials)
+	typeUser, err := app.Store.LoginAdmin(credentials.Credentials, credentials.Type)
 	if err != nil {
+		if err.Error() == "not activated" {
+			app.ErrorLog.Printf("Account not activated")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 		app.ErrorLog.Printf("Invalid login")
 		w.WriteHeader(http.StatusUnauthorized)
 		return

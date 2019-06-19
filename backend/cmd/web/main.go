@@ -74,6 +74,8 @@ func (app *Application) Routes() *mux.Router {
 	// USER API
 	router.HandleFunc("/api/user/login", app.LoginUser).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/user/getUsers", Validate(app.GetUser, []string{"User"})).Methods("GET")
+	router.HandleFunc("/api/user/accept/{id}", Validate(app.Accept, []string{"User"})).Methods("GET")
+	router.HandleFunc("/api/user/getScale", Validate(app.GetPriceScale, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/getFriends", Validate(app.GetFriends, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/friendRequests", Validate(app.GetPendingRequests, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/friendRequests", Validate(app.CreateFriendRequest, []string{"User"})).Methods("POST", "OPTIONS")
@@ -195,6 +197,9 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/search/rac", app.RacSearch).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/search/{id}/rooms", Validate(app.RoomSearch, []string{"User"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/search/{id}/quickRooms", Validate(app.QuickReserveRoomSearch, []string{"User"})).Methods("POST", "OPTIONS")
+
+	// RESEND MAIL API
+	router.HandleFunc("/api/mail/resend", app.ResendEmail).Methods("POST", "OPTIONS")
 
 	// STATIC FILE HANDLER
 	staticFileDirectory := http.Dir("./ui/")

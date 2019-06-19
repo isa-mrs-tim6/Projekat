@@ -23,6 +23,7 @@ type VehicleQuickResParams struct {
 type CompleteQuickResVehParams struct {
 	ReservationID uint
 	MasterID      uint
+	LocationID    uint
 }
 
 type Vehicle struct {
