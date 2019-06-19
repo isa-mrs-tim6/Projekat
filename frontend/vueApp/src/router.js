@@ -50,6 +50,8 @@ import QuickRoomReservation from "./components/User/QuickRoomReservation";
 import HotelList from "./views/User/HotelList";
 import ShowQuickVehicle from "./views/User/ShowQuickVehicle";
 import UserSearch from "./views/User/UserSearch";
+import AirlineList from "./views/User/AirlinesList";
+import AirlineProfile from "./views/User/AirlineProfile";
 import VueCookies from 'vue-cookies'
 
 
@@ -134,6 +136,14 @@ export default new Router({
     {
       path: '/reserve_flight',
       component: Reserve
+    },
+    {
+      path: '/user_airlines',
+      component: AirlineList
+    },
+    {
+      path: '/airline/:id',
+      component: AirlineProfile
     },
     {
       path: '/user_flights',
