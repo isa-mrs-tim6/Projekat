@@ -5,6 +5,7 @@ import (
 	"github.com/isa-mrs-tim6/Projekat/pkg/models"
 	"io/ioutil"
 	"net/http"
+	"sort"
 )
 
 func (app *Application) GetFriends(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +20,11 @@ func (app *Application) GetFriends(w http.ResponseWriter, r *http.Request) {
 	}
 
 	friends, err = app.Store.GetFriends(user.ID)
-
+	sort.SliceStable(friends, func(i, j int) bool {
+		name1 := friends[i].Name + " " + friends[i].Surname
+		name2 := friends[j].Name + " " + friends[j].Surname
+		return name1 < name2
+	})
 	err = json.NewEncoder(w).Encode(friends)
 	if err != nil {
 		app.ErrorLog.Printf("Cannot encode friends into JSON object")
@@ -63,7 +68,7 @@ func (app *Application) CreateFriendRequest(w http.ResponseWriter, r *http.Reque
 	var friendship = models.Friendship{
 		User1ID: user.ID,
 		User2ID: friendshipDto.User2ID,
-		Status: "PENDING",
+		Status:  "PENDING",
 	}
 	user1, err := app.Store.GetUserWithId(friendship.User1ID)
 	friendship.User1 = &user1

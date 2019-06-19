@@ -54,6 +54,20 @@ type FeatureAirline struct {
 	AirlineID   uint
 }
 
+type SeatQuickReservation struct {
+	gorm.Model
+	SeatNumber                string
+	SeatID                    string
+	FlightQuickReserveSeatsID uint
+}
+
+type FlightQuickReserveSeats struct {
+	gorm.Model
+	Seat          []SeatQuickReservation `gorm:"foreignkey:FlightQuickReserveSeatsID"`
+	FlightID      uint
+	ReservationID uint
+}
+
 type Flight struct {
 	gorm.Model
 	Origin        *Destination
@@ -65,11 +79,12 @@ type Flight struct {
 	Duration      time.Duration
 	Distance      uint
 	PriceList
-	Layovers   []Layovers `gorm:"foreignkey:FlightID"`
-	Airplane   Airplane   `gorm:"foreignkey:AirplaneID"`
-	AirplaneID uint
-	Airline    *Airline `gorm:"foreignkey:AirlineID"`
-	AirlineID  uint
+	Layovers          []Layovers                `gorm:"foreignkey:FlightID"`
+	QuickReserveSeats []FlightQuickReserveSeats `gorm:"foreignkey:FlightID"`
+	Airplane          Airplane                  `gorm:"foreignkey:AirplaneID"`
+	AirplaneID        uint
+	Airline           *Airline `gorm:"foreignkey:AirlineID"`
+	AirlineID         uint
 }
 
 type FlightRating struct {
@@ -108,7 +123,13 @@ type FlightDto struct {
 type AirlineProfile struct {
 	Name string
 	Address
-	Promo string
+	Promo   string
+	Picture string `gorm:"default:'airlinePlaceholder.png'"`
+}
+
+type AirlineProfileDTO struct {
+	ID uint
+	AirlineProfile
 }
 
 type Airline struct {

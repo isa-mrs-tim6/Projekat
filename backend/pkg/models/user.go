@@ -30,6 +30,7 @@ type Profile struct {
 	UserInfo
 	Address string
 	Phone   string
+	Picture string `gorm:"default:'userPlaceholder.png'"`
 }
 
 type ProfileParams struct {

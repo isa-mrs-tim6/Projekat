@@ -25,17 +25,30 @@
                                                 @place_changed="getAddressData">
                                         </gmap-autocomplete>
                                     </v-layout>
-                                    <v-flex>
-                                        <gmap-map
-                                                :center="{lat: racProfile.Latitude, lng: racProfile.Longitude}"
-                                                :zoom="8"
-                                                style="width:100%;  height: 400px;"
-                                        >
-                                            <gmap-marker
-                                                    :position="{lat: racProfile.Latitude, lng: racProfile.Longitude}"
-                                            ></gmap-marker>
-                                        </gmap-map>
-                                    </v-flex>
+                                    <v-layout row>
+                                        <v-flex xs6>
+                                            <gmap-map
+                                                    :center="{lat: racProfile.Latitude, lng: racProfile.Longitude}"
+                                                    :zoom="8"
+                                                    style="width:100%;  height: 400px;"
+                                            >
+                                                <gmap-marker
+                                                        :position="{lat: racProfile.Latitude, lng: racProfile.Longitude}"
+                                                ></gmap-marker>
+                                            </gmap-map>
+                                        </v-flex>
+                                        <v-flex xs6>
+                                            <form
+                                                    enctype="multipart/form-data"
+                                                    action="http://localhost:8080/upload"
+                                                    method="post">
+                                                <div class="col-md-4 centered align-items-center mx-auto text-center">
+                                                    <img class="centered mx-auto text-center" height="400" width="100%" v-on:click="fileUpload" style="margin-bottom:50px;"  v-if="this.PictureLink" v-bind:src="this.PictureLink">
+                                                    <input type="file" accept="image/*," @change="updatePicture" id="picture" style="display: none">
+                                                </div>
+                                            </form>
+                                        </v-flex>
+                                    </v-layout>
                                     <v-text-field
                                             v-model="racProfile.Promo"
                                             label="Promo"
@@ -70,12 +83,14 @@
                 ErrorSnackbarText: '',
                 backupRACProfile: '',
                 racProfile: '',
+                PictureLink: '',
             }
         },
         mounted() {
             axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getProfile')
                 .then(res => {
                         this.racProfile = res.data;
+                        this.PictureLink = 'http://localhost:8000/'+this.racProfile.Picture;
                         this.backupRACProfile = JSON.parse(JSON.stringify(this.racProfile))
                     }
                 )
@@ -112,6 +127,32 @@
                 this.racProfile.Address = addressData.formatted_address;
                 this.racProfile.Latitude = addressData.geometry.location.lat();
                 this.racProfile.Longitude = addressData.geometry.location.lng();
+            },
+            updatePicture(e){
+                const file = e.target.files[0];
+
+                let formData = new FormData();
+                formData.append('file', file);
+
+                let a = null;
+
+                axios.create({withCredentials: true}).post( 'http://localhost:8000/api/upload/updateRACProfilePicture',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                ).then(res => {
+                    a = res.data.toString();
+                    a = a.substr(a.lastIndexOf(":")+2, a.lastIndexOf(`"`)-a.lastIndexOf(":")-2);
+                    this.PictureLink = "1" + this.PictureLink;
+                    this.PictureLink = this.PictureLink.substr(1, this.PictureLink.lastIndexOf("/")) + "/" + a;
+                    this.racProfile.Picture = a;
+                });
+            },
+            fileUpload(e) {
+                document.getElementById("picture").click();
             }
         },
     }

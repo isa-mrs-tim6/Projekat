@@ -27,6 +27,18 @@ func (db *Store) GetAirlineProfile(id uint) (models.AirlineProfile, error) {
 	return retVal.AirlineProfile, nil
 }
 
+func (db *Store) GetAirlinesProfiles() ([]models.AirlineProfileDTO, error) {
+	var airlines []models.Airline
+	if err := db.Find(&airlines).Error; err != nil {
+		return nil, err
+	}
+	var retVal = make([]models.AirlineProfileDTO, 0)
+	for _, element := range airlines {
+		retVal = append(retVal, models.AirlineProfileDTO{ID: element.ID, AirlineProfile: element.AirlineProfile})
+	}
+	return retVal, nil
+}
+
 func (db *Store) UpdateAirline(id uint, newProfile models.AirlineProfile) error {
 	var retVal models.Airline
 	if err := db.First(&retVal, id).Error; err != nil {

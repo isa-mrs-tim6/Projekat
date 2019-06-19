@@ -89,6 +89,7 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/user/cancelFlight/{id}", Validate(app.CancelFlight, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/cancelHotel/{id}", Validate(app.CancelHotel, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/cancelVehicle/{id}", Validate(app.CancelVehicle, []string{"User"})).Methods("GET")
+	router.HandleFunc("/api/user/FlightQuickReservation", Validate(app.CompleteQuickResFlight, []string{"User"})).Methods("POST", "OPTIONS")
 
 	// ADMIN API
 	router.HandleFunc("/api/admin/checkFirstPass", Validate(app.CheckFirstPass, []string{"SystemAdmin", "HotelAdmin", "AirlineAdmin", "Rent-A-CarAdmin"})).Methods("GET")
@@ -116,6 +117,9 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/flight/getCompanyFlights", app.GetCompanyFlights).Methods("GET")
 	router.HandleFunc("/api/flight/{id}/getFlight", app.GetFlight).Methods("GET")
 	router.HandleFunc("/api/flight/updateSeats", app.UpdateSeats).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/flight/{id}/quickReservation", app.GetQuickReservations).Methods("GET")
+	router.HandleFunc("/api/flight/quickReservation", Validate(app.CreateQuickFlightReservation, []string{"AirlineAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/flight/quickReservation", Validate(app.RemoveQuickFlightReservation, []string{"AirlineAdmin"})).Methods("DELETE", "OPTIONS")
 
 	// AIRPLANE API
 	router.HandleFunc("/api/airplane/getAirplanes", app.GetAirplanes).Methods("GET")
@@ -126,7 +130,10 @@ func (app *Application) Routes() *mux.Router {
 
 	// AIRLINE API
 	router.HandleFunc("/api/airline/getAirlines", app.GetAirlines).Methods("GET")
-	router.HandleFunc("/api/airline/getProfile", app.GetAirlineProfiles).Methods("GET")
+	router.HandleFunc("/api/airline", app.GetAirlinesProfiles).Methods("GET")
+	router.HandleFunc("/api/airline/{id}/profile", app.GetAirlineProfileID).Methods("GET")
+	router.HandleFunc("/api/airline/{id}/quickReservations", app.GetAirlineQuickReservation).Methods("GET")
+	router.HandleFunc("/api/airline/getProfile", app.GetAirlineProfile).Methods("GET")
 	router.HandleFunc("/api/airline/updateProfile", app.UpdateAirlineProfile).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/airline/addAirline", Validate(app.CreateAirline, []string{"SystemAdmin"})).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/airline/getFlightRatings", Validate(app.GetFlightRatings, []string{"AirlineAdmin"})).Methods("GET")
@@ -190,6 +197,16 @@ func (app *Application) Routes() *mux.Router {
 
 	// RESEND MAIL API
 	router.HandleFunc("/api/mail/resend", app.ResendEmail).Methods("POST", "OPTIONS")
+
+	// UPLOAD FILES API
+	router.HandleFunc("/api/upload/updateProfilePicture", Validate(app.UpdateProfilePicture, []string{"User",
+		"SystemAdmin", "AirlineAdmin", "Rent-A-CarAdmin", "HotelAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/upload/updateAirlineProfilePicture",
+		Validate(app.UpdateAirlineProfilePicture, []string{"AirlineAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/upload/updateHotelProfilePicture",
+		Validate(app.UpdateHotelProfilePicture, []string{"HotelAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/upload/updateRACProfilePicture",
+		Validate(app.UpdateRACProfilePicture, []string{"Rent-A-CarAdmin"})).Methods("POST", "OPTIONS")
 
 	// STATIC FILE HANDLER
 	staticFileDirectory := http.Dir("./ui/")

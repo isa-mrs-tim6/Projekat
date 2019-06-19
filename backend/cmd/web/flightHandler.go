@@ -36,7 +36,7 @@ func (app *Application) GetFlight(w http.ResponseWriter, r *http.Request) {
 	}
 	flight, err := app.Store.GetFlight(uint(id))
 	if err != nil {
-		app.ErrorLog.Println("Could not retrive flight")
+		app.ErrorLog.Println("Could not retrieve flight")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -58,6 +58,101 @@ func (app *Application) GetFlight(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(flight)
 	if err != nil {
 		app.ErrorLog.Println("Cannot encode flight into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetQuickReservations(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idStr := vars["id"]
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		app.ErrorLog.Println("Id is not a valid")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	quickReservations, err := app.Store.GetFlightQuickReservations(uint(id))
+	if err != nil {
+		app.ErrorLog.Println("Could not retrieve quick reservations")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	err = json.NewEncoder(w).Encode(quickReservations)
+	if err != nil {
+		app.ErrorLog.Println("Cannot encode quick reservations into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) CreateQuickFlightReservation(w http.ResponseWriter, r *http.Request) {
+	var reservationDTO models.QuickFlightReservationDTO
+
+	err := json.NewDecoder(r.Body).Decode(&reservationDTO)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	flight, err := app.Store.GetFlight(reservationDTO.FlightID)
+
+	if err != nil {
+		app.ErrorLog.Println("Could not find flight with given id")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	seat, err := app.Store.GetSeat(reservationDTO.SeatID)
+	if err != nil {
+		app.ErrorLog.Println("Could not find seat with given id")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var price float64
+	if seat.Class == "FIRST" {
+		price = flight.PriceFIRSTCLASS
+	} else if seat.Class == "BUSINESS" {
+		price = flight.PriceBUSINESS
+	} else {
+		price = flight.PriceECONOMY
+	}
+
+	price = price - price*(float64(reservationDTO.Discount)/100.0)
+
+	var quickReservation = models.FlightReservation{
+		Flight:         &flight,
+		FlightID:       flight.ID,
+		Price:          price,
+		Seat:           &seat,
+		CompanyRating:  0,
+		FlightRating:   0,
+		Features:       []*models.FeatureAirline{},
+		IsQuickReserve: true,
+	}
+
+	err = app.Store.CreateFlightQuickReservation(&quickReservation)
+	if err != nil {
+		app.ErrorLog.Println("Could not create quick reservations")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) RemoveQuickFlightReservation(w http.ResponseWriter, r *http.Request) {
+	var resDTO models.QuickFlightReservationGDTO
+	err := json.NewDecoder(r.Body).Decode(&resDTO)
+
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = app.Store.RemoveFLightQuickReservation(resDTO)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot remove quick reservation")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -185,7 +280,23 @@ func (app *Application) GetCompanyFlights(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		app.ErrorLog.Println("Could not retrive flights")
 	}
+	for _, element := range flights {
+		sort.SliceStable(element.Airplane.Seats, func(i, j int) bool {
+			var m = make(map[string]int)
+			m["FIRST"] = 1
+			m["BUSINESS"] = 2
+			m["ECONOMIC"] = 3
 
+			if m[element.Airplane.Seats[i].Class] < m[element.Airplane.Seats[j].Class] {
+				return true
+			}
+			if m[element.Airplane.Seats[i].Class] > m[element.Airplane.Seats[j].Class] {
+				return true
+			}
+
+			return false
+		})
+	}
 	err = json.NewEncoder(w).Encode(flights)
 	if err != nil {
 		app.ErrorLog.Println("Cannot encode flights into JSON object")
