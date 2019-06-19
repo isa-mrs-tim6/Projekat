@@ -114,6 +114,14 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 		return err, "", "", "", "", ""
 	}
 
+	var company models.RentACarCompany
+
+	if err := tx.Where("id = ?", reservation.CompanyID).First(&company).Error; err != nil {
+		tx.Rollback()
+		return err, "", "", "", "", ""
+	}
+
+	reservation.RentACarCompany = company
 	reservation.Vehicle = vehicle
 	reservation.Price = db.CalculatePriceVehicle(userID, params.Price)
 	reservation.Location = location.Address.Address
@@ -186,13 +194,8 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 
 	price := fmt.Sprintf("%f", reservation.Price)
 
-	formattedStart := fmt.Sprintf("%d-%02d-%02d",
-		reservation.Beginning.Year(), reservation.Beginning.Month(), reservation.Beginning.Day())
-	formattedEnd := fmt.Sprintf("%d-%02d-%02d",
-		reservation.End.Year(), reservation.End.Month(), reservation.End.Day())
-
 	return nil,
-		reservation.RentACarCompany.Name, reservation.Vehicle.Name, formattedStart, formattedEnd, price
+		reservation.RentACarCompany.Name, reservation.Vehicle.Name, reservation.Beginning.String(), reservation.End.String(), price
 
 }
 

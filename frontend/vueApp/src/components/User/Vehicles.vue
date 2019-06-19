@@ -72,9 +72,10 @@
                     LocationID: parseInt(this.$route.params.locID),
                     CompanyID: parseInt(this.$route.params.id),
                     Price: this.$props.vehicles[index].Vehicle.PricePerDay,
-                    StartDate: this.StartDate,
-                    EndDate:  this.EndDate,
+                    StartDate: this.startDate,
+                    EndDate:  this.endDate,
                 };
+                console.log(res);
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/' + this.reservationID + '/reserveVehicle', res)
                     .then(res =>{
                         this.SuccessSnackbar = true;
