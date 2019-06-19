@@ -95,7 +95,7 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 	return reservations, nil
 }
 
-func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservationParams, userID uint) error {
+func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservationParams, userID uint) (error, string, string, string, string, string) {
 	var reservation models.RentACarReservation
 	var vehicle models.Vehicle
 	var location models.Location
@@ -106,12 +106,12 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 
 	if err := tx.Raw("SELECT * FROM vehicles WHERE id = ? FOR UPDATE", params.VehicleID).Scan(&vehicle).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
 	if err := tx.Where("id=?", params.LocationID).First(&location).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
 	reservation.Vehicle = vehicle
@@ -132,19 +132,19 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 
 	if err := tx.First(&masterReservation, masterRef).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
 	var racReservations []models.RentACarReservation
 	if err := tx.Where("vehicle_id = ?", vehicle.ID).Find(&racReservations).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 	for _, res := range racReservations {
 		if !(res.Occupation.Beginning.After(endDate) ||
 			res.Occupation.End.Before(startDate)) {
 			tx.Rollback()
-			return errors.New("vehicle taken")
+			return errors.New("vehicle taken"), "", "", "", "", ""
 		}
 	}
 
@@ -153,14 +153,14 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 
 	if err := tx.Save(&masterReservation).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
 	// Get all associated reservations
 	var reservations []models.Reservation
 	if err := tx.Where("master_ref = ?", masterRef).Find(&reservations).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
 	for _, associatedReservation := range reservations {
@@ -178,13 +178,22 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 		associatedReservation.ReservationRentACarID = reservation.ID
 		if err := tx.Save(&associatedReservation).Error; err != nil {
 			tx.Rollback()
-			return err
+			return err, "", "", "", "", ""
 		}
 	}
 
 	tx.Commit()
 
-	return nil
+	price := fmt.Sprintf("%f", reservation.Price)
+
+	formattedStart := fmt.Sprintf("%d-%02d-%02d",
+		reservation.Beginning.Year(), reservation.Beginning.Month(), reservation.Beginning.Day())
+	formattedEnd := fmt.Sprintf("%d-%02d-%02d",
+		reservation.End.Year(), reservation.End.Month(), reservation.End.Day())
+
+	return nil,
+		reservation.RentACarCompany.Name, reservation.Vehicle.Name, formattedStart, formattedEnd, price
+
 }
 
 func (db *Store) GetPriceScale(userID uint) (float64, uint, error) {
@@ -196,7 +205,7 @@ func (db *Store) GetPriceScale(userID uint) (float64, uint, error) {
 }
 
 func (db *Store) CalculatePriceVehicle(userID uint, originalPrice float64) float64 {
-	price := float64(0.0)
+	price := originalPrice
 
 	var numOfReservations uint
 	var reward models.ReservationReward

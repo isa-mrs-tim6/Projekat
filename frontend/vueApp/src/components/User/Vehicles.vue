@@ -61,6 +61,8 @@
               SuccessSnackbarText: '',
               ErrorSnackbar: false,
               ErrorSnackbarText: '',
+              StartDate: this.$route.query.start,
+              EndDate: this.$route.query.end,
           };
         },
         methods:{
@@ -70,8 +72,8 @@
                     LocationID: parseInt(this.$route.params.locID),
                     CompanyID: parseInt(this.$route.params.id),
                     Price: this.$props.vehicles[index].Vehicle.PricePerDay,
-                    StartDate: this.$props.startDate,
-                    EndDate: this.$props.endDate
+                    StartDate: this.StartDate,
+                    EndDate:  this.EndDate,
                 };
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/' + this.reservationID + '/reserveVehicle', res)
                     .then(res =>{

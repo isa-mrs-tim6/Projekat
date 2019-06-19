@@ -29,14 +29,14 @@
                                     <template v-slot:activator="{ on }">
                                         <v-text-field v-model="StartDate" label="Start date" prepend-icon="event" readonly v-on="on" :rules="[rules.required]"></v-text-field>
                                     </template>
-                                    <v-date-picker v-model="StartDate" no-title scrollable @input="menuStart = false"></v-date-picker>
+                                    <v-date-picker v-model="StartDate" no-title scrollable @input="menuStart = false" :readonly="checkReadonly()"></v-date-picker>
                                 </v-menu>
                                 <v-menu v-model="menuEnd" :close-on-content-click="false" lazy transition="scale-transition"
                                         offset-y full-width max-width="290px" min-width="290px">
                                     <template v-slot:activator="{ on }">
                                         <v-text-field v-model="EndDate" label="End date" prepend-icon="event" readonly v-on="on" :rules="[rules.required]"></v-text-field>
                                     </template>
-                                    <v-date-picker v-model="EndDate" no-title scrollable @input="menuEnd = false"></v-date-picker>
+                                    <v-date-picker v-model="EndDate" no-title scrollable @input="menuEnd = false" :readonly="checkReadonly()"></v-date-picker>
                                 </v-menu>
                             </v-flex>
                             <v-spacer></v-spacer>
@@ -104,8 +104,8 @@
                 Price: [0, 200],
                 PriceLow: '',
                 PriceHigh: '',
-                StartDate: '',
-                EndDate: '',
+                StartDate: this.$route.query.start,
+                EndDate: this.$route.query.end,
                 menuStart: false,
                 menuEnd: false,
                 rules: {
@@ -116,6 +116,9 @@
             }
         },
         methods: {
+            checkReadonly(){
+                return !isNaN(parseInt(this.reservationID))
+            },
             findVehicles(e) {
                 e.preventDefault();
                 if(this.StartDate === '' || this.EndDate === ''){
