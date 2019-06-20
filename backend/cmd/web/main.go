@@ -25,7 +25,8 @@ func main() {
 	// SETUP DB CONNECTION DETAILS
 	username := flag.String("username", "postgres", "Database username")
 	password := flag.String("password", "admin", "Database password")
-	dbPersist := flag.Bool("persist", true, "Recreate database tables and add mock-up objects")
+	recreate := flag.Bool("recreate", false, "Recreate database tables")
+	demo := flag.Bool("demo", false, "Adds mock-up objects for showcasing")
 	emailDomain := flag.String("email", "", "Email domain")
 	emailPassword := flag.String("emailPassword", "", "Email password")
 	flag.Parse()
@@ -50,9 +51,13 @@ func main() {
 	defer Close(db)
 
 	// CHECK FOR FIRST TIME SETUP
-	if !(*dbPersist) {
+	if *demo {
 		initTables(db)
-		addModels(db)
+		AddDemoModels(db)
+	} else {
+		if *recreate {
+			initTables(db)
+		}
 	}
 
 	// INJECT TO APPLICATION

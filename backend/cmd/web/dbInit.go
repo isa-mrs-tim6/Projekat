@@ -45,15 +45,9 @@ func initTables(db *gorm.DB) {
 		&models.HotelReservation{}, &models.FlightReservation{}, &models.Destination{}, &models.RoomRating{}, &models.ReservationReward{},
 		&models.VehicleRating{}, &models.FeatureAirline{}, &models.HotelReservationReward{}, &models.RoomQuickReserveDays{}, models.SeatQuickReservation{}, models.FlightQuickReserveSeats{})
 	fmt.Printf("DATABASE: Finished automigration, time taken: %f seconds\n", time.Since(timeAutoMigration).Seconds())
-}
 
-func addModels(db *gorm.DB) {
-	fmt.Println("DATABASE: Adding models")
-	timeStart := time.Now()
-
-	// hash passwords
-	pass1, err := bcrypt.GenerateFromPassword([]byte("S_ADMIN1"), bcrypt.DefaultCost)
-
+	// HASH PASSWORD
+	pass1, _ := bcrypt.GenerateFromPassword([]byte("S_ADMIN1"), bcrypt.DefaultCost)
 	// CREATING SYSTEM ADMINS
 	systemAdmin := models.SystemAdmin{
 		Profile: models.Profile{
@@ -66,9 +60,15 @@ func addModels(db *gorm.DB) {
 		FirstPassChanged:     true,
 	}
 	db.Create(&systemAdmin)
+	fmt.Printf("DATABASE: Finished creating system admin, time taken: %f seconds\n", time.Since(timeAutoMigration).Seconds())
+}
+
+func AddDemoModels(db *gorm.DB) {
+	fmt.Println("DATABASE: Adding models")
+	timeStart := time.Now()
 
 	// hash passwords
-	pass1, err = bcrypt.GenerateFromPassword([]byte("A_ADMIN1"), bcrypt.DefaultCost)
+	pass1, err := bcrypt.GenerateFromPassword([]byte("A_ADMIN1"), bcrypt.DefaultCost)
 	pass2, err := bcrypt.GenerateFromPassword([]byte("A_ADMIN2"), bcrypt.DefaultCost)
 	pass3, err := bcrypt.GenerateFromPassword([]byte("A_ADMIN3"), bcrypt.DefaultCost)
 
