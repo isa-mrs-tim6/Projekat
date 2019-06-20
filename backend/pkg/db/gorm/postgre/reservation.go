@@ -519,8 +519,13 @@ func (db *Store) CancelFlight(resID uint) error {
 		Preload("ReservationRentACar.RentACarCompany").
 		Preload("ReservationRentACar.Vehicle").
 		First(&master)
-	db.Table("seats").Where("reservation_id = ?", master.ReservationFlight.Seat.ReservationID).
-		Update("reservation_id", 0)
+	if !master.ReservationFlight.IsQuickReserve {
+		db.Table("seats").Where("reservation_id = ?", master.ReservationFlight.Seat.ReservationID).
+			Update("reservation_id", 0)
+	}else{
+		db.Table("reservations").Where("id = ?", master.ID).
+			Update("reservation_flight_id", 0)
+	}
 
 	if !master.ReservationFlight.IsQuickReserve {
 		db.Where("id=?", master.ID).Delete(master.ReservationFlight)
@@ -759,9 +764,29 @@ func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams
 }
 
 func (db *Store) CreateMaterQuickReservation(reservation *models.Reservation) error {
-	if err := db.Create(&reservation).Error; err != nil {
+	tx := db.Begin()
+	var masters []models.Reservation
+
+	if err := tx.Raw("SELECT * FROM flight_reservations WHERE id = ? FOR UPDATE", reservation.ReservationFlightID).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+
+	if err := tx.Table("reservations").Where("reservation_flight_id = ?", reservation.ReservationFlightID).Find(&masters).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if len(masters) != 0{
+		tx.Rollback()
+		return errors.New("seat already taken")
+	}
+
+	if err := tx.Create(&reservation).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
 	return nil
 }
 

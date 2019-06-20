@@ -98,8 +98,20 @@
                     }
                 )
                 .catch(err => console.log(err));
+            this.checkFirstPass();
         },
         methods: {
+            checkFirstPass(){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/admin/checkFirstPass")
+                    .then(
+                        res =>{
+                            if(res.data === false){
+                                alert("Please update your password before accessing this feature");
+                                this.$router.replace("admin_profile");
+                            }
+                        }
+                    )
+            },
             update(e) {
                 e.preventDefault();
                 if (!this.AirlineProfile.Name || !this.AirlineProfile.Longitude || !this.AirlineProfile.Latitude || !this.AirlineProfile.Address){

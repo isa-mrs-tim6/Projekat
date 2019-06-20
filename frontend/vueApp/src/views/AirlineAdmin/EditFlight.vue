@@ -370,7 +370,21 @@
                     this.flights = res.data;
                 });
         },
+        mounted(){
+            this.checkFirstPass();
+        },
         methods:{
+            checkFirstPass(){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/admin/checkFirstPass")
+                    .then(
+                        res =>{
+                            if(res.data === false){
+                                alert("Please update your password before accessing this feature");
+                                this.$router.replace("admin_profile");
+                            }
+                        }
+                    )
+            },
             editSeatStatus(){
                 let index = this.editedSeats.SelectedSeat;
                 let status = this.editedSeats.Seats[index].Disabled;

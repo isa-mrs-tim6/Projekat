@@ -134,8 +134,20 @@
                     }
                 )
                 .catch(err => console.log(err));
+            this.checkFirstPass();            
         },
         methods: {
+            checkFirstPass(){
+                axios.create({withCredentials: true}).get("http://localhost:8000/api/admin/checkFirstPass")
+                    .then(
+                        res =>{
+                            if(res.data === false){
+                                alert("Please update your password before accessing this feature");
+                                this.$router.replace("admin_profile");
+                            }
+                        }
+                    )
+            },
             close(){
                 this.dialog = false;
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/destination/'+this.editDestination.ID+'/updateDestination', this.editDestination)

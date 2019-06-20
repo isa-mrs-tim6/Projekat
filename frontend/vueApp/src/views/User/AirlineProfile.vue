@@ -8,7 +8,7 @@
                         <v-container>
                             <v-layout row>
                                 <v-flex xs3>
-                                    <img src = "../../assets/placeholder/company2.png" width="300px" height="150px">
+                                    <img src = "../../assets/placeholder/company2.png" width="250px" height="150px">
                                 </v-flex>
                                 <v-flex xs6>
                                     <v-layout row mb-3 align-center>
@@ -169,9 +169,26 @@ export default {
                 .then(res=>{
                     axios.create({withCredentials: true}).post("http://localhost:8000/api/user/FlightQuickReservation", item)
                         .then(res=>{
+                            let vm = this;
                             this.getReservations();
                             this.succMessage = "Successfully created reservation";
                             this.SuccessSnackbar = true;
+                            setTimeout(function () {
+                                vm.$router.go()
+                            }, 3000);
+                        })
+                        .catch(err =>{
+                            let vm = this;
+                            if(err.response.status === 406){
+                                this.errorMessage = "Quick reservation already taken!";
+                                this.ErrorSnackbar = true;
+                            }else{
+                                this.errorMessage = "Failed to reserve please try again!";
+                                this.ErrorSnackbar = true;
+                            }
+                            setTimeout(function () {
+                                vm.$router.go()
+                            }, 3000);
                         })
                 })
                 .catch(err =>{

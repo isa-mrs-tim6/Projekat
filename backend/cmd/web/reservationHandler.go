@@ -128,7 +128,7 @@ func (app *Application) CompleteQuickResFlight(w http.ResponseWriter, r *http.Re
 
 	if err != nil {
 		app.ErrorLog.Printf("Cannot complete quick reservation")
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 }
