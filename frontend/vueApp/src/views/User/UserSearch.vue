@@ -42,6 +42,7 @@
                 </template>
             </v-flex>
         </v-layout>
+        <v-snackbar v-model="InfoSnackbar" :timeout=4000 :top="true" color="info">{{InfoSnackbarMessage}}</v-snackbar>
     </div>
 </template>
 
@@ -53,6 +54,8 @@
         components: {UserNavBar},
         data:function() {
             return {
+                InfoSnackbar: false,
+                InfoSnackbarMessage: "",
                 query: "",
                 results:[],
                 ind: false
@@ -67,6 +70,10 @@
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/user/search", QueryDto).
                 then(res=>{
                     this.results =res.data
+                    if (this.results.length === 0){
+                        this.InfoSnackbarMessage = "No users found!"
+                        this.InfoSnackbar = true;
+                    }
                 })
             },
             addFriend(id, index){
