@@ -23,7 +23,12 @@ func (db *Store) UpdateUser(oldEmail string, params models.ProfileParams) error 
 	if err != nil {
 		return err
 	}
-	params.Profile.Password = string(hashedPassword)
+
+	if params.Profile.Password != "" {
+		params.Profile.Password = string(hashedPassword)
+	} else {
+		params.Profile.Password = retVal.Profile.Password
+	}
 
 	retVal.Profile = params.Profile
 

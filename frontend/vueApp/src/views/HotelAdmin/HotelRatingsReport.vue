@@ -44,11 +44,15 @@
             axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getHotelReservations')
                 .then(res => {
                     this.Reservations = res.data;
+                    let res_num = 0;
                     for (let i = 0; i < this.Reservations.length; i++) {
-                        this.Rating += this.Reservations[i].HotelRating;
+                        if (this.Reservations[i].HotelRating > 0) {
+                            this.Rating += this.Reservations[i].HotelRating;
+                            res_num++;
+                        }
                     }
-                    if (this.Reservations.length > 0) {
-                        this.Rating /= this.Reservations.length;
+                    if (res_num > 0) {
+                        this.Rating /= res_num;
                     }
                 } )
                 .catch(err => alert("Could not retrieve hotel reservations"));

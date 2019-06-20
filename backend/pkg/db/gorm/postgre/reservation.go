@@ -95,7 +95,7 @@ func (db *Store) GetUserReservations(id uint) ([]models.ReservationDAO, error) {
 	return reservations, nil
 }
 
-func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservationParams, userID uint) error {
+func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservationParams, userID uint) (error, string, string, string, string, string) {
 	var reservation models.RentACarReservation
 	var vehicle models.Vehicle
 	var location models.Location
@@ -106,14 +106,22 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 
 	if err := tx.Raw("SELECT * FROM vehicles WHERE id = ? FOR UPDATE", params.VehicleID).Scan(&vehicle).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
 	if err := tx.Where("id=?", params.LocationID).First(&location).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
+	var company models.RentACarCompany
+
+	if err := tx.Where("id = ?", reservation.CompanyID).First(&company).Error; err != nil {
+		tx.Rollback()
+		return err, "", "", "", "", ""
+	}
+
+	reservation.RentACarCompany = company
 	reservation.Vehicle = vehicle
 	reservation.Price = db.CalculatePriceVehicle(userID, params.Price)
 	reservation.Location = location.Address.Address
@@ -132,19 +140,19 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 
 	if err := tx.First(&masterReservation, masterRef).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
 	var racReservations []models.RentACarReservation
 	if err := tx.Where("vehicle_id = ?", vehicle.ID).Find(&racReservations).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 	for _, res := range racReservations {
 		if !(res.Occupation.Beginning.After(endDate) ||
 			res.Occupation.End.Before(startDate)) {
 			tx.Rollback()
-			return errors.New("vehicle taken")
+			return errors.New("vehicle taken"), "", "", "", "", ""
 		}
 	}
 
@@ -153,14 +161,14 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 
 	if err := tx.Save(&masterReservation).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
 	// Get all associated reservations
 	var reservations []models.Reservation
 	if err := tx.Where("master_ref = ?", masterRef).Find(&reservations).Error; err != nil {
 		tx.Rollback()
-		return err
+		return err, "", "", "", "", ""
 	}
 
 	for _, associatedReservation := range reservations {
@@ -178,13 +186,17 @@ func (db *Store) ReserveVehicle(masterRef uint, params models.VehicleReservation
 		associatedReservation.ReservationRentACarID = reservation.ID
 		if err := tx.Save(&associatedReservation).Error; err != nil {
 			tx.Rollback()
-			return err
+			return err, "", "", "", "", ""
 		}
 	}
 
 	tx.Commit()
 
-	return nil
+	price := fmt.Sprintf("%f", reservation.Price)
+
+	return nil,
+		reservation.RentACarCompany.Name, reservation.Vehicle.Name, reservation.Beginning.String(), reservation.End.String(), price
+
 }
 
 func (db *Store) GetPriceScale(userID uint) (float64, uint, error) {
@@ -196,7 +208,7 @@ func (db *Store) GetPriceScale(userID uint) (float64, uint, error) {
 }
 
 func (db *Store) CalculatePriceVehicle(userID uint, originalPrice float64) float64 {
-	price := float64(0.0)
+	price := originalPrice
 
 	var numOfReservations uint
 	var reward models.ReservationReward
@@ -741,15 +753,38 @@ func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams
 	var slave models.RentACarReservation
 	var loc models.Location
 
-	if err := db.Preload("ReservationRentACar").
+	var masters []models.Reservation
+
+	tx := db.Begin()
+
+	if err := tx.Preload("ReservationRentACar").
 		Where("id = ?", params.MasterID).First(&master).Error; err != nil {
-		return err
-	}
-	if err := db.Where("id = ?", params.ReservationID).First(&slave).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
 
-	if err := db.Where("id = ?", params.LocationID).First(&loc).Error; err != nil {
+	if err := tx.Raw("SELECT * from rent_a_car_reservations WHERE id = ? FOR UPDATE", params.ReservationID).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Preload("ReservationRentACar").Where("reservation_rent_a_car_id = ?", params.ReservationID).Find(&masters).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if len(masters) != 0 {
+		tx.Rollback()
+		return errors.New("reservation taken")
+	}
+
+	if err := tx.Where("id = ?", params.ReservationID).First(&slave).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Where("id = ?", params.LocationID).First(&loc).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
 
@@ -757,9 +792,12 @@ func (db *Store) CompleteQuickResVehicle(params models.CompleteQuickResVehParams
 	master.ReservationRentACarID = slave.ID
 	master.ReservationRentACar.Location = loc.Address.Address
 
-	if err := db.Save(&master).Error; err != nil {
+	if err := tx.Save(&master).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+
+	tx.Commit()
 	return nil
 }
 

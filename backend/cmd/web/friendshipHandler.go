@@ -68,7 +68,7 @@ func (app *Application) CreateFriendRequest(w http.ResponseWriter, r *http.Reque
 	var friendship = models.Friendship{
 		User1ID: user.ID,
 		User2ID: friendshipDto.User2ID,
-		Status: "PENDING",
+		Status:  "PENDING",
 	}
 	user1, err := app.Store.GetUserWithId(friendship.User1ID)
 	friendship.User1 = &user1

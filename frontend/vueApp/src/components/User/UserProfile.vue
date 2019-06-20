@@ -3,18 +3,19 @@
         <v-form>
             <v-container>
                 <v-layout row>
-                    <v-flex xs6>
-                        <v-text-field label="First Name" v-model="Name"></v-text-field>
-                        <v-text-field label="Surname" v-model="Surname"></v-text-field>
-                        <v-text-field label="Email" v-model="Email"></v-text-field>
-                        <v-text-field label="Password" type="password" v-model="Password"></v-text-field>
-                        <v-text-field label="Confirm password" type="password" v-model="ConfirmedPassword"></v-text-field>
-                        <v-text-field label="Address" v-model="Address"></v-text-field>
-                        <v-text-field label="Phone" v-model="Phone"></v-text-field>
-                        <v-flex xs12>
-                            <v-btn block @click="updateUser">submit</v-btn>
-                        </v-flex>
+                <v-flex xs6>
+                    <v-text-field label="First Name" v-model="Name"></v-text-field>
+                    <v-text-field label="Surname" v-model="Surname"></v-text-field>
+                    <v-text-field label="Email" v-model="Email"></v-text-field>
+                    <v-text-field label="Password" type="password" v-model="Password"></v-text-field>
+                    <v-text-field label="Confirm password" type="password" v-model="ConfirmedPassword"></v-text-field>
+                    <v-text-field label="Passport" v-model="Passport"></v-text-field>
+                    <v-text-field label="Address" v-model="Address"></v-text-field>
+                    <v-text-field label="Phone" v-model="Phone"></v-text-field>
+                    <v-flex xs12 sm1>
+                        <v-btn @click="updateUser">submit</v-btn>
                     </v-flex>
+                </v-flex>
                     <v-flex xs6 offset-xs2 style="margin-top: 80px">
                         <form
                                 enctype="multipart/form-data"
@@ -29,6 +30,8 @@
                 </v-layout>
             </v-container>
         </v-form>
+        <v-snackbar v-model="SuccessSnackbar" :timeout=2000 :top="true" color="success">{{this.SuccessSnackbarText}}</v-snackbar>
+        <v-snackbar v-model="ErrorSnackbar" :timeout=2000 :top="true" color="error">{{this.ErrorSnackbarText}}</v-snackbar>
     </div>
 </template>
 
@@ -45,12 +48,17 @@
                 Email:"",
                 OldEmail: "",
                 Password:"",
+                Passport: "",
                 ConfirmedPassword:"",
                 OldPassword:"",
                 Address:"",
                 Phone:"",
                 Picture:"",
                 PictureLink:"",
+                SuccessSnackbar: false,
+                SuccessSnackbarText: '',
+                ErrorSnackbar: false,
+                ErrorSnackbarText: '',
             }
         },
         beforeCreate() {
@@ -64,6 +72,7 @@
                     this.Phone = res.data.Phone;
                     this.Picture = res.data.Picture;
                     this.PictureLink = 'http://localhost:8000/'+this.Picture;
+                    this.Passport = res.data.Passport;
                     this.OldPassword = res.data.Password;
                 })
         },
@@ -71,7 +80,8 @@
             updateUser(e){
                 e.preventDefault();
                 if(this.Password !== this.ConfirmedPassword){
-                    alert("Password and confirm password does not match");
+                    this.ErrorSnackbar = true;
+                    this.ErrorSnackbarText = 'Password and confirmed password do not match';
                     return;
                 }
                 let newUserProfile={
@@ -81,13 +91,18 @@
                     Email: this.Email,
                     Address: this.Address,
                     Phone: this.Phone,
-                    Password: this.OldPassword,
+                    Passport: this.Passport,
+                    Password: this.Password,
                     Picture: this.Picture,
                 };
-                if(this.Password !== "") {
-                    newUserProfile.Password = this.Password;
-                }
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/user/updateProfile", newUserProfile)
+                    .then(res =>{
+                        this.SuccessSnackbar = true;
+                        this.SuccessSnackbarText = 'Profile updated';
+                    }).catch(err => {
+                        this.ErrorSnackbar = true;
+                        this.ErrorSnackbarText = 'An error has occured';
+                    })
             },
             updatePicture(e){
                 const file = e.target.files[0];

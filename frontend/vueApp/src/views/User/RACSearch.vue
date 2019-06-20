@@ -1,6 +1,9 @@
 <template>
     <div>
         <v-card dark>
+            <v-card-title>
+                <h2>Search Rent-a-car Companies:</h2>
+            </v-card-title>
             <v-card-text>
                 <v-container>
                     <v-layout align-center justify-center row-wrap>
@@ -149,7 +152,7 @@
                     this.ErrorSnackbar = true;
                     this.ErrorSnackbarText = 'Please select a location.';
                 }else{
-                    this.$router.push({ path: `/vehiclesSearch/${this.items[index].ID}/${this.selectedLoc[index]}`, query: { reservationID: this.reservationID, passengers: this.passengers}})
+                    this.$router.push({ path: `/vehiclesSearch/${this.items[index].ID}/${this.selectedLoc[index]}`, query: { reservationID: this.reservationID, passengers: this.passengers, start: this.time.from, end: this.time.to}})
                 }
             },
             racSearch(e) {

@@ -91,7 +91,6 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/user/cancelVehicle/{id}", Validate(app.CancelVehicle, []string{"User"})).Methods("GET")
 	router.HandleFunc("/api/user/FlightQuickReservation", Validate(app.CompleteQuickResFlight, []string{"User"})).Methods("POST", "OPTIONS")
 
-
 	// ADMIN API
 	router.HandleFunc("/api/admin/checkFirstPass", Validate(app.CheckFirstPass, []string{"SystemAdmin", "HotelAdmin", "AirlineAdmin", "Rent-A-CarAdmin"})).Methods("GET")
 	router.HandleFunc("/api/admin/login", app.LoginAdmin).Methods("POST", "OPTIONS")
@@ -118,11 +117,9 @@ func (app *Application) Routes() *mux.Router {
 	router.HandleFunc("/api/flight/getCompanyFlights", app.GetCompanyFlights).Methods("GET")
 	router.HandleFunc("/api/flight/{id}/getFlight", app.GetFlight).Methods("GET")
 	router.HandleFunc("/api/flight/updateSeats", app.UpdateSeats).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/flight/{id}/quickReservation",app.GetQuickReservations).Methods("GET")
-	router.HandleFunc("/api/flight/quickReservation",Validate(app.CreateQuickFlightReservation, []string{"AirlineAdmin"})).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/flight/quickReservation",Validate(app.RemoveQuickFlightReservation, []string{"AirlineAdmin"})).Methods("DELETE", "OPTIONS")
-
-
+	router.HandleFunc("/api/flight/{id}/quickReservation", app.GetQuickReservations).Methods("GET")
+	router.HandleFunc("/api/flight/quickReservation", Validate(app.CreateQuickFlightReservation, []string{"AirlineAdmin"})).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/flight/quickReservation", Validate(app.RemoveQuickFlightReservation, []string{"AirlineAdmin"})).Methods("DELETE", "OPTIONS")
 
 	// AIRPLANE API
 	router.HandleFunc("/api/airplane/getAirplanes", app.GetAirplanes).Methods("GET")

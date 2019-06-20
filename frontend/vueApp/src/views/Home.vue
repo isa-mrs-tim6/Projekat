@@ -8,6 +8,9 @@
   export default {
     components: {
       HelloWorld
+    },
+    created() {
+      this.$router.push({ path: '/user_flights/'});
     }
   }
 </script>

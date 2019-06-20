@@ -121,7 +121,7 @@ func (app *Application) CompleteQuickResFlight(w http.ResponseWriter, r *http.Re
 			user.ID,
 			user.UserInfo,
 		},
-		ReservationFlight: flightRes,
+		ReservationFlight:   flightRes,
 		ReservationFlightID: flightRes.ID,
 	}
 	err = app.Store.CreateMaterQuickReservation(&reservation)
@@ -217,10 +217,38 @@ func (app *Application) ReserveVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := app.Store.ReserveVehicle(uint(reservationID), params, user.ID); err != nil {
+	err, company, vehicle, from, to, price := app.Store.ReserveVehicle(uint(reservationID), params, user.ID)
+
+	if err != nil {
 		app.ErrorLog.Printf("Could not complete reservation")
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+
+	go app.VehicleResEmail(email, company, user.Name+" "+user.Surname, vehicle, from, to, price)
+}
+
+func (app *Application) VehicleResEmail(receiver string, company string, user string, vehicle string,
+	dateFrom string, dateTo string, price string) {
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	message := "From: " + app.EmailAddress + "\n" +
+		"To: " + receiver + "\n" +
+		"Subject: Vehicle reservation\n" +
+		mime +
+		`<html><head></head>
+		<body><h1>ISA/MRS TIM6</h1>
+		Your reservation is successful!
+		Reservation details: <br>
+		Name: ` + user + `<br>
+		Company: ` + company + `<br>
+		Vehicle: ` + vehicle + `<br>
+		From: ` + dateFrom + `<br>
+		To: ` + dateTo + `<br>
+		Price: ` + price + `<br>
+		</body></html>`
+
+	_ = smtp.SendMail("smtp.gmail.com:587",
+		smtp.PlainAuth("", app.EmailAddress, app.EmailPassword, "smtp.gmail.com"),
+		app.EmailAddress, []string{receiver}, []byte(message))
 }
 
 func (app *Application) GetUserReservations(w http.ResponseWriter, r *http.Request) {

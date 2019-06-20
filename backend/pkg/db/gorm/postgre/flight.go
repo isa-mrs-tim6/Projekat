@@ -59,7 +59,7 @@ func (db *Store) GetFlightQuickReservations(id uint) ([]models.QuickFlightReserv
 
 func (db *Store) GetCompanyQuickReservations(id uint) ([]models.QuickFlightReservationGDTOV2, error) {
 	var retVal []models.QuickFlightReservationGDTOV2
-	if err := db.Table("flight_reservations").Select("seats.class, flight_reservations.price, flight_reservations.id, dest.name as DestName,origin.name as OriginName, flights.departure, flight_reservations.flight_id, " +
+	if err := db.Table("flight_reservations").Select("seats.class, flight_reservations.price, flight_reservations.id, dest.name as DestName,origin.name as OriginName, flights.departure, flight_reservations.flight_id, "+
 		"	flights.price_economy, flights.price_business, flights.price_firstclass").
 		Joins("INNER JOIN seats ON seats.reservation_id = flight_reservations.id").
 		Joins("INNER JOIN flights ON flight_reservations.flight_id = flights.id").
@@ -85,8 +85,8 @@ func (db *Store) RemoveFLightQuickReservation(resDTO models.QuickFlightReservati
 		return err
 	}
 	if err := db.Table("seats").Where("reservation_id = ?", resDTO.ReservationID).
-		Update("reservation_id",0).Error; err != nil{
-			return err
+		Update("reservation_id", 0).Error; err != nil {
+		return err
 	}
 	return nil
 }

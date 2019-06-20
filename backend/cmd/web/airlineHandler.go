@@ -40,7 +40,6 @@ func (app *Application) GetAirlinesProfiles(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-
 func (app *Application) GetAirlineProfileID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr := vars["id"]
@@ -88,7 +87,7 @@ func (app *Application) GetAirlineQuickReservation(w http.ResponseWriter, r *htt
 	}
 	reservations, err := app.Store.GetCompanyQuickReservations(uint(id))
 	var flight models.Flight
-	for index, element := range reservations{
+	for index, element := range reservations {
 		flight, _ = app.Store.GetFlight(uint(element.FlightID))
 		reservations[index].DestName = flight.Destination.Name
 		reservations[index].OriginName = flight.Origin.Name
@@ -100,8 +99,6 @@ func (app *Application) GetAirlineQuickReservation(w http.ResponseWriter, r *htt
 		return
 	}
 }
-
-
 
 func (app *Application) CreateAirline(w http.ResponseWriter, r *http.Request) {
 	var airline models.Airline

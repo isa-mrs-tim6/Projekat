@@ -24,6 +24,7 @@
             <div id="wrapper1" style="position: relative; height: 40vh; width: 80vw">
                 <FinanceGraph v-bind:item="item.visitors" ref="chart" :chart-data="dataCollectionVisitors"></FinanceGraph>
             </div>
+            <div style="height: 20vh;"></div>
             <div id="wrapper2" style="position: relative; height: 40vh; width: 80vw">
                 <FinanceGraph v-bind:item="item.currency" ref="chart" :chart-data="dataCollectionFinances"></FinanceGraph>
             </div>
@@ -148,7 +149,7 @@
                 let dateFrom = moment(this.time.from);
                 const dateTo = moment(this.time.to);
 
-                while (dateFrom.isSameOrBefore(dateTo)) {
+                while (dateFrom.isoWeek() <=dateTo.isoWeek()) {
                     this.weeklyDictVisitors.set("Week " + dateFrom.isoWeek() + ", " + dateFrom.year(), 0);
                     this.weeklyDictFinances.set("Week " + dateFrom.isoWeek() + ", " + dateFrom.year(), 0);
                     dateFrom.add(1, 'weeks');
@@ -202,16 +203,23 @@
                 if (!moment(this.time.from).isValid() || !moment(this.time.to).isValid()) {
                     return;
                 }
-                let dateFrom = moment(this.time.from).startOf("month");
+                let dateFrom = moment(this.time.from);
+                let dateFromIncrement = moment(this.time.from).startOf("month");
                 const dateTo = moment(this.time.to).endOf("month");
 
-                while (dateFrom.isSameOrBefore(dateTo)) {
-                    this.monthlyDictVisitors.set(monthNames[dateFrom.month()] + ", " + dateFrom.year(), 0);
-                    this.monthlyDictFinances.set(monthNames[dateFrom.month()] + ", " + dateFrom.year(), 0);
-                    dateFrom.add(1, 'months');
+                while (dateFromIncrement.isSameOrBefore(dateTo)) {
+                    this.monthlyDictVisitors.set(monthNames[dateFromIncrement.month()] + ", " + dateFromIncrement.year(), 0);
+                    this.monthlyDictFinances.set(monthNames[dateFromIncrement.month()] + ", " + dateFromIncrement.year(), 0);
+                    dateFromIncrement.add(1, 'months');
                 }
 
                 for (let i = 0; i < this.reservations.length; i++) {
+                    if(moment(this.reservations[i].Beginning).isBefore(dateFrom)){
+                        continue
+                    }
+                    if(moment(this.reservations[i].Beginning).isAfter(dateTo)){
+                        continue
+                    }
                     const key = monthNames[moment(this.reservations[i].Beginning).month()] + ", " + moment(this.reservations[i].Beginning).year();
                     if (this.monthlyDictVisitors.has(key)) {
                         this.monthlyDictVisitors.set(key, this.monthlyDictVisitors.get(key) + 1);
