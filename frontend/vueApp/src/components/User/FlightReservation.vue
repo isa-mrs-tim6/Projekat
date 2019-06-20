@@ -11,8 +11,13 @@
                     <v-card-title><h3 class=".display-2">Flight reservation</h3></v-card-title>
                     <v-card-text>
                         <v-layout row>
-                            <v-flex xs6 mt-3 justify-center>
-                                <seat-map :editedSeats="flight.Airplane" tab="reservation" @seatsChanged="updateSeats"></seat-map>
+                            <v-flex xs6 mt-1 justify-center>
+                                <v-layout row mb-2>
+                                    <span class="title">Seat map:</span>
+                                </v-layout>
+                                <v-layout row>
+                                    <seat-map :editedSeats="flight.Airplane" :tab="mode" @seatsChanged="updateSeats"></seat-map>
+                                </v-layout>
                             </v-flex>
                             <v-flex xs6>
                                 <v-layout column v-if="this.Seats.length !== 0">
@@ -141,6 +146,7 @@
             return{
                 flightId: this.$route.query.flightId,
                 self: null,
+                isLogIn: false,
                 flight:{
                     Airplane:{
                         Seats:[]
@@ -162,6 +168,15 @@
                     color: null,
                 },
             }
+        },
+        beforeCreate(){
+            axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getProfile")
+                .then(res =>{
+                    this.isLogIn = true;
+                })
+                .catch(err =>{
+                    this.isLogIn = false;
+                })
         },
         created(){
             axios.get("http://localhost:8000/api/flight/"+ this.flightId +"/getFlight")
@@ -260,6 +275,13 @@
             }
         },
         computed:{
+          mode: function(){
+              if(this.isLogIn){
+                  return "reservation";
+              }else{
+                  return "explore";
+              }
+          },
           friendsSelect:function(){
               const friends = JSON.parse(JSON.stringify(this.friends));
               let retVal = [];

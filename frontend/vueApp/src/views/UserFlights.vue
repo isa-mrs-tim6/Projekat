@@ -4,7 +4,6 @@
         <v-layout justify-center style="margin-top: 200px">
             <v-flex xs9 style="height: 100%;">
                 <div v-bind:isLogIn="isLogIn"><flight-search></flight-search></div>
-                <ResultGrid v-bind:items="items" v-bind:title="title" style="margin-top: 150px"></ResultGrid>
             </v-flex>
         </v-layout>
     </div>

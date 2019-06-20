@@ -71,6 +71,7 @@
                 <FlightGrid v-bind:flights="flightsToShow" v-bind:searchType="searchType"></FlightGrid>
             </v-flex>
         </v-layout>
+            <v-snackbar v-model="ResultsSnackbar" :timeout=4000 :top="true" color="info">{{ResultsSnackbarMessage}}</v-snackbar>            
     </div>
 </template>
 
@@ -87,6 +88,8 @@
         data() {
             return {
                 flights: [],
+                ResultsSnackbarMessage:"",
+                ResultsSnackbar: false,
                 searchType: null,
                 isLogIn: false,
                 filterParam:{
@@ -114,6 +117,10 @@
                     axios.post("http://localhost:8000/api/search/oneWay",searchQuery)
                         .then(res=>{
                             this.flights = res.data;
+                            if(this.flights.length === 0){
+                                this.ResultsSnackbarMessage = "No flights found to "+ query.to + " !"
+                                this.ResultsSnackbar = true;
+                            }
                         });
                     var searchQuery2 = {
                         from : query.to,
@@ -130,6 +137,10 @@
                     axios.post("http://localhost:8000/api/search/oneWay", searchQuery2)
                         .then(res=>{
                             this.flightsReturn = res.data;
+                            if(this.flightsReturn.length === 0){
+                                this.ResultsSnackbarMessage = "No return flights found!"
+                                this.ResultsSnackbar = true;
+                            }
                         });
                 }else if(query.date){
                     this.searchType = "oneWay";
@@ -145,6 +156,10 @@
                     axios.post("http://localhost:8000/api/search/oneWay", searchQuery)
                         .then(res=>{
                             this.flights = res.data;
+                            if(this.flights.length === 0){
+                                this.ResultsSnackbarMessage = "No flights found!"
+                                this.ResultsSnackbar = true;
+                            }
                         })
                     localStorage.setItem('departureDate',query.date);
                 }else{
@@ -162,6 +177,10 @@
                     axios.post("http://localhost:8000/api/search/multi", searchQuery)
                         .then(res=>{
                             this.flights = res.data;
+                            if(this.flights.length === 0){
+                                this.ResultsSnackbarMessage = "No flights found!"
+                                this.ResultsSnackbar = true;
+                            }
                         });
                     localStorage.setItem('departureDate',query.date);
                 }

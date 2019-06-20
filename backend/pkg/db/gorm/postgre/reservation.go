@@ -220,10 +220,10 @@ func (db *Store) CalculatePriceVehicle(userID uint, originalPrice float64) float
 	return price
 }
 
-func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationParams) (uint, error) {
+func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationParams) (models.Reservation, error) {
 	// Check parameters
 	if params.Users == nil || params.Seats == nil || len(params.Users) != len(params.Seats) || len(params.Users) == 0 {
-		return 0, errors.New("invalid parameters")
+		return models.Reservation{}, errors.New("invalid parameters")
 	}
 
 	// Create master reservation, { Users[0], Seats[0] } combination
@@ -280,7 +280,7 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 		db.Create(&reservation)
 	}
 
-	return masterReservation.ID, nil
+	return masterReservation, nil
 }
 
 func (db *Store) CalculatePriceFlight(flightID uint, seatID uint, userID uint, features []models.FeatureAirline, isQuickReserve bool) float64 {

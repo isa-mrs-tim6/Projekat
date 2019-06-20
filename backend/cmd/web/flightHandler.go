@@ -50,7 +50,7 @@ func (app *Application) GetFlight(w http.ResponseWriter, r *http.Request) {
 			return true
 		}
 		if m[flight.Airplane.Seats[i].Class] > m[flight.Airplane.Seats[j].Class] {
-			return true
+			return false
 		}
 
 		return false

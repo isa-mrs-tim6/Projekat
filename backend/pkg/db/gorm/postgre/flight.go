@@ -28,10 +28,13 @@ func (db *Store) UpdateFlight(id uint, newFlight models.Flight) error {
 
 func (db *Store) GetFlight(id uint) (models.Flight, error) {
 	var retVal models.Flight
-	if err := db.Preload("Origin").Preload("Destination").Preload("Airplane.Seats").
+	if err := db.Preload("Origin").Preload("Destination").Preload("Airplane.Seats").Preload("Airline").
 		First(&retVal, id).Error; err != nil {
 		return retVal, err
 	}
+	sort.SliceStable(retVal.Airplane.Seats, func(i, j int) bool {
+		return retVal.Airplane.Seats[i].Number < retVal.Airplane.Seats[j].Number
+	})
 	return retVal, nil
 }
 
