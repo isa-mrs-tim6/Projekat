@@ -143,6 +143,9 @@ type Airline struct {
 }
 
 type FlightReservationParams struct {
+	Features []FeatureAirline
+	BigSuitcase int
+	SmallSuitcase int
 	Seats          []Seat
 	Users          []UserReserveParams
 	IsQuickReserve bool

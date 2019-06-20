@@ -228,7 +228,10 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 		tx.Rollback()
 		return nil, errors.New("seat taken")
 	}
-
+	resFeatures := make([]*models.FeatureAirline, 0)
+	for index, _ := range params.Features {
+		resFeatures = append(resFeatures, &params.Features[index])
+	}
 	// Create master reservation, { Users[0], Seats[0] } combination
 	masterReservation := models.Reservation{
 		Passenger: models.Passenger{
@@ -241,8 +244,8 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 			FlightRating:   0,
 			CompanyRating:  0,
 			IsQuickReserve: params.IsQuickReserve,
-			Price:          db.CalculatePriceFlight(uint(flightID), params.Seats[0].ID, params.Users[0].ID, nil, params.IsQuickReserve), // TODO Add support for features
-			Features:       nil,                                                                                                         // TODO Add support for features
+			Price:          db.CalculatePriceFlight(uint(flightID), params.Seats[0].ID, params.Users[0].ID, params.Features, params.IsQuickReserve, params.BigSuitcase, params.SmallSuitcase),
+			Features:       resFeatures,
 		},
 	}
 
@@ -282,8 +285,8 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 				FlightRating:   0,
 				CompanyRating:  0,
 				IsQuickReserve: params.IsQuickReserve,
-				Price:          db.CalculatePriceFlight(uint(flightID), params.Seats[i].ID, params.Users[i].ID, nil, params.IsQuickReserve), // TODO Add support for features
-				Features:       nil,                                                                                                         // TODO Add support for features
+				Price:          db.CalculatePriceFlight(uint(flightID), params.Seats[i].ID, params.Users[i].ID, params.Features, params.IsQuickReserve, params.BigSuitcase, params.SmallSuitcase),
+				Features:       resFeatures,
 			},
 			MasterRef: masterReservation.ID,
 		}
@@ -301,7 +304,7 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 	return &masterReservation, nil
 }
 
-func (db *Store) CalculatePriceFlight(flightID uint, seatID uint, userID uint, features []models.FeatureAirline, isQuickReserve bool) float64 {
+func (db *Store) CalculatePriceFlight(flightID uint, seatID uint, userID uint, features []models.FeatureAirline, isQuickReserve bool, BigSuitCase int, SmallSuitCase int) float64 {
 	var flightPrices models.PriceList
 	var seat models.Seat
 	price := float64(0.0)
@@ -321,7 +324,8 @@ func (db *Store) CalculatePriceFlight(flightID uint, seatID uint, userID uint, f
 	if isQuickReserve {
 		price *= flightPrices.QuickReservationPriceScale
 	}
-
+	price += float64(BigSuitCase) * flightPrices.BigSuitcase
+	price += float64(SmallSuitCase) * flightPrices.SmallSuitcase
 	// Add prices of features
 	if features != nil {
 		for _, feature := range features {

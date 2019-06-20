@@ -99,3 +99,24 @@ func (db *Store) GetAirlineReservations(id uint) ([]models.FlightReservation, er
 	}
 	return retVal, nil
 }
+
+func (db *Store) GetAirlineFeatures(id uint) ([]models.FeatureAirline, error) {
+	var retVal []models.FeatureAirline
+	if err := db.Set("gorm:auto_preload", true).Where("airline_id = ?", id).Find(&retVal).Error; err != nil {
+		return retVal, err
+	}
+	return retVal, nil
+}
+
+func (db *Store) AddAirlineFeature(feature models.FeatureAirline) {
+	db.Create(&feature)
+}
+
+func (db *Store) UpdateAirlineFeature(feature models.FeatureAirline) {
+	db.Model(&feature).Where("id = ?", feature.ID).Update(feature)
+}
+
+func (db *Store) DeleteAirlineFeature(feature models.FeatureAirline) {
+	db.Where("id = ?", feature.ID).Delete(&feature)
+}
+

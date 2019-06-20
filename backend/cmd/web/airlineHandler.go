@@ -207,3 +207,93 @@ func (app *Application) GetAirlineReservations(w http.ResponseWriter, r *http.Re
 		return
 	}
 }
+
+func (app *Application) GetAirlineFeatures(w http.ResponseWriter, r *http.Request) {
+	var airlineID uint
+	if getAccountType(r) == "AirlineAdmin" {
+		// The request came from a airline admin
+		email := getEmail(r)
+		user, err := app.Store.GetAirlineAdmin(email)
+		if err != nil {
+			app.ErrorLog.Printf("Could not retrive airline admin")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		airlineID = user.AirlineID
+	} else {
+		// The request came from a regular user
+		// Airline ID was sent as request payload
+		id, _ := r.URL.Query()["airline"]
+		idInt, err := strconv.ParseUint(id[0], 10, 64)
+		airlineID = uint(idInt)
+		if err != nil {
+			app.ErrorLog.Println("Could not decode JSON")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	}
+
+	features, err := app.Store.GetAirlineFeatures(airlineID)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive airline features")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = json.NewEncoder(w).Encode(features)
+	if err != nil {
+		app.ErrorLog.Printf("Cannot encode airline features into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) AddAirlineFeature(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+	if err != nil {
+		app.ErrorLog.Printf("Could not retrive airline admin")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var feature models.FeatureAirline
+	if err := json.NewDecoder(r.Body).Decode(&feature); err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if feature.Price < 0 {
+		app.ErrorLog.Println("Invalid request")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	feature.AirlineID = user.AirlineID
+
+	app.Store.AddAirlineFeature(feature)
+}
+
+func (app *Application) UpdateAirlineFeature(w http.ResponseWriter, r *http.Request) {
+	var feature models.FeatureAirline
+	if err := json.NewDecoder(r.Body).Decode(&feature); err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if feature.Price < 0 {
+		app.ErrorLog.Println("Invalid request")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	app.Store.UpdateAirlineFeature(feature)
+}
+
+func (app *Application) DeleteAirlineFeature(w http.ResponseWriter, r *http.Request) {
+	var feature models.FeatureAirline
+	if err := json.NewDecoder(r.Body).Decode(&feature); err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	app.Store.DeleteAirlineFeature(feature)
+}

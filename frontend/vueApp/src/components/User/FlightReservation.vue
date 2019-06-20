@@ -70,6 +70,55 @@
                                             </v-layout>
                                         </div>
                                         <v-flex>
+                                            <v-dialog v-model="dialog" width="500">
+                                                 <template v-slot:activator="{ on }">
+                                                    <v-btn color="blue lighten-2" dark block v-on="on">Extra features</v-btn>
+                                                </template>
+                                                <v-card>
+                                                    <v-card-title class="headline grey lighten-2" primary-title>
+                                                        Take a look at our offerings:
+                                                    </v-card-title>
+                                                    <v-card-text>
+                                                        <v-flex>
+                                                            <v-autocomplete :items="features" v-model="selected_features" label="Features" item-text="Name" item-value="Name" multiple
+                                                                chips return-object>
+                                                                <template slot="selection" slot-scope="data">
+                                                                    <v-chip :selected="data.selected" :key="JSON.stringify(data.item)" close
+                                                                            class="chip--select-multi" @input="data.parent.selectItem(data.item)">
+                                                                        <v-icon style="margin-right: 10px;">{{data.item.Icon}}</v-icon>
+                                                                        {{ data.item.Name }}
+                                                                    </v-chip>
+                                                                </template>
+                                                                <template slot="item" slot-scope="data">
+                                                                    <template>
+                                                                        <v-list-tile-avatar>
+                                                                            <v-icon>{{data.item.Icon}}</v-icon>
+                                                                        </v-list-tile-avatar>
+                                                                        <v-list-tile-content>
+                                                                        <v-list-tile-title v-html="data.item.Name"></v-list-tile-title>
+                                                                        <v-list-tile-sub-title v-html="data.item.Description"></v-list-tile-sub-title>
+                                                                        </v-list-tile-content>
+                                                                        <v-list-tile-action>
+                                                                        <v-list-tile-action-text>{{ data.item.Price }}€</v-list-tile-action-text>
+                                                                        </v-list-tile-action>
+                                                                    </template>
+                                                                </template>
+                                                            </v-autocomplete>
+                                                        </v-flex>
+                                                        <v-layout row>
+                                                            <v-flex xs6 mx-2><span>Small suitcase price: {{flight.SmallSuitcase}}€</span></v-flex>
+                                                            <v-flex xs6><span>Big suitcase price: {{flight.BigSuitcase}}€</span></v-flex>
+                                                        </v-layout>
+                                                        <v-layout row>
+                                                            <v-flex xs6 mx-2><v-text-field v-model="SmallSuitcase" label = "Small luggage:"></v-text-field></v-flex>
+                                                            <v-flex xs6><v-text-field v-model="BigSuitcase" label = "Big luggage:"></v-text-field></v-flex>
+                                                        </v-layout>
+                                                    </v-card-text>
+                                                </v-card>
+                                            </v-dialog>
+                                        </v-flex>
+                                        <v-flex mt-5><span class = "display-1">Total Price: {{price}}</span></v-flex>
+                                        <v-flex mt-4>
                                             <v-btn @click="reserve" block color="info">Reserve</v-btn>
                                         </v-flex>
                                     </v-flex>
@@ -147,6 +196,10 @@
                 flightId: this.$route.query.flightId,
                 self: null,
                 isLogIn: false,
+                BigSuitcase: "0",
+                SmallSuitcase: "0",
+                selected_features: [],
+                features: [],
                 flight:{
                     Airplane:{
                         Seats:[]
@@ -161,6 +214,7 @@
                 Seats:[],
                 userInfo:[],
                 friends:[],
+                dialog: false,
                 dialogUserInfo: false,
                 snackbar_fields: {
                     snackbar: false,
@@ -182,6 +236,15 @@
             axios.get("http://localhost:8000/api/flight/"+ this.flightId +"/getFlight")
                  .then(res =>{
                         this.flight = res.data;
+                        axios.create({withCredentials: true}).get('http://localhost:8000/api/airline/features', {
+                            params: {
+                                airline: this.flight.AirlineID
+                            }
+                         })
+                            .then(resFet => {
+                                this.features = resFet.data;
+                            })
+                            .catch(err => alert("Could not retrieve features"))
                  });
             axios.create({withCredentials:true}).get("http://localhost:8000/api/user/getFriends")
                 .then(res =>{
@@ -244,6 +307,46 @@
             reserve(e) {
                 e.preventDefault();
                 localStorage.setItem('destination',this.flight.Destination.Name);
+                if(!this.BigSuitcase || !this.SmallSuitcase){
+                    this.snackbar_fields.text = "Number of Big Suitcases and Small Suitcases must be filled!";
+                    this.snackbar_fields.color = "warning";
+                    this.snackbar_fields.snackbar = true;
+                    this.BigSuitcase = "0";
+                    this.SmallSuitcase = "0";
+                    return;
+                }
+                if(isNaN(parseInt(this.BigSuitcase))){
+                    this.snackbar_fields.text = "Number of Big Suitcases must be integer!";
+                    this.snackbar_fields.color = "warning";
+                    this.snackbar_fields.snackbar = true;
+                    this.BigSuitcase = "0";
+                    return;
+                }else{
+                    if(parseInt(this.BigSuitcase) < 0){
+                        this.snackbar_fields.text = "Number of Big Suitcases must be positive number!";
+                        this.snackbar_fields.color = "warning";
+                        this.snackbar_fields.snackbar = true;
+                        this.BigSuitcase = "0";
+                        
+                        return;
+                    }
+                }
+                if(isNaN(parseInt(this.SmallSuitcase))){
+                    this.snackbar_fields.text = "Number of Big Suitcases must be integer!";
+                    this.snackbar_fields.color = "warning";
+                    this.snackbar_fields.snackbar = true;
+                    this.SmallSuitcase = "0";
+                    return;
+                }else{
+                    if(parseInt(this.SmallSuitcase) < 0){
+                        this.snackbar_fields.text = "Number of Big Suitcases must be positive number!";
+                        this.snackbar_fields.color = "warning";
+                        this.snackbar_fields.snackbar = true;
+                        this.SmallSuitcase = "0";
+                        return;
+                    }
+                }
+
                 for (let i = 0; i < this.userInfo.length; i++) {
                     if (!this.checkInfo(i, this.userInfo[i].Type)) {
                         this.snackbar_fields.text = "Please fill in the required fields";
@@ -254,8 +357,11 @@
                 }
 
                 const payload = {
+                    "BigSuitcase": parseInt(this.BigSuitcase),
+                    "SmallSuitcase": parseInt(this.SmallSuitcase),
                     "Seats": this.Seats,
                     "Users": this.userInfo,
+                    "Features": this.selected_features
                 };
 
                 axios.create({withCredentials: true}).post('http://localhost:8000/api/reservations/airline/reserve/q='+this.flightId, payload)
@@ -276,6 +382,34 @@
             }
         },
         computed:{
+          price: function(){
+              var retVal = 0;
+              for (let seat of this.Seats) {
+                  if(seat.Class === "ECONOMIC"){
+                      retVal += this.flight.PriceECONOMY
+                  }else if(seat.Class === "BUSINESS"){
+                      retVal += this.flight.PriceBUSINESS
+                  }else{
+                      retVal += this.flight.PriceFIRSTCLASS
+                  }
+              }
+              for (let feature of this.selected_features){
+                  retVal += feature.Price
+              }
+              var bgSuitCase = parseInt(this.BigSuitcase);
+              var smlSuitCase = parseInt(this.SmallSuitcase);
+              if(!isNaN(bgSuitCase)){
+                  if (bgSuitCase > 0){
+                      retVal += bgSuitCase * this.flight.BigSuitcase
+                  }
+              }
+              if(!isNaN(smlSuitCase)){
+                  if (smlSuitCase > 0){
+                      retVal += smlSuitCase * this.flight.SmallSuitcase
+                  }
+              }
+              return retVal;
+          },
           mode: function(){
               if(this.isLogIn){
                   return "reservation";

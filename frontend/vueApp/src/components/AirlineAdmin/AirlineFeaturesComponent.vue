@@ -10,7 +10,7 @@
                         <v-container>
                             <v-layout v-bind="binding" align-center justify-start row wrap>
                                 <v-flex xs4>
-                                    <v-btn fab large color="red" @click="addRow">
+                                    <v-btn fab large color="primary" @click="addRow">
                                         <v-icon x-large color="white">add</v-icon>
                                     </v-btn>
                                 </v-flex>
@@ -23,48 +23,26 @@
                                                         <v-icon x-large>{{value.Icon}}</v-icon>
                                                     </v-flex>
                                                     <v-flex>
-                                                        <v-autocomplete
-                                                                v-model="value.Icon"
-                                                                :items="icons_model"
-                                                                :label="`Pick an icon`"
-                                                                prepend-inner-icon="wallpaper"
-                                                                persistent-hint
-                                                        >
+                                                        <v-autocomplete v-model="value.Icon" :items="icons_model" :label="`Pick an icon`"
+                                                            prepend-inner-icon="wallpaper" persistent-hint>
                                                             <template v-slot:append-outer>
-                                                                <v-slide-x-reverse-transition
-                                                                        mode="out-in"
-                                                                >
-                                                                </v-slide-x-reverse-transition>
+                                                                <v-slide-x-reverse-transition mode="out-in"></v-slide-x-reverse-transition>
                                                             </template>
                                                         </v-autocomplete>
                                                     </v-flex>
                                                     <v-flex >
-                                                        <v-text-field
-                                                                v-model="value.Name"
-                                                                label="Name"
-                                                                class="body-2"
-                                                                prepend-inner-icon="input"
-                                                                required
-                                                        ></v-text-field>
+                                                        <v-text-field v-model="value.Name" label="Name" class="body-2"
+                                                            prepend-inner-icon="input" required>
+                                                        </v-text-field>
                                                     </v-flex>
                                                     <v-flex>
-                                                        <v-textarea
-                                                                auto-grow
-                                                                name="input-2-2"
-                                                                label="Description"
-                                                                prepend-inner-icon="note"
-                                                                class="body-2"
-                                                                v-model="value.Description"
-                                                        ></v-textarea>
+                                                        <v-textarea auto-grow name="input-2-2" label="Description" prepend-inner-icon="note" class="body-2" v-model="value.Description">
+                                                        </v-textarea>
                                                     </v-flex>
                                                     <v-flex>
-                                                        <v-text-field
-                                                                v-model="value.Price"
-                                                                label="Price"
-                                                                class="body-2"
-                                                                prepend-inner-icon="euro_symbol"
-                                                                required
-                                                        ></v-text-field>
+                                                        <v-text-field v-model="value.Price" label="Price"
+                                                            class="body-2" prepend-inner-icon="euro_symbol" required>
+                                                        </v-text-field>
                                                     </v-flex>
                                                     <v-flex>
                                                         <v-tooltip bottom>
@@ -98,48 +76,27 @@
                                                         <v-icon x-large>{{value.Icon}}</v-icon>
                                                     </v-flex>
                                                     <v-flex>
-                                                        <v-autocomplete
-                                                                v-model="value.Icon"
-                                                                :items="icons_model"
-                                                                :label="`Pick an icon`"
-                                                                prepend-inner-icon="wallpaper"
-                                                                persistent-hint
-                                                        >
+                                                        <v-autocomplete v-model="value.Icon" :items="icons_model"
+                                                            :label="`Pick an icon`" prepend-inner-icon="wallpaper" persistent-hint>
                                                             <template v-slot:append-outer>
-                                                                <v-slide-x-reverse-transition
-                                                                        mode="out-in"
-                                                                >
+                                                                <v-slide-x-reverse-transition mode="out-in">
                                                                 </v-slide-x-reverse-transition>
                                                             </template>
                                                         </v-autocomplete>
                                                     </v-flex>
                                                     <v-flex >
-                                                        <v-text-field
-                                                                v-model="value.Name"
-                                                                label="Name"
-                                                                class="body-2"
-                                                                prepend-inner-icon="input"
-                                                                required
-                                                        ></v-text-field>
+                                                        <v-text-field v-model="value.Name" label="Name" class="body-2"
+                                                        prepend-inner-icon="input" required></v-text-field>
                                                     </v-flex>
                                                     <v-flex>
-                                                        <v-textarea
-                                                                auto-grow
-                                                                name="input-2-2"
-                                                                label="Description"
-                                                                prepend-inner-icon="note"
-                                                                class="body-2"
-                                                                v-model="value.Description"
-                                                        ></v-textarea>
+                                                        <v-textarea auto-grow name="input-2-2" label="Description"
+                                                            prepend-inner-icon="note" class="body-2" v-model="value.Description">
+                                                        </v-textarea>
                                                     </v-flex>
                                                     <v-flex>
-                                                        <v-text-field
-                                                                v-model="value.Price"
-                                                                label="Price"
-                                                                class="body-2"
-                                                                prepend-inner-icon="euro_symbol"
-                                                                required
-                                                        ></v-text-field>
+                                                        <v-text-field v-model="value.Price" label="Price" class="body-2"
+                                                            prepend-inner-icon="euro_symbol" required> 
+                                                        </v-text-field>
                                                     </v-flex>
                                                     <v-flex>
                                                         <v-tooltip bottom>
@@ -186,7 +143,7 @@
     import { icons } from '../../iconList';
 
     export default {
-        name: "HotelFeaturesComponent",
+        name: "AirlineFeaturesComponent",
         icons_model: null,
         computed: {
             binding () {
@@ -213,12 +170,12 @@
         },
         methods: {
             getFeatures(){
-                axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/features')
-                    .then(res => {
-                        this.features = res.data;
-                        this.backup = JSON.parse(JSON.stringify(this.features));
-                    })
-                    .catch(err => alert("Could not retrieve features"))
+                axios.create({withCredentials: true}).get('http://localhost:8000/api/airline/features')
+                .then(res => {
+                    this.features = res.data;
+                    this.backup = JSON.parse(JSON.stringify(this.features));
+                })
+                .catch(err => alert("Could not retrieve features"))
             },
             addFeature(index) {
                 if (!Number.isInteger(parseInt(this.new_features[index].Price)) || parseInt(this.new_features[index].Price) < 0) {
@@ -226,7 +183,7 @@
                     return;
                 }
                 this.new_features[index].Price = parseInt(this.new_features[index].Price);
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/features', this.new_features[index])
+                axios.create({withCredentials: true}).post('http://localhost:8000/api/airline/features', this.new_features[index])
                     .then(res => {
                         this.getFeatures();
                         this.new_features.splice(index, 1);
@@ -243,7 +200,7 @@
                 }
                 this.features[index].Price = parseInt(this.features[index].Price);
 
-                axios.create({withCredentials: true}).put('http://localhost:8000/api/hotel/features', this.features[index])
+                axios.create({withCredentials: true}).put('http://localhost:8000/api/airline/features', this.features[index])
                     .then(res => {
                         this.backup = JSON.parse(JSON.stringify(this.features));
                     })
@@ -253,7 +210,7 @@
                 this.features = JSON.parse(JSON.stringify(this.backup));
             },
             deleteFeature(index) {
-                axios.create({withCredentials: true}).delete('http://localhost:8000/api/hotel/features', { data: this.features[index] })
+                axios.create({withCredentials: true}).delete('http://localhost:8000/api/airline/features', { data: this.features[index] })
                     .then(res => {
                         this.features.splice(index, 1);
                         this.backup = JSON.parse(JSON.stringify(this.features));

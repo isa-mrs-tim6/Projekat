@@ -458,9 +458,6 @@
                 if (this.fFeatures == null) {
                     this.fFeatures = [];
                 }
-                for(let i=0; i < this.fFeatures.length; i++){
-                    this.fPrice += this.fFeatures[i].Price;
-                }
                 this.vName =  this.reservations[index].Master.ReservationRentACar.Vehicle.Name;
                 this.vType = this.reservations[index].Master.ReservationRentACar.Vehicle.Type;
                 this.vCapacity = this.reservations[index].Master.ReservationRentACar.Vehicle.Capacity;
@@ -477,9 +474,6 @@
                 this.hFeatures = this.reservations[index].Master.ReservationHotel.Features;
                 if (this.hFeatures == null) {
                     this.hFeatures = [];
-                }
-                for(let i=0; i < this.hFeatures.length; i++){
-                    this.hPrice += this.hFeatures[i].Price;
                 }
                 this.hAddress = this.reservations[index].Master.ReservationHotel.Hotel.Address;
                 this.hRating = this.reservations[index].Master.ReservationHotel.HotelRating;
@@ -500,7 +494,7 @@
                     }
                     this.roomRatings.push(rating);
                 }
-                console.log(this.roomRatings);
+                console.log(this.resDetails);
                 this.total = this.fPrice + this.hPrice + this.rPrice;
 
             },
