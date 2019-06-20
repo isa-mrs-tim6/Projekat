@@ -76,7 +76,7 @@
                     EndDate:  this.endDate,
                 };
                 console.log(res);
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/' + this.reservationID + '/reserveVehicle', res)
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/' + this.reservationID + '/reserveVehicle', res)
                     .then(res =>{
                         this.SuccessSnackbar = true;
                         this.SuccessSnackbarText = 'Reservation complete';

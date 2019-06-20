@@ -365,7 +365,7 @@
             }
         },
         created(){
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/flight/getCompanyFlights")
+            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/getCompanyFlights")
                 .then(res => {
                     this.flights = res.data;
                 });
@@ -375,7 +375,7 @@
         },
         methods:{
             checkFirstPass(){
-                axios.create({withCredentials: true}).get("http://localhost:8000/api/admin/checkFirstPass")
+                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
                     .then(
                         res =>{
                             if(res.data === false){
@@ -462,7 +462,7 @@
                 this.editedItem = Object.assign({}, this.defaultItem);
                 this.editedSeats = JSON.parse(JSON.stringify(this.defaultSeats));
                 this.editedIndex = -1;
-                axios.create({withCredentials: true}).get("http://localhost:8000/api/flight/getCompanyFlights")
+                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/getCompanyFlights")
                 .then(res => {
                     this.flights = res.data;
                 });
@@ -480,9 +480,9 @@
                     BigSuitcase: this.editedItem.BigSuitcase.toString()
                 };
                 Object.assign(this.flights[this.editedIndex], this.editedItem);
-                axios.create({withCredentials: true}).post("http://localhost:8000/api/priceList/update", flight)
+                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/priceList/update", flight)
                     .then(res => {
-                        axios.create({withCredentials: true}).get("http://localhost:8000/api/flight/getCompanyFlights")
+                        axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/getCompanyFlights")
                             .then(res => {
                                 this.flights = res.data;
                                 this.SuccessSnackbar = true;
@@ -513,9 +513,9 @@
                     FlightID: this.flights[this.editedIndex].ID.toString(),
                     AirplaneObject: this.flights[this.editedIndex].Airplane
                 };
-                axios.create({withCredentials: true}).post("http://localhost:8000/api/flight/updateSeats", flight)
+                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/updateSeats", flight)
                     .then(res => {
-                        axios.create({withCredentials: true}).get("http://localhost:8000/api/flight/getCompanyFlights")
+                        axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/getCompanyFlights")
                             .then(res => {
                                 this.flights = res.data;
                                 this.SuccessSnackbar = true;

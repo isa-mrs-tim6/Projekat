@@ -23,8 +23,8 @@ const (
 
 func main() {
 	// SETUP DB CONNECTION DETAILS
-	username := flag.String("username", "postgres", "Database username")
-	password := flag.String("password", "admin", "Database password")
+	username := flag.String("username", "power_user", "Database username")
+	password := flag.String("password", "poweruserpassword", "Database password")
 	recreate := flag.Bool("recreate", false, "Recreate database tables")
 	demo := flag.Bool("demo", false, "Adds mock-up objects for showcasing")
 	emailDomain := flag.String("email", "", "Email domain")
@@ -234,7 +234,7 @@ func (app *Application) RunServer() {
 		ErrorLog: app.ErrorLog,
 		Handler: handlers.CORS(
 			handlers.AllowCredentials(),
-			handlers.AllowedOrigins([]string{"http://localhost:8080"}),
+			handlers.AllowedOrigins([]string{"http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:5000"}),
 			handlers.AllowedHeaders([]string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"}),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}))(app.Routes()),
 	}

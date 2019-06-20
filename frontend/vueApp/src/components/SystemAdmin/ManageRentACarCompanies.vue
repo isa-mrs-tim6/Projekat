@@ -77,7 +77,7 @@
             }
         },
         created() {
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getRentACarCompanies')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getRentACarCompanies')
                 .then(res => this.RentACarCompanies = res.data)
                 .catch(err => alert("Could not retrieve rent-a-car companies"));
         },
@@ -98,9 +98,9 @@
                     return;
                 }
 
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/rentACarCompany/addRentACarCompany', newRentACarCompany)
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/addRentACarCompany', newRentACarCompany)
                     .then(res =>
-                        axios.create({withCredentials: true}).get('http://localhost:8000/api/rentACarCompany/getRentACarCompanies')
+                        axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getRentACarCompanies')
                             .then(res => this.RentACarCompanies = res.data)
                             .catch(err => alert("Could not retrieve rent-a-car companies"))
                     .catch(err => alert("Error adding new rent-a-car company")));

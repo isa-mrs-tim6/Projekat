@@ -67,7 +67,7 @@ export default {
       axios
         .create({ withCredentials: true })
         .get(
-          "http://localhost:8000/api/flight/" + idx + "/quickReservation"
+          "http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/" + idx + "/quickReservation"
         )
         .then(res => {
           this.results = res.data;
@@ -78,7 +78,7 @@ export default {
         ReservationID: id,
         Number: seatNumber,
       }
-      axios.create({withCredentials: true}).delete("http://localhost:8000/api/flight/quickReservation",{data: quickReservationDto})
+      axios.create({withCredentials: true}).delete("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/quickReservation",{data: quickReservationDto})
                     .then(res => {
                         for (let o of this.seats.Seats) {
                           if (o.Number === seatNumber){
@@ -115,7 +115,7 @@ export default {
         FlightId: this.flight.ID
       };
       axios.create({withCredentials: true})
-        .post("http://localhost:8000/api/flight/quickReservation",quickReservationDto)
+        .post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/quickReservation",quickReservationDto)
         .then(res=>{
           this.seats.Seats[this.selectedIndex].Disabled = true;
           this.seats.SelectedSeat = -1;

@@ -64,7 +64,7 @@
         },
         created(){
             if (this.reservationID != null) {
-            axios.create({withCredentials:true}).get("http://localhost:8000/api/reservations/" + this.reservationID + "/reservation")
+            axios.create({withCredentials:true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/reservations/" + this.reservationID + "/reservation")
                 .then(res =>{
                     this.reservation = res.data;
                 });

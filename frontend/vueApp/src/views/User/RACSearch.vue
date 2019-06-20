@@ -53,7 +53,7 @@
                                 <v-card-text>
                                     <v-layout row>
                                         <v-flex xs2>
-                                            <img width="100%" height="100%" v-bind:src='"http://localhost:8000/" + item.Picture'>
+                                            <img width="100%" height="100%" v-bind:src='"http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/" + item.Picture'>
                                         </v-flex>
                                         <v-flex xs8>
                                             <v-layout row >
@@ -163,7 +163,7 @@
                     "From": moment(this.time.from,"YYYY-MM-DD").valueOf().toString(),
                     "To": moment(this.time.to,"YYYY-MM-DD").valueOf().toString(),
                 };
-                axios.create({withCredentials: true}).post("http://localhost:8000/api/search/rac", SearchQuery).
+                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/search/rac", SearchQuery).
                     then(res => {
                         this.items = res.data;
 

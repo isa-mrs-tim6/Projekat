@@ -253,13 +253,13 @@
             }
         },
         mounted() {
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/rewards')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/rewards')
                 .then(res => {
                     this.rewards = res.data;
                     this.backup = JSON.parse(JSON.stringify(this.rewards));
                 })
                 .catch(err => alert("Could not retrieve hotel rewards"));
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/features')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/features')
                 .then(res => {
                     this.features = res.data;
                 })
@@ -283,7 +283,7 @@
                     return;
                 }
 
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/rewards', this.new_rewards[index])
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/rewards', this.new_rewards[index])
                     .then(res => {
                         this.rewards.unshift(this.new_rewards[index]);
                         this.backup = JSON.parse(JSON.stringify(this.rewards));
@@ -311,7 +311,7 @@
                     return;
                 }
                 
-                axios.create({withCredentials: true}).put('http://localhost:8000/api/hotel/rewards', this.rewards[index])
+                axios.create({withCredentials: true}).put('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/rewards', this.rewards[index])
                     .then(res => {
                         this.backup = JSON.parse(JSON.stringify(this.rewards));
                     })
@@ -321,7 +321,7 @@
                 this.rewards = JSON.parse(JSON.stringify(this.backup));
             },
             deleteFeature(index) {
-                axios.create({withCredentials: true}).delete('http://localhost:8000/api/hotel/rewards', { data: this.rewards[index] })
+                axios.create({withCredentials: true}).delete('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/rewards', { data: this.rewards[index] })
                     .then(res => {
                         this.rewards.splice(index, 1);
                         this.backup = JSON.parse(JSON.stringify(this.rewards));

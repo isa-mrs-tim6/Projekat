@@ -23,7 +23,7 @@
             }
         },
         created() {
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getHotels')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getHotels')
                 .then(res => this.hotels = res.data)
                 .catch(err => console.log(err));
         },

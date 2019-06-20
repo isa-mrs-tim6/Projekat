@@ -74,7 +74,7 @@
             }
         },
         created() {
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getRooms')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getRooms')
                 .then(res => this.Rooms = res.data)
                 .catch(err => alert("Could not retrieve hotel rooms"));
         },
@@ -90,9 +90,9 @@
                     };
                     rooms.push(newRoom);
                 }
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/addRooms', rooms)
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/addRooms', rooms)
                     .then(res =>
-                        axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getRooms')
+                        axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getRooms')
                             .then(res => this.Rooms = res.data)
                             .catch(err => alert("Could not retrieve hotel rooms"))
                             .catch(err => alert("Error adding new rooms")));
@@ -103,9 +103,9 @@
             deleteRooms(e) {
                 e.preventDefault();
                 let deletedRooms = this.$refs.roomReference.getSelected();
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/deleteRooms', deletedRooms)
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/deleteRooms', deletedRooms)
                     .then(res =>
-                        axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getRooms')
+                        axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getRooms')
                             .then(res => this.Rooms = res.data)
                             .catch(err => alert("Could not retrieve hotel rooms"))
                     .catch(err => {
@@ -119,8 +119,8 @@
                     });
             },
             updateRoom: function(room) {
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/updateRoom', room)
-                    .then(res => axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getRooms')
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/updateRoom', room)
+                    .then(res => axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getRooms')
                         .then(res => this.Rooms = res.data)
                         .catch(err => alert("Could not retrieve hotel rooms"))
                         .catch(err => alert("Error updating room")));

@@ -176,12 +176,12 @@
             }
         },
         created() {
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/' + this.hotelID + '/getRoomCapacities')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/' + this.hotelID + '/getRoomCapacities')
                 .then(res => {
                     this.capacities = res.data;
                 })
                 .catch(err => alert(err));
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/features', {
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/features', {
                 params: {
                     hotel: this.hotelID
                 }
@@ -196,7 +196,7 @@
                 this.num_of_guests = query.Guests;
                 this.time.from = query.From;
                 this.time.to = query.To;
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/search/' + this.hotelID + '/rooms', query)
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/search/' + this.hotelID + '/rooms', query)
                     .then(res => {
                         this.rooms = res.data;
                         this.checkboxes = [];
@@ -238,7 +238,7 @@
                     return;
                 }
 
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/reservations/hotel/' + this.hotelID + '/reserve/masterRef='+ this.reservationID, query)
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/reservations/hotel/' + this.hotelID + '/reserve/masterRef='+ this.reservationID, query)
                     .then(res => {
                         this.$router.push({ path: '/user/reserve', query: { reservationID: this.reservationID, passengers: this.passengers }});
                     })

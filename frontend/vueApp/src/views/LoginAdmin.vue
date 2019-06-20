@@ -88,7 +88,7 @@
                     Password: this.Password,
                     Type: this.Type.split(' ').join(''),
                 };
-                axios.create({withCredentials: true}).post("http://localhost:8000/api/admin/login", credentials)
+                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/login", credentials)
                     .then(
                         res => {
                             switch (res.data) {
@@ -135,7 +135,7 @@
                     Password: this.Password,
                     Type: this.Type.split(' ').join(''),
                 };
-                axios.post("http://localhost:8000/api/mail/resend", credentials)
+                axios.post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/mail/resend", credentials)
                     .then(res => {
                         this.snackbar_fields.text = "Email resent";
                         this.snackbar_fields.color = "success";

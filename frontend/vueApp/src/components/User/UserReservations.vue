@@ -384,7 +384,7 @@
             }
         },
         beforeCreate() {
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/reservations/getReservations").
+            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/reservations/getReservations").
             then(res => {
                 this.reservations = res.data;
                 for(let i = 0; i < this.reservations.length; i++) {
@@ -409,7 +409,7 @@
                     date = moment(this.reservations[i].Master.ReservationHotel.End).format('DD.MM.YYYY');
                     this.reservations[i].Master.ReservationHotel.End = date.toString();
                 }
-                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getScale")
+                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/getScale")
                     .then(res2 => {
                         this.ResCount = res2.data.Count;
                         this.PriceScale = res2.data.Scale;
@@ -551,7 +551,7 @@
                 this.rateDialog = false;
             },
             accept(reservation){
-                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/accept/"+reservation.ID)
+                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/accept/"+reservation.ID)
                     .then(res => {
                         this.$router.go();
                     })
@@ -560,19 +560,19 @@
                 return reservation.IsExpiring === false
             },
             cancelFlight(reservation){
-                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/cancelFlight/"+reservation.ID)
+                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/cancelFlight/"+reservation.ID)
                     .then(res => {
                         this.$router.go();
                     })
             },
             cancelHotel(reservation){
-                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/cancelHotel/"+reservation.ID)
+                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/cancelHotel/"+reservation.ID)
                     .then(res => {
                         this.$router.go();
                     })
             },
             cancelRAC(reservation){
-                axios.create({withCredentials: true}).get("http://localhost:8000/api/user/cancelVehicle/"+reservation.ID)
+                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/cancelVehicle/"+reservation.ID)
                     .then(res => {
                         this.$router.go();
                     })
@@ -590,7 +590,7 @@
                                 Rating: this.rateStars,
                                 RoomID: 0
                             };
-                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                            axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/rate", rating)
                                 .then(res => {
                                     this.SuccessSnackbar = true;
                                     this.SuccessSnackbarText = 'Reservation successfully rated';
@@ -609,7 +609,7 @@
                                 Rating: this.rateStars,
                                 RoomID: 0
                             };
-                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                            axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/rate", rating)
                                 .then(res => {
                                     this.SuccessSnackbar = true;
                                     this.SuccessSnackbarText = 'Reservation successfully rated';
@@ -628,7 +628,7 @@
                                 Rating: this.rateStars,
                                 RoomID: this.hRooms[this.rateIndex].ID
                             };
-                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                            axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/rate", rating)
                                 .then(res => {
                                     this.SuccessSnackbar = true;
                                     this.SuccessSnackbarText = 'Reservation successfully rated';
@@ -647,7 +647,7 @@
                                 Rating: this.rateStars,
                                 RoomID: 0
                             };
-                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                            axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/rate", rating)
                                 .then(res => {
                                     this.SuccessSnackbar = true;
                                     this.SuccessSnackbarText = 'Reservation successfully rated';
@@ -666,7 +666,7 @@
                                 Rating: this.rateStars,
                                 RoomID: 0
                             };
-                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                            axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/rate", rating)
                                 .then(res => {
                                     this.SuccessSnackbar = true;
                                     this.SuccessSnackbarText = 'Reservation successfully rated';
@@ -685,7 +685,7 @@
                                 Rating: this.rateStars,
                                 RoomID: 0
                             };
-                            axios.create({withCredentials: true}).post("http://localhost:8000/api/user/rate", rating)
+                            axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/rate", rating)
                                 .then(res => {
                                     this.SuccessSnackbar = true;
                                     this.SuccessSnackbarText = 'Reservation successfully rated';

@@ -224,7 +224,7 @@
             }
         },
         beforeCreate(){
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getProfile")
+            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/getProfile")
                 .then(res =>{
                     this.isLogIn = true;
                 })
@@ -233,10 +233,10 @@
                 })
         },
         created(){
-            axios.get("http://localhost:8000/api/flight/"+ this.flightId +"/getFlight")
+            axios.get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/"+ this.flightId +"/getFlight")
                  .then(res =>{
                         this.flight = res.data;
-                        axios.create({withCredentials: true}).get('http://localhost:8000/api/airline/features', {
+                        axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/features', {
                             params: {
                                 airline: this.flight.AirlineID
                             }
@@ -246,11 +246,11 @@
                             })
                             .catch(err => alert("Could not retrieve features"))
                  });
-            axios.create({withCredentials:true}).get("http://localhost:8000/api/user/getFriends")
+            axios.create({withCredentials:true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/getFriends")
                 .then(res =>{
                         this.friends = res.data;
                 });
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getProfile")
+            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/getProfile")
                 .then(res => this.self = res.data);
         },
         methods:{
@@ -364,7 +364,7 @@
                     "Features": this.selected_features
                 };
 
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/reservations/airline/reserve/q='+this.flightId, payload)
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/reservations/airline/reserve/q='+this.flightId, payload)
                     .then(res => {
                         if (res.status === 200) {
                             this.snackbar_fields.text = "Reservation successful";

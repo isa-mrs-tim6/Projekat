@@ -76,7 +76,7 @@
             }
         },
         created() {
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/airline/getAirlines')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/getAirlines')
                 .then(res => this.Airlines = res.data)
                 .catch(err => alert("Could not retrieve airline companies"));
         },
@@ -97,9 +97,9 @@
                     return;
                 }
 
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/airline/addAirline', newAirline)
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/addAirline', newAirline)
                     .then(res =>
-                        axios.create({withCredentials: true}).get('http://localhost:8000/api/airline/getAirlines')
+                        axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/getAirlines')
                             .then(res => this.Airlines = res.data)
                             .catch(err => alert("Could not retrieve airline companies"))
                             .catch(err => alert("Error adding new airline company")));

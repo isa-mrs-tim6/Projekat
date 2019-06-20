@@ -110,10 +110,10 @@
             }
         },
         mounted() {
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getProfile')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getProfile')
                 .then(res => {
                         this.hotelProfile = res.data;
-                        this.PictureLink = 'http://localhost:8000/'+this.hotelProfile.Picture;
+                        this.PictureLink = 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/'+this.hotelProfile.Picture;
                         this.backupHotelProfile = JSON.parse(JSON.stringify(this.hotelProfile))
                     }
                 )
@@ -131,7 +131,7 @@
                 }else {
                     this.hotelProfile.Latitude = Number(this.hotelProfile.Latitude);
                     this.hotelProfile.Longitude = Number(this.hotelProfile.Longitude);
-                    axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/updateProfile', this.hotelProfile)
+                    axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/updateProfile', this.hotelProfile)
                         .then(res => {
                             this.backupHotelProfile = JSON.parse(JSON.stringify(this.hotelProfile))
                             this.snackbar_fields.text = "Update successful";
@@ -163,7 +163,7 @@
 
                 let a = null;
 
-                axios.create({withCredentials: true}).post( 'http://localhost:8000/api/upload/updateHotelProfilePicture',
+                axios.create({withCredentials: true}).post( 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/upload/updateHotelProfilePicture',
                     formData,
                     {
                         headers: {

@@ -110,7 +110,7 @@
                     Password: this.Password,
                     Passport: this.Passport
                 };
-                axios.post("http://localhost:8000/api/user/register", userProfile)
+                axios.post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/register", userProfile)
                     .then(res => this.RegComplete = true)
                     .catch(err => {
                         if (err.response.status === 406){

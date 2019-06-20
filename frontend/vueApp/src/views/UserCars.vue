@@ -28,7 +28,7 @@
             }
         },
         beforeCreate() {
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/rentACarCompany/getRentACarCompanies")
+            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getRentACarCompanies")
                 .then(res =>{
                     this.items = res.data;
                 })

@@ -75,7 +75,7 @@
             }
         },
         created() {
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getHotels')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getHotels')
                 .then(res => this.hotels = res.data)
                 .catch(err => console.log(err));
         },
@@ -90,9 +90,9 @@
                     'Description': this.Description,
                 };
                 this.clear();
-                axios.create({withCredentials: true}).post('http://localhost:8000/api/hotel/addHotel', newHotel)
+                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/addHotel', newHotel)
                     .then(res =>
-                        axios.create({withCredentials: true}).get('http://localhost:8000/api/hotel/getHotels')
+                        axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getHotels')
                             .then(res => this.hotels = res.data)
                             .catch(err => alert(err)))
                     .catch(err => alert(err));

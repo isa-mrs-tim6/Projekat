@@ -59,7 +59,7 @@
             }
         },
         mounted() {
-            axios.create({withCredentials: true}).get('http://localhost:8000/api/reservations/rewards')
+            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/reservations/rewards')
                 .then(res => {
                     this.rewards = res.data;
                     this.backup = JSON.parse(JSON.stringify(this.rewards));
@@ -84,7 +84,7 @@
                         return;
                     }
                 }
-                axios.create({withCredentials: true}).put('http://localhost:8000/api/reservations/rewards', this.rewards)
+                axios.create({withCredentials: true}).put('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/reservations/rewards', this.rewards)
                     .then(res => {
                         this.backup = JSON.parse(JSON.stringify(this.rewards));
                     })

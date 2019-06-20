@@ -22,7 +22,7 @@
                                         <v-card-text>
                                             <v-layout row align-center>
                                                 <v-flex xs2>
-                                                    <img :src = '"http://localhost:8000/" + airline.Picture' width="160px" height="100px">
+                                                    <img :src = '"http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/" + airline.Picture' width="160px" height="100px">
                                                 </v-flex>
                                                 <v-flex xs5 mx-5>
                                                     <v-layout row mb-4><span class="headline">Airline Name: {{airline.Name}}</span></v-layout>
@@ -59,7 +59,7 @@
             }
         },
         beforeCreate() {
-            axios.get("http://localhost:8000/api/airline")
+            axios.get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline")
                 .then(res =>{
                     this.airlines = res.data;
                 })

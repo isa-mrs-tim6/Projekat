@@ -8,7 +8,7 @@
                         <v-container>
                             <v-layout row>
                                 <v-flex xs3>
-                                    <img :src = '"http://localhost:8000/" + profile.Picture' width="250px" height="150px">
+                                    <img :src = '"http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/" + profile.Picture' width="250px" height="150px">
                                 </v-flex>
                                 <v-flex xs6>
                                     <v-layout row mb-3 align-center>
@@ -134,13 +134,13 @@ export default {
         }
     },
     beforeCreate() {
-        axios.get("http://localhost:8000/api/airline/"+ this.$route.params.id + "/profile")
+        axios.get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/"+ this.$route.params.id + "/profile")
             .then(res =>{
                 this.profile = res.data;
                 this.updateMap = true;
         });
 
-        axios.get("http://localhost:8000/api/airline/"+ this.$route.params.id + "/rating")
+        axios.get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/"+ this.$route.params.id + "/rating")
             .then(res =>{
                 this.rating = res.data;
         });
@@ -151,7 +151,7 @@ export default {
     },
     methods:{
         getReservations(){
-            axios.get("http://localhost:8000/api/airline/"+ this.$route.params.id + "/quickReservations")
+            axios.get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/"+ this.$route.params.id + "/quickReservations")
             .then(res =>{
                 this.reservations = res.data;
                 this.update = true;
@@ -167,9 +167,9 @@ export default {
             }
         },
         reserve(item){
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getProfile")
+            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/getProfile")
                 .then(res=>{
-                    axios.create({withCredentials: true}).post("http://localhost:8000/api/user/FlightQuickReservation", item)
+                    axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/FlightQuickReservation", item)
                         .then(res=>{
                             let vm = this;
                             this.getReservations();

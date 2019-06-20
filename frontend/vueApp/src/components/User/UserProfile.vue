@@ -62,7 +62,7 @@
             }
         },
         beforeCreate() {
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getProfile")
+            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/getProfile")
                 .then(res =>{
                     this.Name = res.data.Name;
                     this.Surname = res.data.Surname;
@@ -71,7 +71,7 @@
                     this.Address = res.data.Address;
                     this.Phone = res.data.Phone;
                     this.Picture = res.data.Picture;
-                    this.PictureLink = 'http://localhost:8000/'+this.Picture;
+                    this.PictureLink = 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/'+this.Picture;
                     this.Passport = res.data.Passport;
                     this.OldPassword = res.data.Password;
                 })
@@ -95,7 +95,7 @@
                     Password: this.Password,
                     Picture: this.Picture,
                 };
-                axios.create({withCredentials: true}).post("http://localhost:8000/api/user/updateProfile", newUserProfile)
+                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/updateProfile", newUserProfile)
                     .then(res =>{
                         this.SuccessSnackbar = true;
                         this.SuccessSnackbarText = 'Profile updated';
@@ -112,7 +112,7 @@
 
                 let a = null;
 
-                axios.create({withCredentials: true}).post( 'http://localhost:8000/api/upload/updateProfilePicture',
+                axios.create({withCredentials: true}).post( 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/upload/updateProfilePicture',
                     formData,
                     {
                         headers: {

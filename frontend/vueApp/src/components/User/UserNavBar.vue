@@ -33,7 +33,7 @@
     export default {
         name: "UserNavBar",
         beforeCreate(){
-            axios.create({withCredentials: true}).get("http://localhost:8000/api/user/getProfile")
+            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/getProfile")
                 .then(res =>{
                     this.isLogIn = true;
                 })
