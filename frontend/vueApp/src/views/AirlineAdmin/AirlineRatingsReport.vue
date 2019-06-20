@@ -44,11 +44,15 @@
             axios.create({withCredentials: true}).get('http://localhost:8000/api/airline/getAirlineReservations')
                 .then(res => {
                     this.Reservations = res.data;
+                    var k = 0;
                     for (let i = 0; i < this.Reservations.length; i++) {
-                        this.Rating += this.Reservations[i].CompanyRating;
+                        if (this.Reservations[i].CompanyRating != 0){
+                            this.Rating += this.Reservations[i].CompanyRating;
+                            k++;
+                        }
                     }
                     if (this.Reservations.length > 0) {
-                        this.Rating /= this.Reservations.length;
+                        this.Rating /= k;
                     }
                 } )
                 .catch(err => alert("Could not retrieve airline reservations"));
@@ -67,7 +71,7 @@
                             }
                         }
                     )
-            }
+            },
         },
     }
 </script>

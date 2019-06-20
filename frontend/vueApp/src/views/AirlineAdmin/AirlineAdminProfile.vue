@@ -22,7 +22,7 @@
     export default {
         name: "AirlineAdminProfile",
         components: {AdminProfile, AirlineAdminNavDrawer},
-        mounter(){
+        mounted(){
             this.checkFirstPass();
         },
         methods: {
@@ -36,8 +36,7 @@
                         }
                     )
             }
-        },
-
+        }
     }
 </script>
 

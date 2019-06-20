@@ -81,10 +81,11 @@
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/user/login", creds)
                     .then(
                         res => {
+
                             if (this.isInv){
                                 this.$router.push("/userReservations")
                             }else{
-                                this.$router.push("/user")
+                                this.$router.push("/user_flights")
                             }
                         }
                         )

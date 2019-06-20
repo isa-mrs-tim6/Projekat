@@ -8,11 +8,15 @@
                         <v-container>
                             <v-layout row>
                                 <v-flex xs3>
-                                    <img src = "../../assets/placeholder/company2.png" width="300px" height="150px">
+                                    <img src = "../../assets/placeholder/company2.png" width="250px" height="150px">
                                 </v-flex>
                                 <v-flex xs6>
-                                    <v-layout row mb-3>
-                                    <v-flex><span class = "display-1">{{profile.Name}}</span></v-flex>
+                                    <v-layout row mb-3 align-center>
+                                        <v-flex><span class = "display-1">{{profile.Name}}</span></v-flex>
+                                        <v-flex>
+                                            <v-rating v-model="rating" background-color="indigo lighten-3" empty-icon="$vuetify.icons.ratingFull"
+                                            readonly half-increments color="orange" size="48"></v-rating>
+                                        </v-flex>
                                     </v-layout>
                                     <v-layout row mt-4>
                                         <v-flex><span class = "title">Description:</span></v-flex>
@@ -28,7 +32,7 @@
                                 <v-flex xs6>
                                     <v-layout row>
                                         <v-flex mt-3>
-                                            <span class = "title">Address: </span><span class = "subheading">profile.Address</span>
+                                            <span class = "title">Address: </span><span class = "subheading">{{profile.Address}}</span>
                                         </v-flex>
                                     </v-layout>
                                     <v-layout row mt-4>
@@ -124,6 +128,7 @@ export default {
                 errorMessage: "",
                 SuccessSnackbar: false,
                 ErrorSnackbar: false,
+                rating: 0,
         }
     },
     beforeCreate() {
@@ -131,6 +136,11 @@ export default {
             .then(res =>{
                 this.profile = res.data;
                 this.updateMap = true;
+        });
+
+        axios.get("http://localhost:8000/api/airline/"+ this.$route.params.id + "/rating")
+            .then(res =>{
+                this.rating = res.data;
         });
         
     },
@@ -159,9 +169,26 @@ export default {
                 .then(res=>{
                     axios.create({withCredentials: true}).post("http://localhost:8000/api/user/FlightQuickReservation", item)
                         .then(res=>{
+                            let vm = this;
                             this.getReservations();
                             this.succMessage = "Successfully created reservation";
                             this.SuccessSnackbar = true;
+                            setTimeout(function () {
+                                vm.$router.go()
+                            }, 3000);
+                        })
+                        .catch(err =>{
+                            let vm = this;
+                            if(err.response.status === 406){
+                                this.errorMessage = "Quick reservation already taken!";
+                                this.ErrorSnackbar = true;
+                            }else{
+                                this.errorMessage = "Failed to reserve please try again!";
+                                this.ErrorSnackbar = true;
+                            }
+                            setTimeout(function () {
+                                vm.$router.go()
+                            }, 3000);
                         })
                 })
                 .catch(err =>{

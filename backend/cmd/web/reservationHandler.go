@@ -128,7 +128,7 @@ func (app *Application) CompleteQuickResFlight(w http.ResponseWriter, r *http.Re
 
 	if err != nil {
 		app.ErrorLog.Printf("Cannot complete quick reservation")
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 }
@@ -310,6 +310,7 @@ func (app *Application) ReserveFlight(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.ErrorLog.Println("Could not complete reservation")
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	if err := json.NewEncoder(w).Encode(reservation.ID); err != nil {
 		app.ErrorLog.Printf("Cannot encode reservation data into JSON object")
