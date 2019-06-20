@@ -234,7 +234,7 @@ func (app *Application) RunServer() {
 		ErrorLog: app.ErrorLog,
 		Handler: handlers.CORS(
 			handlers.AllowCredentials(),
-			handlers.AllowedOrigins([]string{"http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:5000"}),
+			handlers.AllowedOrigins([]string{"http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:5000"}),
 			handlers.AllowedHeaders([]string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"}),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}))(app.Routes()),
 	}

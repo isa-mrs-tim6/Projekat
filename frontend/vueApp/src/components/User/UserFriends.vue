@@ -79,13 +79,13 @@
         },
         methods:{
             updateFriends(){
-                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/getFriends")
+                axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/user/getFriends")
                     .then(res=>{
                         this.friends = res.data;
                     })
             },
             updateRequests(){
-                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/friendRequests")
+                axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/user/friendRequests")
                     .then(res=>{
                         this.requests = res.data;
                     })
@@ -95,7 +95,7 @@
                     User2ID: id,
                     Status: status
                 };
-                axios.create({withCredentials: true}).put("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/friendRequests",friendshipDto)
+                axios.create({withCredentials: true}).put("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/user/friendRequests",friendshipDto)
                     .then(res => {
                         this.updateRequests();
                         this.updateFriends();
@@ -105,7 +105,7 @@
                 var friendshipDto = {
                     User2ID:id
                 };
-                axios.create({withCredentials: true}).delete("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/friends",{data: friendshipDto})
+                axios.create({withCredentials: true}).delete("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/user/friends",{data: friendshipDto})
                     .then(res => {
                         this.updateFriends()
                     })

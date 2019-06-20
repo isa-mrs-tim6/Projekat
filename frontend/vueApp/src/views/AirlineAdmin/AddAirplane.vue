@@ -102,7 +102,7 @@
             }
         },
         beforeCreate() {
-            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airplane/getAirplanesAndSeats")
+            axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airplane/getAirplanesAndSeats")
                 .then(res => {
                     this.items = res.data;
                 })
@@ -112,7 +112,7 @@
         },
         methods: {
             checkFirstPass(){
-                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
+                axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
                     .then(
                         res =>{
                             if(res.data === false){
@@ -182,9 +182,9 @@
                     Business: parseInt(this.Business),
                     Economy: parseInt(this.Economy)
                 };
-                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airplane/addAirplane", params)
+                axios.create({withCredentials: true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airplane/addAirplane", params)
                     .then(res => {
-                        axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airplane/getAirplanesAndSeats")
+                        axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airplane/getAirplanesAndSeats")
                             .then(res => {
                                 this.clear();
                                 this.items = res.data;

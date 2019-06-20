@@ -128,7 +128,7 @@
             }
         },
         mounted() {
-            axios.create({withCredentials:true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/destination/getCompanyDestinations')
+            axios.create({withCredentials:true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/destination/getCompanyDestinations')
                 .then(res => {
                         this.destinations = res.data
                     }
@@ -138,7 +138,7 @@
         },
         methods: {
             checkFirstPass(){
-                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
+                axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
                     .then(
                         res =>{
                             if(res.data === false){
@@ -150,9 +150,9 @@
             },
             close(){
                 this.dialog = false;
-                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/destination/'+this.editDestination.ID+'/updateDestination', this.editDestination)
+                axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/destination/'+this.editDestination.ID+'/updateDestination', this.editDestination)
                     .then(res=>{
-                        axios.create({withCredentials:true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/destination/getCompanyDestinations')
+                        axios.create({withCredentials:true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/destination/getCompanyDestinations')
                             .then(res => {
                                 this.destinations = res.data
                                 }
@@ -183,9 +183,9 @@
                 } else {
                     this.destination.Latitude = Number(this.destination.Latitude);
                     this.destination.Longitude = Number(this.destination.Longitude);
-                    axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/destination/add', this.destination)
+                    axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/destination/add', this.destination)
                         .then(res =>
-                            axios.create({withCredentials:true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/destination/getCompanyDestinations')
+                            axios.create({withCredentials:true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/destination/getCompanyDestinations')
                                 .then(res => {
                                     this.destinations = res.data;
                                     this.SuccessSnackbar = true;

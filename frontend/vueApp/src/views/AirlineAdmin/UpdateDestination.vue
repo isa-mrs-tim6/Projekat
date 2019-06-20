@@ -29,7 +29,7 @@
             }
         },
         mounted() {
-            axios.get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/destination/' + this.$route.params.id + '/getDestination')
+            axios.get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/destination/' + this.$route.params.id + '/getDestination')
                 .then(res => {
                         this.Destination = res.data;
                         this.BackupDestination = JSON.parse(JSON.stringify(this.Destination))
@@ -52,7 +52,7 @@
                 } else {
                     this.Destination.Latitude = Number(this.Destination.Latitude);
                     this.Destination.Longitude = Number(this.Destination.Longitude);
-                    axios.post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/destination/' + this.$route.params.id + '/updateDestination', this.Destination)
+                    axios.post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/destination/' + this.$route.params.id + '/updateDestination', this.Destination)
                         .then(res => this.BackupDestination = JSON.parse(JSON.stringify(this.Destination)))
                         .catch(err => console.log(err));
                 }

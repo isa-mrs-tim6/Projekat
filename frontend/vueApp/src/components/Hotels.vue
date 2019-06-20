@@ -20,7 +20,7 @@
                 <td>
                     <v-layout row>
                         <v-flex xs4>
-                            <img width="300px" height="300px" v-bind:src = '"http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/"+hotels.item.Picture'>
+                            <img width="300px" height="300px" v-bind:src = '"http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/"+hotels.item.Picture'>
                         </v-flex>
                         <v-flex xs8>
                             <v-layout style="margin-left: 5px;" column>

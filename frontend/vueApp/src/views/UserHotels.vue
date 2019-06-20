@@ -33,7 +33,7 @@
             search: function(query) {
                 this.start = query["From"];
                 this.end = query["To"];
-                axios.post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/search/hotels', query)
+                axios.post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/search/hotels', query)
                     .then(res => {
                         this.items = res.data;
                         localStorage.setItem("hotelStart", this.start);

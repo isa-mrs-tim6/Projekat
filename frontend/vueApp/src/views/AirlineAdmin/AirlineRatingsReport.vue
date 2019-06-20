@@ -30,18 +30,18 @@
             Rating: 0,
         }),
         created(){
-            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/getProfile')
+            axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/getProfile')
                 .then(res => {
                         this.Name = res.data.Name;
                     }
                 )
                 .catch(err => alert(err));
-            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/getFlightRatings')
+            axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/getFlightRatings')
                 .then(res => {
                     this.Flights = res.data;
                 } )
                 .catch(err => alert("Could not retrieve flights and their ratings"));
-            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/getAirlineReservations')
+            axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/getAirlineReservations')
                 .then(res => {
                     this.Reservations = res.data;
                     var k = 0;
@@ -62,7 +62,7 @@
         },
         methods: {
             checkFirstPass(){
-                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
+                axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
                     .then(
                         res =>{
                             if(res.data === false){

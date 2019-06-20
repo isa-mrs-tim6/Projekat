@@ -25,7 +25,7 @@
             }
         },
         created() {
-            axios.get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/'+this.$route.params.type+'/completeRegistration/q='+this.$route.params.email)
+            axios.get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/'+this.$route.params.type+'/completeRegistration/q='+this.$route.params.email)
                 .then(res => {
                     this.regSuccess = true;
                     if (this.$route.params.type === 'User') {

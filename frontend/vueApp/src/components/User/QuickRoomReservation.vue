@@ -74,7 +74,7 @@
                 "From": localStorage.getItem("hotelStart"),
                 "To": localStorage.getItem("hotelEnd"),
             };
-            axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/search/' + this.hotelID + '/quickRooms', query)
+            axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/search/' + this.hotelID + '/quickRooms', query)
                 .then(res => {
                     this.rooms = res.data;
                     this.checkboxes = [];
@@ -103,7 +103,7 @@
                     "To": localStorage.getItem("hotelEnd"),
                     "IsQuickReserve": true,
                 };
-                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/reservations/hotel/' + this.hotelID + '/reserve/masterRef='+ this.reservationID, query)
+                axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/reservations/hotel/' + this.hotelID + '/reserve/masterRef='+ this.reservationID, query)
                     .then(res => {
                         this.$router.push({ path: '/user/reserve', query: { reservationID: this.reservationID, passengers: this.tickets }});
                     })

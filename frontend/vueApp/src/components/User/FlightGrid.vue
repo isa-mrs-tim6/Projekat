@@ -9,7 +9,7 @@
                         </v-card-title>
                         <v-layout row>
                             <v-flex xs2 style="margin-left: 18px">
-                                <img width="100%" height="100%" v-bind:src='"http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/" + value.Airline.Picture'>
+                                <img width="100%" height="100%" v-bind:src='"http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/" + value.Airline.Picture'>
                             </v-flex>
                             <v-flex xs8>
                                 <v-card-title primary-title>

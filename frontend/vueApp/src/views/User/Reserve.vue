@@ -114,7 +114,7 @@
                     };
                     var dateMoment = moment(searchQuery.date,"YYYY-MM-DD");
                     searchQuery.date = dateMoment.valueOf().toString();
-                    axios.post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/search/oneWay",searchQuery)
+                    axios.post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/search/oneWay",searchQuery)
                         .then(res=>{
                             this.flights = res.data;
                             if(this.flights.length === 0){
@@ -134,7 +134,7 @@
 
                     var dateMoment2 = moment(searchQuery2.date,"YYYY-MM-DD");
                     searchQuery2.date = dateMoment2.valueOf().toString();
-                    axios.post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/search/oneWay", searchQuery2)
+                    axios.post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/search/oneWay", searchQuery2)
                         .then(res=>{
                             this.flightsReturn = res.data;
                             if(this.flightsReturn.length === 0){
@@ -153,7 +153,7 @@
                     };
                     var dateMoment = moment(searchQuery.date,"YYYY-MM-DD");
                     searchQuery.date = dateMoment.valueOf().toString();
-                    axios.post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/search/oneWay", searchQuery)
+                    axios.post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/search/oneWay", searchQuery)
                         .then(res=>{
                             this.flights = res.data;
                             if(this.flights.length === 0){
@@ -174,7 +174,7 @@
                     };
                     var dateMoment = moment(searchQuery.date,"YYYY-MM-DD");
                     searchQuery.date = dateMoment.valueOf().toString();
-                    axios.post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/search/multi", searchQuery)
+                    axios.post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/search/multi", searchQuery)
                         .then(res=>{
                             this.flights = res.data;
                             if(this.flights.length === 0){

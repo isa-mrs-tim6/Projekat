@@ -90,10 +90,10 @@
             }
         },
         mounted() {
-            axios.create({withCredentials:true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/getProfile')
+            axios.create({withCredentials:true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/getProfile')
                 .then(res => {
                         this.AirlineProfile = res.data;
-                        this.PictureLink = 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/'+this.AirlineProfile.Picture;
+                        this.PictureLink = 'http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/'+this.AirlineProfile.Picture;
                         this.BackupAirlineProfile = JSON.parse(JSON.stringify(this.AirlineProfile))
                     }
                 )
@@ -102,7 +102,7 @@
         },
         methods: {
             checkFirstPass(){
-                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
+                axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
                     .then(
                         res =>{
                             if(res.data === false){
@@ -126,7 +126,7 @@
                 } else {
                     this.AirlineProfile.Latitude = Number(this.AirlineProfile.Latitude);
                     this.AirlineProfile.Longitude = Number(this.AirlineProfile.Longitude);
-                    axios.create({withCredentials:true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/updateProfile', this.AirlineProfile)
+                    axios.create({withCredentials:true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/updateProfile', this.AirlineProfile)
                         .then(res => {this.BackupAirlineProfile = JSON.parse(JSON.stringify(this.AirlineProfile));
                                 this.SuccessSnackbar = true; })
                         .catch(err => this.ErrorSnackbar = true);
@@ -149,7 +149,7 @@
 
                 let a = null;
 
-                axios.create({withCredentials: true}).post( 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/upload/updateAirlineProfilePicture',
+                axios.create({withCredentials: true}).post( 'http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/upload/updateAirlineProfilePicture',
                     formData,
                     {
                         headers: {

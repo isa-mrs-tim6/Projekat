@@ -17,18 +17,18 @@
             Reservations: [],
         }),
         created() {
-            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getProfile')
+            axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/hotel/getProfile')
                 .then(res => {
                         this.Name = res.data.Name;
                     }
                 )
                 .catch(err => alert(err));
-            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getRoomRatings')
+            axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/hotel/getRoomRatings')
                 .then(res => {
                     this.Rooms = res.data;
                 } )
                 .catch(err => alert("Could not retrieve hotel rooms and their ratings"));
-            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getHotelReservations')
+            axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/hotel/getHotelReservations')
                 .then(res => {
                     this.Reservations = res.data;
                 } )
@@ -39,7 +39,7 @@
         },
         methods: {
             checkFirstPass(){
-                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
+                axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
                     .then(
                         res =>{
                             if(res.data === false){

@@ -17,13 +17,13 @@
             Reservations: [],
         }),
         created() {
-            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getProfile')
+            axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getProfile')
                 .then(res => {
                         this.Name = res.data.Name;
                     }
                 )
                 .catch(err => alert(err));
-            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getReservations')
+            axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getReservations')
                 .then(res => {
                     this.Reservations = res.data;
                     } )
@@ -34,7 +34,7 @@
         },
         methods: {
             checkFirstPass(){
-                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
+                axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
                     .then(
                         res =>{
                             if(res.data === false){

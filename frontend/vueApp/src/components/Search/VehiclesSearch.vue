@@ -139,7 +139,7 @@
                     'EndDate': this.EndUnix
                 };
                 this.clear();
-                axios.post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/findVehicles', vehicleParams)
+                axios.post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/findVehicles', vehicleParams)
                         .then(res =>{
                             console.log(res.data);
                                 this.vehicles = [];

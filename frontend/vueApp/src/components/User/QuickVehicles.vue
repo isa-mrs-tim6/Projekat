@@ -80,7 +80,7 @@
                 EndDate: moment(this.End,"YYYY-MM-DD").valueOf().toString(),
             };
             console.log(params);
-            axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/reservations/rac/quickReservationsCompany", params)
+            axios.create({withCredentials: true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/reservations/rac/quickReservationsCompany", params)
                 .then(res => {
                     this.Reservations = res.data;
                     if(this.Reservations === null){
@@ -98,7 +98,7 @@
                     MasterID: Number.parseInt(this.$route.query.reservationID),
                     LocationId: this.LocationID
                 };
-                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/reservation/rac/completeQuickRes', res)
+                axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/reservation/rac/completeQuickRes', res)
                     .then(res =>{
                         this.SuccessSnackbar = true;
                         this.SuccessSnackbarText = 'Reservation complete';

@@ -87,10 +87,10 @@
             }
         },
         mounted() {
-            axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getProfile')
+            axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getProfile')
                 .then(res => {
                         this.racProfile = res.data;
-                        this.PictureLink = 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/'+this.racProfile.Picture;
+                        this.PictureLink = 'http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/'+this.racProfile.Picture;
                         this.backupRACProfile = JSON.parse(JSON.stringify(this.racProfile))
                     }
                 )
@@ -111,7 +111,7 @@
                 }else{
                     this.racProfile.Latitude = Number(this.racProfile.Latitude);
                     this.racProfile.Longitude = Number(this.racProfile.Longitude);
-                    axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/updateProfile', this.racProfile)
+                    axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/updateProfile', this.racProfile)
                         .then(res => {
                             this.backupRACProfile = JSON.parse(JSON.stringify(this.racProfile));
                             this.SuccessSnackbar = true;
@@ -136,7 +136,7 @@
 
                 let a = null;
 
-                axios.create({withCredentials: true}).post( 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/upload/updateRACProfilePicture',
+                axios.create({withCredentials: true}).post( 'http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/upload/updateRACProfilePicture',
                     formData,
                     {
                         headers: {

@@ -191,11 +191,11 @@
             }
         },
         created() {
-            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/destination/getCompanyDestinations")
+            axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/destination/getCompanyDestinations")
                 .then(res => {
                     this.destinations = res.data;
                 });
-            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airplane/getCompanyAirplanes")
+            axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airplane/getCompanyAirplanes")
                 .then(res => {
                     this.airplanes = res.data;
                 })
@@ -205,7 +205,7 @@
         },
         methods: {
             checkFirstPass(){
-                axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
+                axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/checkFirstPass")
                     .then(
                         res =>{
                             if(res.data === false){
@@ -327,7 +327,7 @@
                     PriceBUSINESS: this.flight.businessClass,
                     PriceFIRSTCLASS: this.flight.firstClass
                 };
-                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/flight/add",flightDto)
+                axios.create({withCredentials: true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/flight/add",flightDto)
                     .then(res => {
                         this.SuccessSnackbar = true;
                         let vm = this;

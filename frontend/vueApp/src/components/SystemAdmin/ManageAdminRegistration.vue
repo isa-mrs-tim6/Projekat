@@ -139,7 +139,7 @@
             }
         },
         mounted() {
-            axios.get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/getAirlines')
+            axios.get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/getAirlines')
                 .then(res => this.airlines = res.data)
                 .catch(err => {
                     this.snackbar_fields.text = "Could not retrieve an airline list";
@@ -147,7 +147,7 @@
                     this.snackbar_fields.snackbar = true;
                     this.loader = null;
                 });
-            axios.get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/hotel/getHotels')
+            axios.get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/hotel/getHotels')
                 .then(res => this.hotels = res.data)
                 .catch(err => {
                 this.snackbar_fields.text = "Could not retrieve a list of hotels";
@@ -155,7 +155,7 @@
                 this.snackbar_fields.snackbar = true;
                 this.loader = null;
                 });
-            axios.get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getRentACarCompanies')
+            axios.get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getRentACarCompanies')
                 .then(res => this.rac_companies = res.data)
                 .catch(err => {
                     this.snackbar_fields.text = "Could not retrieve a list of rent-a-car companies";
@@ -180,7 +180,7 @@
                 };
 
                 this.loader = "loading";
-                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/register', credentials)
+                axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/register', credentials)
                     .then(res => {
                         if (res.status === 201) {
                             this.snackbar_fields.text = "Registration successful";

@@ -170,7 +170,7 @@
         },
         methods: {
             getFeatures(){
-                axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/features')
+                axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/features')
                 .then(res => {
                     this.features = res.data;
                     this.backup = JSON.parse(JSON.stringify(this.features));
@@ -183,7 +183,7 @@
                     return;
                 }
                 this.new_features[index].Price = parseInt(this.new_features[index].Price);
-                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/features', this.new_features[index])
+                axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/features', this.new_features[index])
                     .then(res => {
                         this.getFeatures();
                         this.new_features.splice(index, 1);
@@ -200,7 +200,7 @@
                 }
                 this.features[index].Price = parseInt(this.features[index].Price);
 
-                axios.create({withCredentials: true}).put('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/features', this.features[index])
+                axios.create({withCredentials: true}).put('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/features', this.features[index])
                     .then(res => {
                         this.backup = JSON.parse(JSON.stringify(this.features));
                     })
@@ -210,7 +210,7 @@
                 this.features = JSON.parse(JSON.stringify(this.backup));
             },
             deleteFeature(index) {
-                axios.create({withCredentials: true}).delete('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/airline/features', { data: this.features[index] })
+                axios.create({withCredentials: true}).delete('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/airline/features', { data: this.features[index] })
                     .then(res => {
                         this.features.splice(index, 1);
                         this.backup = JSON.parse(JSON.stringify(this.features));

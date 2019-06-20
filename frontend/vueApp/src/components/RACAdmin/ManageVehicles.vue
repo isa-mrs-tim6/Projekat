@@ -267,7 +267,7 @@
             }
         },
         created(){
-            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyVehicles")
+            axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyVehicles")
                 .then(res => {
                     this.vehicles = res.data;
                 });
@@ -285,9 +285,9 @@
                     Discount: this.editedItem.Discount
                 };
                 Object.assign(this.vehicles[this.editedIndex], this.editedItem);
-                axios.create({withCredentials:true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/deleteVehicle", vehicle)
+                axios.create({withCredentials:true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/deleteVehicle", vehicle)
                     .then(res=>{
-                        axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyVehicles")
+                        axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyVehicles")
                             .then(res => {
                                 this.vehicles = res.data;
                             });
@@ -313,9 +313,9 @@
                     PricePerDay: parseFloat(this.addedItem.Capacity),
                     Discount: this.addedItem.Discount
                 };
-                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/addVehicle', vehicle)
+                axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/addVehicle', vehicle)
                     .then(res =>{
-                        axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyVehicles')
+                        axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyVehicles')
                             .then(res => this.vehicles = res.data);
                         this.SuccessSnackbar = true;
                         this.SuccessSnackbarText = 'Vehicle successfully added';
@@ -372,7 +372,7 @@
                 this.menuFrom = [];
                 this.menuTo = [];
 
-                axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/'+item.ID+'/quickReservations')
+                axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/'+item.ID+'/quickReservations')
                     .then(res =>{
                             this.QuickReserveDays = res.data;
 
@@ -428,7 +428,7 @@
                 });
 
                 axios.create({withCredentials: true})
-                    .post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/updateQuickReservations', quickReserveDays);
+                    .post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/updateQuickReservations', quickReserveDays);
             },
             editItem (item) {
                 this.editedIndex = this.vehicles.indexOf(item);
@@ -459,9 +459,9 @@
                     PricePerDay: parseFloat(this.editedItem.PricePerDay),
                     Discount: this.editedItem.Discount
                 };
-                axios.create({withCredentials:true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/updateVehicle", vehicle)
+                axios.create({withCredentials:true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/updateVehicle", vehicle)
                     .then(res=>{
-                        axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyVehicles")
+                        axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyVehicles")
                             .then(res => {
                                 Object.assign(this.vehicles[this.editedIndex], this.editedItem);
                                 this.vehicles = res.data;

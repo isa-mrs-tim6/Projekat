@@ -20,7 +20,7 @@
                                 <v-layout column>
                                     <v-layout row>
                                         <v-flex xs3>
-                                            <img v-bind:src='"http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/" + value.Hotel.Picture'>
+                                            <img v-bind:src='"http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/" + value.Hotel.Picture'>
                                         </v-flex>
                                         <v-flex xs6 style="margin-right: -25px"></v-flex>
                                         <v-flex xs3>

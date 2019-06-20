@@ -78,7 +78,7 @@
                     Email: this.Email,
                     Password: this.Password
                 };
-                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/login", creds)
+                axios.create({withCredentials: true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/user/login", creds)
                     .then(
                         res => {
 
@@ -113,7 +113,7 @@
                     Password: this.Password,
                     Type: "User",
                 };
-                axios.post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/mail/resend", credentials)
+                axios.post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/mail/resend", credentials)
                     .then(res => {
                         this.snackbar_fields.text = "Email resent";
                         this.snackbar_fields.color = "success";

@@ -92,7 +92,7 @@
             }
         },
         beforeMount() {
-            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/getProfile")
+            axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/getProfile")
                 .then(res =>{
                     this.Name = res.data.Name;
                     this.Surname = res.data.Surname;
@@ -100,7 +100,7 @@
                     this.Address = res.data.Address;
                     this.Phone = res.data.Phone;
                     this.Picture = res.data.Picture;
-                    this.PictureLink = 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/'+this.Picture;
+                    this.PictureLink = 'http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/'+this.Picture;
                     this.OldPassword = res.data.Password;
                 })
         },
@@ -124,7 +124,7 @@
                 if(this.Password !== "") {
                     newUserProfile.Password = this.Password;
                 }
-                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/admin/updateProfile", newUserProfile)
+                axios.create({withCredentials: true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/admin/updateProfile", newUserProfile)
                     .then(res => this.SuccessSnackbar = true);
             },
             updatePicture(e){
@@ -135,7 +135,7 @@
 
                 let a = null;
 
-                axios.create({withCredentials: true}).post( 'http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/upload/updateProfilePicture',
+                axios.create({withCredentials: true}).post( 'http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/upload/updateProfilePicture',
                     formData,
                     {
                         headers: {

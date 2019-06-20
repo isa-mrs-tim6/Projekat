@@ -169,7 +169,7 @@
             }
         },
         created(){
-            axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyLocations")
+            axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyLocations")
                 .then(res => {
                     this.offices = res.data;
                 });
@@ -185,9 +185,9 @@
                     Latitude: parseFloat(this.editedItem.Latitude)
                 };
                 Object.assign(this.offices[this.editedIndex], this.editedItem);
-                axios.create({withCredentials:true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/deleteLocation", office)
+                axios.create({withCredentials:true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/deleteLocation", office)
                     .then(res=>{
-                        axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyLocations")
+                        axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyLocations")
                             .then(res => {
                                 this.offices = res.data;
                             });
@@ -211,9 +211,9 @@
                     Longitude: parseFloat(this.addedItem.Longitude),
                     Latitude: parseFloat(this.addedItem.Latitude)
                 };
-                axios.create({withCredentials: true}).post('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/addLocation', location)
+                axios.create({withCredentials: true}).post('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/addLocation', location)
                     .then(res =>{
-                        axios.create({withCredentials: true}).get('http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyLocations')
+                        axios.create({withCredentials: true}).get('http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyLocations')
                             .then(res => this.offices = res.data);
                         this.SuccessSnackbar = true;
                         this.SuccessSnackbarText = 'Office successfully added';
@@ -286,9 +286,9 @@
                     Latitude: parseFloat(this.editedItem.Latitude)
                 };
                 Object.assign(this.offices[this.editedIndex], this.editedItem);
-                axios.create({withCredentials:true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/updateLocation", office)
+                axios.create({withCredentials:true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/updateLocation", office)
                     .then(res=>{
-                        axios.create({withCredentials: true}).get("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyLocations")
+                        axios.create({withCredentials: true}).get("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/rentACarCompany/getCompanyLocations")
                             .then(res => {
                                 this.offices = res.data;
                             });

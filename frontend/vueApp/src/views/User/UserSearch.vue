@@ -67,7 +67,7 @@
                 var QueryDto = {
                     Query: this.query
                 };
-                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/search", QueryDto).
+                axios.create({withCredentials: true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/user/search", QueryDto).
                 then(res=>{
                     this.results =res.data
                     if (this.results.length === 0){
@@ -80,7 +80,7 @@
                 var friendshipDto = {
                     User2ID: id
                 };
-                axios.create({withCredentials: true}).post("http://ec2-35-159-21-254.eu-central-1.compute.amazonaws.com:8000/api/user/friendRequests", friendshipDto)
+                axios.create({withCredentials: true}).post("http://ec2-18-195-170-20.eu-central-1.compute.amazonaws.com:8000/api/user/friendRequests", friendshipDto)
                     .then(res =>{
                         this.results[index].Status = "PENDING";
                     })
