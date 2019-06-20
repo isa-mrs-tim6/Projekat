@@ -1,8 +1,6 @@
 <template>
-    <v-card>
+    <v-card dark>
         <v-card-title>
-            Hotels
-            <v-spacer></v-spacer>
             <v-text-field
                     v-model="search"
                     append-icon="search"
@@ -15,14 +13,41 @@
             :headers="headers"
             :items="hotels"
             :search="search"
+            dark
             class="elevation-1"
         >
             <template v-slot:items="hotels">
-                <td>{{hotels.item.Name}}</td>
-                <td>{{hotels.item.Address}}</td>
-                <td>{{hotels.item.Longitude}}</td>
-                <td>{{hotels.item.Latitude}}</td>
-                <td>{{hotels.item.Description}}</td>
+                <td>
+                    <v-layout row>
+                        <img width="300px" height="300px" v-bind:src = '"http://localhost:8000/"+hotels.item.Picture'>
+                        <v-layout style="margin-left: 5px;" column>
+                            <div class="display-1">
+                                {{hotels.item.Name}}
+                            </div>
+                            <div class="headline">
+                                {{hotels.item.Description}}
+                            </div>
+                        </v-layout>
+                    </v-layout>
+                </td>
+                <td>
+                    <v-layout column text-xs-center>
+                        <div>
+                            <gmap-map
+                                    :center="{lat: hotels.item.Latitude, lng: hotels.item.Longitude}"
+                                    :zoom="8"
+                                    style="width:100%;  height: 300px;"
+                            >
+                                <gmap-marker
+                                        :position="{lat: hotels.item.Latitude, lng: hotels.item.Longitude}"
+                                ></gmap-marker>
+                            </gmap-map>
+                        </div>
+                        <div class="headline">
+                            {{hotels.item.Address}}
+                        </div>
+                    </v-layout>
+                </td>
             </template>
             <template v-slot:no-results>
                 <v-alert :value="true" color="error" icon="warning">
@@ -43,9 +68,6 @@
                 headers: [
                     { text: 'Name', value: 'Name' },
                     { text: 'Address', value: 'Address' },
-                    { text: 'Longitude', value: 'Longitude' },
-                    { text: 'Latitude', value: 'Latitude' },
-                    { text: 'Description', value: 'Description' },
                 ],
             }
         },
