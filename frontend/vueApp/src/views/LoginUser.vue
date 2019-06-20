@@ -80,7 +80,7 @@
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/user/login", creds)
                     .then(
                         res => {
-                            this.$router.replace("user");
+                            this.$router.replace("user_flights");
                         }
                         )
                     .catch( err => {

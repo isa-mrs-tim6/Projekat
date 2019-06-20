@@ -208,10 +208,25 @@ func (db *Store) CalculatePriceVehicle(userID uint, originalPrice float64) float
 	return price
 }
 
-func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationParams) (models.Reservation, error) {
+func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationParams) (*models.Reservation, error) {
 	// Check parameters
+
+	tx := db.Begin()
+
 	if params.Users == nil || params.Seats == nil || len(params.Users) != len(params.Seats) || len(params.Users) == 0 {
-		return models.Reservation{}, errors.New("invalid parameters")
+		return nil, errors.New("invalid parameters")
+	}
+
+	var seat models.Seat
+
+	if err := tx.Raw("SELECT * FROM seats WHERE id = ? FOR UPDATE", params.Seats[0].ID).Scan(&seat).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	if seat.ReservationID != 0 {
+		tx.Rollback()
+		return nil, errors.New("seat taken")
 	}
 
 	// Create master reservation, { Users[0], Seats[0] } combination
@@ -230,21 +245,30 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 			Features:       nil,                                                                                                         // TODO Add support for features
 		},
 	}
-	db.Create(&masterReservation)
 
-	var expireTime time.Time
-	var isExpiring bool
+	if err := tx.Create(&masterReservation).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
 
 	for i := 1; i < len(params.Users); i++ {
 		var friend models.User
 		if params.Users[i].Email != "" { // Registered user
-			db.Where("email = ?", params.Users[i].Email).First(&friend)
+			tx.Where("email = ?", params.Users[i].Email).First(&friend)
 			params.Users[i].ID = friend.ID
 			params.Users[i].Name = friend.Name
 			params.Users[i].Surname = friend.Surname
 			params.Users[i].Passport = friend.Passport
-			expireTime = time.Now().AddDate(0, 0, 3)
-			isExpiring = true
+		}
+
+		if err := tx.Raw("SELECT * FROM seats WHERE id = ? FOR UPDATE", params.Seats[i].ID).Scan(&seat).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+
+		if seat.ReservationID != 0 {
+			tx.Rollback()
+			return nil, errors.New("seat taken")
 		}
 
 		reservation := models.Reservation{
@@ -261,14 +285,20 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 				Price:          db.CalculatePriceFlight(uint(flightID), params.Seats[i].ID, params.Users[i].ID, nil, params.IsQuickReserve), // TODO Add support for features
 				Features:       nil,                                                                                                         // TODO Add support for features
 			},
-			MasterRef:  masterReservation.ID,
-			IsExpiring: isExpiring,
-			ExpireTime: expireTime,
+			MasterRef: masterReservation.ID,
 		}
-		db.Create(&reservation)
+		if err := tx.Create(&reservation).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
 	}
 
-	return masterReservation, nil
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	return &masterReservation, nil
 }
 
 func (db *Store) CalculatePriceFlight(flightID uint, seatID uint, userID uint, features []models.FeatureAirline, isQuickReserve bool) float64 {

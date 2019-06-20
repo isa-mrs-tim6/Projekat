@@ -268,9 +268,10 @@
                         }
                     })
                     .catch(err => {
-                        this.snackbar_fields.text = "Reservation unsuccessful" + err;
+                        this.snackbar_fields.text = "Reservation unsuccessful";
                         this.snackbar_fields.color = "error";
                         this.snackbar_fields.snackbar = true;
+                        this.$router.go();
                     });
             }
         },

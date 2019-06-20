@@ -20,6 +20,7 @@
                                                     <td>{{destinations.item.Name}}</td>
                                                     <td>{{destinations.item.Longitude}}</td>
                                                     <td>{{destinations.item.Latitude}}</td>
+                                                    <td><v-icon @click="editDest(destinations.item)">edit</v-icon></td>
                                                 </template>
                                             </v-data-table>
                                             <v-form>
@@ -57,7 +58,37 @@
                         </v-container>
                         <v-snackbar v-model="SuccessSnackbar" :timeout=4000 :top="true" color="success">Successfully added new destination</v-snackbar>
                         <v-snackbar v-model="ErrorSnackbar" :timeout=4000 :top="true" color="error">Failed to add new destination</v-snackbar>
-
+                        <v-dialog v-model="dialog" width="800px" persistent>
+                            <v-card>
+                                <v-card-title>
+                                    <span class="title">Edit destination:</span>
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-layout row>
+                                        <v-flex xs1>
+                                            <v-icon medium style="margin-left: 10px; margin-right: 8px">location_on</v-icon>
+                                        </v-flex>
+                                        <v-flex xs11>
+                                            <gmap-autocomplete style="width: 95%; border-bottom: 1px solid gray" placeholder="Address"
+                                                :value="editDestination.Name" @input="value = $event.target.value" @place_changed="getEditAddressData"></gmap-autocomplete>
+                                        </v-flex>
+                                    </v-layout> 
+                                    <v-layout row>
+                                        <v-flex xs1></v-flex>
+                                        <v-flex xs11>
+                                            <gmap-map :center="{lat: editDestination.Latitude, lng: editDestination.Longitude}" :zoom="8" style="width:50%;  height: 250px;">
+                                                <gmap-marker :position="{lat: editDestination.Latitude, lng: editDestination.Longitude}"></gmap-marker>
+                                            </gmap-map>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-layout row justify-end>
+                                        <v-btn @click="close">Close</v-btn>                                        
+                                    </v-layout>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -73,19 +104,27 @@
         components: {AirlineAdminNavDrawer},
         data() {
             return {
+                dialog: false,
                 SuccessSnackbar: false,
                 ErrorSnackbar: false,
                 headers: [
                     { text: 'Name', value: 'Name' },
                     { text: 'Longitude', value: 'Longitude' },
                     { text: 'Latitude', value: 'Latitude' },
+                    { text: 'Edit', value: 'edit'},
                 ],
                 destinations: [],
                 destination:{
                     Name:"",
                     Longitude: 0,
                     Latitude: 0
-                }
+                },
+                editDestination:{
+                    ID:0,
+                    Name:"",
+                    Longitude: 0,
+                    Latitude: 0
+                },
             }
         },
         mounted() {
@@ -97,6 +136,27 @@
                 .catch(err => console.log(err));
         },
         methods: {
+            close(){
+                this.dialog = false;
+                axios.create({withCredentials: true}).post('http://localhost:8000/api/destination/'+this.editDestination.ID+'/updateDestination', this.editDestination)
+                    .then(res=>{
+                        axios.create({withCredentials:true}).get('http://localhost:8000/api/destination/getCompanyDestinations')
+                            .then(res => {
+                                this.destinations = res.data
+                                }
+                            )
+                            .catch(err => console.log(err));
+                    })
+                
+            },
+            editDest(dest){
+                this.editDestination.Name = dest.Name;
+                this.editDestination.AirlineID = dest.AirlineID;
+                this.editDestination.Longitude = dest.Longitude;
+                this.editDestination.Latitude = dest.Latitude;
+                this.editDestination.ID = dest.ID
+                this.dialog = true;
+            },
             addDestination(e) {
                 e.preventDefault();
                 if (!this.destination.Name || !this.destination.Longitude || !this.destination.Latitude){
@@ -129,6 +189,11 @@
                 this.destination.Name = addressData.formatted_address;
                 this.destination.Latitude = addressData.geometry.location.lat();
                 this.destination.Longitude = addressData.geometry.location.lng();
+            },
+            getEditAddressData: function (addressData) {
+                this.editDestination.Name = addressData.formatted_address;
+                this.editDestination.Latitude = addressData.geometry.location.lat();
+                this.editDestination.Longitude = addressData.geometry.location.lng();
             }
         }
     }

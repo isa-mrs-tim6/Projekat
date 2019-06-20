@@ -59,6 +59,24 @@ func (app *Application) GetAirlineProfileID(w http.ResponseWriter, r *http.Reque
 	}
 }
 
+func (app *Application) GetAirlineRatingID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idStr := vars["id"]
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		app.ErrorLog.Println("Id is not a valid")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	rating, err := app.Store.GetAirlineRating(uint(id))
+	err = json.NewEncoder(w).Encode(rating)
+	if err != nil {
+		app.ErrorLog.Println("Cannot encode rating into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *Application) GetAirlineQuickReservation(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr := vars["id"]
