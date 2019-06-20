@@ -8,7 +8,7 @@
                         <v-container>
                             <v-layout row>
                                 <v-flex xs3>
-                                    <img src = "../../assets/placeholder/company2.png" width="250px" height="150px">
+                                    <img :src = '"http://localhost:8000/" + profile.Picture' width="250px" height="150px">
                                 </v-flex>
                                 <v-flex xs6>
                                     <v-layout row mb-3 align-center>
@@ -120,7 +120,9 @@ export default {
     name: "AirlineProfile",
     data() {
             return {
-                profile: {},
+                profile: {
+                    Picture:"",
+                },
                 update:false,
                 updateMap: false,
                 reservations: [],

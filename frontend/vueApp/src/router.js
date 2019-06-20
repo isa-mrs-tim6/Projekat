@@ -53,6 +53,7 @@ import UserSearch from "./views/User/UserSearch";
 import AirlineList from "./views/User/AirlinesList";
 import AirlineProfile from "./views/User/AirlineProfile";
 import AirlineFeatures from "./views/AirlineAdmin/AirlineFeatures.vue";
+import AddAirplane from "./views/AirlineAdmin/AddAirplane";
 import VueCookies from 'vue-cookies'
 
 
@@ -185,6 +186,10 @@ export default new Router({
     {
       path: "/userFriends",
       component: ShowFriends
+    },
+    {
+      path: '/airlineAdmin/add_airplane',
+      component: AddAirplane
     },
     {
       path: '/airlineAdmin/airline_profile',
