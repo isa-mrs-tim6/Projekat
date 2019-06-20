@@ -22,7 +22,7 @@
                                         <v-card-text>
                                             <v-layout row align-center>
                                                 <v-flex xs2>
-                                                    <img src = "../../assets/placeholder/company2.png" width="160px" height="100px">
+                                                    <img :src = '"http://localhost:8000/" + airline.Picture' width="160px" height="100px">
                                                 </v-flex>
                                                 <v-flex xs5 mx-5>
                                                     <v-layout row mb-4><span class="headline">Airline Name: {{airline.Name}}</span></v-layout>

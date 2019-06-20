@@ -330,6 +330,10 @@
                 axios.create({withCredentials: true}).post("http://localhost:8000/api/flight/add",flightDto)
                     .then(res => {
                         this.SuccessSnackbar = true;
+                        let vm = this;
+                        setTimeout(function () {
+                                vm.$router.go()
+                        }, 1250);
                     })
                     .catch(err => {
                         this.ErrorSnackbar = true;

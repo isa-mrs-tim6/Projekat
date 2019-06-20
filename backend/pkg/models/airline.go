@@ -16,9 +16,18 @@ type Seat struct {
 	QuickReserve  bool
 }
 
+type AirplaneDAO struct {
+	Name      string
+	RowWidth  uint
+	First     uint
+	Business  uint
+	Economy   uint
+}
+
 type Airplane struct {
 	gorm.Model
 	Name      string
+	IsCopy    bool
 	RowWidth  uint
 	Seats     []Seat `gorm:"foreignkey:AirplaneID"`
 	AirlineID uint

@@ -9,8 +9,9 @@
         components: {NavigationDrawer},
         title: "Airline Admin Dashboard",
         items:[
-            {title: 'Add flight', icon: 'flight', route: 'flight_add'},
+            {title: 'Add flight', icon: 'add', route: 'flight_add'},
             {title: 'Edit flight', icon: 'edit', route: 'flight_edit'},
+            {title: 'Airplanes', icon: 'flight', route: 'add_airplane'},
             {title: 'Add destination', icon: 'add_location', route: 'destination_add'},
             {title: 'Features', icon: 'local_offer', route: 'features' },
             { title: 'Ratings', icon: 'star', route: 'ratings' },

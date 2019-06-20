@@ -10,6 +10,52 @@ import (
 	"time"
 )
 
+func (app *Application) AddAirplane(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+
+	if err != nil {
+		app.ErrorLog.Println("Could not retrive airline admin")
+	}
+
+	var params models.AirplaneDAO
+
+	err = json.NewDecoder(r.Body).Decode(&params)
+	if err != nil {
+		app.ErrorLog.Println("Could not decode JSON")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	err = app.Store.AddAirplane(user.AirlineID, params)
+	if err != nil {
+		app.ErrorLog.Println("Could not add airplane")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Application) GetAirplanesAndSeats(w http.ResponseWriter, r *http.Request) {
+	email := getEmail(r)
+	user, err := app.Store.GetAirlineAdmin(email)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrive airline admin")
+	}
+
+	airplanes, err := app.Store.GetAirplanesAndSeats(user.AirlineID)
+	if err != nil {
+		app.ErrorLog.Println("Could not retrive list of airplanes")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	err = json.NewEncoder(w).Encode(airplanes)
+	if err != nil {
+		app.ErrorLog.Println("Cannot encode airplanes into JSON object")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *Application) GetAirplanes(w http.ResponseWriter, r *http.Request) {
 	airplanes, err := app.Store.GetAirplanes()
 	if err != nil {
@@ -349,14 +395,31 @@ func (app *Application) CreateFlight(w http.ResponseWriter, r *http.Request) {
 	user, err := app.Store.GetAirlineAdmin(email)
 	if err != nil {
 		app.ErrorLog.Println("Could not retrive airline admin")
+		w.WriteHeader(http.StatusInternalServerError)
+		return;
 	}
 	airplane, err := app.Store.GetAirplane(user.AirlineID, flightDto.Airplane)
 	if err != nil {
 		app.ErrorLog.Println("Could not retrive airplane")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
-	DeepCopy(airplane, &flight.Airplane)
-	flight.AirlineID = airplane.ID
+	flight.Airplane = models.Airplane{
+		AirlineID: user.AirlineID,
+		RowWidth: airplane.RowWidth,
+		Name: airplane.Name,
+		IsCopy: true,
+		Seats: make([]models.Seat,0),
+	}
+	for _, seat := range airplane.Seats {
+		flight.Airplane.Seats = append(flight.Airplane.Seats, models.Seat{
+			Class: seat.Class,
+			Number: seat.Number,
+			Disabled: false,
+			QuickReserve: false,
+		})
+	}
 
 	origin, err := app.Store.FindDestination(user.AirlineID, flightDto.Origin)
 	if err != nil {
