@@ -274,9 +274,9 @@ func AddDemoModels(db *gorm.DB) {
 			{Name: "Madrid", Coordinate: models.Coordinate{Latitude: 40.4168, Longitude: 3.7038}},
 		},
 		AirlineFeatures: []models.FeatureAirline{
-			{Name: "Coffee", Icon: "add_circle_outline", Description: "Coffee on flight", Price: 50},
-			{Name: "Wifi", Icon: "add_circle_outline", Description: "Wifi on flight", Price: 75},
-			{Name: "Newspaper", Icon: "add_circle_outline", Description: "Newspaper on flight", Price: 90},
+			{Name: "Coffee", Icon: "local_drink", Description: "Coffee on flight", Price: 50},
+			{Name: "Wifi", Icon: "wifi", Description: "Wifi on flight", Price: 75},
+			{Name: "Newspaper", Icon: "library_books", Description: "Newspaper on flight", Price: 90},
 		},
 		Flights: []models.Flight{
 			{
@@ -324,8 +324,7 @@ func AddDemoModels(db *gorm.DB) {
 				Distance:  780,
 				Departure: time.Date(2019, 8, 2, 10, 15, 0, 0, time.Local),
 				Landing:   time.Date(2019, 8, 2, 14, 15, 0, 0, time.Local),
-				Layovers: []models.Layovers{
-				},
+				Layovers:  []models.Layovers{},
 			},
 			{
 				PriceList: models.PriceList{
@@ -369,8 +368,7 @@ func AddDemoModels(db *gorm.DB) {
 				Distance:  780,
 				Departure: time.Date(2019, 8, 3, 16, 15, 0, 0, time.Local),
 				Landing:   time.Date(2019, 8, 3, 20, 15, 0, 0, time.Local),
-				Layovers: []models.Layovers{
-				},
+				Layovers:  []models.Layovers{},
 			},
 			{
 				PriceList: models.PriceList{
@@ -408,6 +406,42 @@ func AddDemoModels(db *gorm.DB) {
 						Coordinate: models.Coordinate{Latitude: -51.124, Longitude: 5.24}}},
 				},
 			},
+			{
+				PriceList: models.PriceList{
+					PriceECONOMY: 300, PriceBUSINESS: 600, PriceFIRSTCLASS: 900,
+					SmallSuitcase: 100, BigSuitcase: 300,
+				},
+				Duration:  time.Hour * 4,
+				Distance:  780,
+				Departure: time.Date(2019, 5, 5, 10, 15, 0, 0, time.Local),
+				Landing:   time.Date(2019, 5, 6, 14, 15, 0, 0, time.Local),
+				Layovers: []models.Layovers{
+					{Address: models.Address{
+						Address:    "Layover 1",
+						Coordinate: models.Coordinate{Latitude: 13, Longitude: 52.414}}},
+					{Address: models.Address{
+						Address:    "Layover 2",
+						Coordinate: models.Coordinate{Latitude: -51.124, Longitude: 5.24}}},
+				},
+			},
+			{
+				PriceList: models.PriceList{
+					PriceECONOMY: 300, PriceBUSINESS: 600, PriceFIRSTCLASS: 900,
+					SmallSuitcase: 100, BigSuitcase: 300,
+				},
+				Duration:  time.Hour * 4,
+				Distance:  780,
+				Departure: time.Date(2019, 4, 5, 10, 15, 0, 0, time.Local),
+				Landing:   time.Date(2019, 4, 6, 14, 15, 0, 0, time.Local),
+				Layovers: []models.Layovers{
+					{Address: models.Address{
+						Address:    "Layover 1",
+						Coordinate: models.Coordinate{Latitude: 13, Longitude: 52.414}}},
+					{Address: models.Address{
+						Address:    "Layover 2",
+						Coordinate: models.Coordinate{Latitude: -51.124, Longitude: 5.24}}},
+				},
+			},
 		},
 	}
 	DeepCopy(&airline.Airplanes[0], &airline.Flights[0].Airplane)
@@ -418,7 +452,8 @@ func AddDemoModels(db *gorm.DB) {
 	DeepCopy(&airline.Airplanes[1], &airline.Flights[5].Airplane)
 	DeepCopy(&airline.Airplanes[0], &airline.Flights[6].Airplane)
 	DeepCopy(&airline.Airplanes[1], &airline.Flights[7].Airplane)
-
+	DeepCopy(&airline.Airplanes[0], &airline.Flights[8].Airplane)
+	DeepCopy(&airline.Airplanes[1], &airline.Flights[9].Airplane)
 
 	airline.Flights[0].Origin = &airline.Destinations[0]
 	airline.Flights[0].Destination = &airline.Destinations[4]
@@ -438,11 +473,14 @@ func AddDemoModels(db *gorm.DB) {
 	airline.Flights[7].Origin = &airline.Destinations[5]
 	airline.Flights[7].Destination = &airline.Destinations[4]
 
-
+	airline.Flights[8].Origin = &airline.Destinations[3]
+	airline.Flights[8].Destination = &airline.Destinations[4]
+	airline.Flights[9].Origin = &airline.Destinations[5]
+	airline.Flights[9].Destination = &airline.Destinations[6]
 
 	airline2 := models.Airline{
 		AirlineProfile: models.AirlineProfile{
-			Name:  "Emirates Airline",
+			Name: "Emirates Airline",
 			Promo: "Established in Oct-1985, Emirates Airline is the national carrier of the emirate of Dubai, United Arab Emirates. " +
 				"Emirates is the world's largest airline and is among the fastest-growing carriers worldwide, pursuing an aggressive n" +
 				"etwork. The airline operates with a fleet of widebody equipment, and is the largest operator of the Airbus A380 aircraft " +
@@ -486,9 +524,9 @@ func AddDemoModels(db *gorm.DB) {
 			},
 		},
 		AirlineFeatures: []models.FeatureAirline{
-			{Name: "Wifi", Icon: "add_circle_outline", Description: "Wifi on flight", Price: 100},
-			{Name: "Movies", Icon: "add_circle_outline", Description: "Movies on flight", Price: 200},
-			{Name: "Shower", Icon: "add_circle_outline", Description: "Shower on flight", Price: 300},
+			{Name: "Wifi", Icon: "wifi", Description: "Wifi on flight", Price: 100},
+			{Name: "Movies", Icon: "local_movies", Description: "Movies on flight", Price: 200},
+			{Name: "Shower", Icon: "whatshot", Description: "Shower on flight", Price: 300},
 		},
 		Flights: []models.Flight{
 			{
@@ -511,9 +549,7 @@ func AddDemoModels(db *gorm.DB) {
 				Distance:  380,
 				Departure: time.Date(2019, 8, 3, 10, 17, 0, 0, time.Local),
 				Landing:   time.Date(2019, 8, 3, 12, 17, 0, 0, time.Local),
-				Layovers: []models.Layovers{
-
-				},
+				Layovers:  []models.Layovers{},
 			},
 			{
 				PriceList: models.PriceList{
@@ -542,9 +578,7 @@ func AddDemoModels(db *gorm.DB) {
 				Distance:  380,
 				Departure: time.Date(2019, 8, 4, 10, 17, 0, 0, time.Local),
 				Landing:   time.Date(2019, 8, 4, 12, 17, 0, 0, time.Local),
-				Layovers: []models.Layovers{
-
-				},
+				Layovers:  []models.Layovers{},
 			},
 			{
 				PriceList: models.PriceList{
@@ -573,9 +607,29 @@ func AddDemoModels(db *gorm.DB) {
 				Distance:  380,
 				Departure: time.Date(2019, 8, 3, 9, 17, 0, 0, time.Local),
 				Landing:   time.Date(2019, 8, 3, 11, 17, 0, 0, time.Local),
-				Layovers: []models.Layovers{
-
+				Layovers:  []models.Layovers{},
+			},
+			{
+				PriceList: models.PriceList{
+					PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
+					SmallSuitcase: 100, BigSuitcase: 300,
 				},
+				Duration:  time.Hour * 2,
+				Distance:  380,
+				Departure: time.Date(2019, 2, 3, 9, 17, 0, 0, time.Local),
+				Landing:   time.Date(2019, 2, 3, 11, 17, 0, 0, time.Local),
+				Layovers:  []models.Layovers{},
+			},
+			{
+				PriceList: models.PriceList{
+					PriceECONOMY: 100, PriceBUSINESS: 200, PriceFIRSTCLASS: 400,
+					SmallSuitcase: 100, BigSuitcase: 300,
+				},
+				Duration:  time.Hour * 2,
+				Distance:  380,
+				Departure: time.Date(2019, 3, 3, 9, 17, 0, 0, time.Local),
+				Landing:   time.Date(2019, 3, 5, 11, 17, 0, 0, time.Local),
+				Layovers:  []models.Layovers{},
 			},
 		},
 	}
@@ -585,7 +639,8 @@ func AddDemoModels(db *gorm.DB) {
 	DeepCopy(&airline2.Airplanes[1], &airline2.Flights[3].Airplane)
 	DeepCopy(&airline2.Airplanes[0], &airline2.Flights[4].Airplane)
 	DeepCopy(&airline2.Airplanes[1], &airline2.Flights[5].Airplane)
-
+	DeepCopy(&airline2.Airplanes[0], &airline2.Flights[6].Airplane)
+	DeepCopy(&airline2.Airplanes[1], &airline2.Flights[7].Airplane)
 
 	airline2.Flights[0].Origin = &airline2.Destinations[0]
 	airline2.Flights[0].Destination = &airline2.Destinations[4]
@@ -599,6 +654,10 @@ func AddDemoModels(db *gorm.DB) {
 	airline2.Flights[4].Destination = &airline2.Destinations[4]
 	airline2.Flights[5].Origin = &airline2.Destinations[6]
 	airline2.Flights[5].Destination = &airline2.Destinations[4]
+	airline2.Flights[6].Origin = &airline2.Destinations[5]
+	airline2.Flights[6].Destination = &airline2.Destinations[4]
+	airline2.Flights[7].Origin = &airline2.Destinations[6]
+	airline2.Flights[7].Destination = &airline2.Destinations[4]
 
 	db.Create(&airline)
 	db.Create(&airline2)
@@ -614,9 +673,9 @@ func AddDemoModels(db *gorm.DB) {
 			},
 		},
 		Features: []models.Feature{
-			{Name: "H1_FEATURE1", Icon: "add_circle_outline", Description: "H1_FEATURE1_DESC", Price: 50},
-			{Name: "H1_FEATURE2", Icon: "add_circle_outline", Description: "H1_FEATURE2_DESC", Price: 75},
-			{Name: "H1_FEATURE3", Icon: "add_circle_outline", Description: "H1_FEATURE3_DESC", Price: 90},
+			{Name: "Wifi", Icon: "wifi", Description: "Fast wifi", Price: 50},
+			{Name: "Breakfast", Icon: "fastfood", Description: "Continental breakfast", Price: 75},
+			{Name: "Pets allowed", Icon: "pets", Description: "Pet friendly", Price: 90},
 		},
 		Rooms: []models.Room{
 			{Number: 1, Capacity: 2, Price: 250, QuickReserveDays: []models.RoomQuickReserveDays{
@@ -667,9 +726,9 @@ func AddDemoModels(db *gorm.DB) {
 	}
 
 	hotel.Rewards = []models.HotelReservationReward{
-		{Name: "H1_REWARD1", Description: "H1_DESC1", PriceScale: 0.95, Features: []*models.Feature{
+		{Name: "Reservation plan: Silver", Description: "Affordable and easy to use", PriceScale: 0.95, Features: []*models.Feature{
 			&hotel.Features[0], &hotel.Features[1]}},
-		{Name: "H1_REWARD2", Description: "H1_DESC2", PriceScale: 0.85, Features: []*models.Feature{
+		{Name: "Reservation plan: Gold", Description: "Premium", PriceScale: 0.85, Features: []*models.Feature{
 			&hotel.Features[1], &hotel.Features[2]}},
 	}
 
@@ -682,9 +741,9 @@ func AddDemoModels(db *gorm.DB) {
 				Coordinate: models.Coordinate{Latitude: 36.1699, Longitude: -115.1398}},
 		},
 		Features: []models.Feature{
-			{Name: "Wifi", Icon: "add_circle_outline", Description: "Wifi in room", Price: 40},
-			{Name: "Room service", Icon: "add_circle_outline", Description: "Room service desc", Price: 55},
-			{Name: "Bar", Icon: "add_circle_outline", Description: "Mini bar", Price: 60},
+			{Name: "Wifi", Icon: "wifi", Description: "Wifi in room", Price: 40},
+			{Name: "Room service", Icon: "room_service", Description: "Room service every day", Price: 55},
+			{Name: "Bar", Icon: "local_drink", Description: "Mini bar", Price: 60},
 		},
 		Rooms: []models.Room{
 			{Number: 1, Capacity: 2, Price: 150},
@@ -695,9 +754,9 @@ func AddDemoModels(db *gorm.DB) {
 		},
 	}
 	hotel2.Rewards = []models.HotelReservationReward{
-		{Name: "H2_REWARD1", Description: "H2_DESC1", PriceScale: 0.90, Features: []*models.Feature{
+		{Name: "Silver tier", Description: "Simply great", PriceScale: 0.90, Features: []*models.Feature{
 			&hotel2.Features[0], &hotel2.Features[1]}},
-		{Name: "H2_REWARD2", Description: "H2_DESC2", PriceScale: 0.85, Features: []*models.Feature{
+		{Name: "Gold tier", Description: "Premium", PriceScale: 0.85, Features: []*models.Feature{
 			&hotel2.Features[1], &hotel2.Features[2]}},
 	}
 	db.Create(&hotel)
@@ -763,7 +822,7 @@ func AddDemoModels(db *gorm.DB) {
 	user := models.User{
 		Profile: models.Profile{
 			Credentials: models.Credentials{Email: "USER1@email.com", Password: string(pass1)},
-			UserInfo:    models.UserInfo{Name: "Nikola", Surname: "Nikolic", Passport:    "1234567",},
+			UserInfo:    models.UserInfo{Name: "Nikola", Surname: "Nikolic", Passport: "1234567"},
 			Address:     "USER1_ADDRESS",
 			Phone:       "USER1_PHONE",
 		},
@@ -772,7 +831,7 @@ func AddDemoModels(db *gorm.DB) {
 	user2 := models.User{
 		Profile: models.Profile{
 			Credentials: models.Credentials{Email: "USER2@email.com", Password: string(pass2)},
-			UserInfo:    models.UserInfo{Name: "Marko", Surname: "Markovic",Passport:    "1234567",},
+			UserInfo:    models.UserInfo{Name: "Marko", Surname: "Markovic", Passport: "1234567"},
 			Address:     "USER2_ADDRESS",
 			Phone:       "USER2_ADDRESS",
 		},
@@ -781,7 +840,7 @@ func AddDemoModels(db *gorm.DB) {
 	user3 := models.User{
 		Profile: models.Profile{
 			Credentials: models.Credentials{Email: "USER3@email.com", Password: string(pass3)},
-			UserInfo:    models.UserInfo{Name: "Petar", Surname: "Petrovic",Passport:    "1234567",},
+			UserInfo:    models.UserInfo{Name: "Petar", Surname: "Petrovic", Passport: "1234567"},
 			Address:     "USER3_ADDRESS",
 			Phone:       "USER3_ADDRESS",
 		},
@@ -790,7 +849,7 @@ func AddDemoModels(db *gorm.DB) {
 	user4 := models.User{
 		Profile: models.Profile{
 			Credentials: models.Credentials{Email: "USER4@email.com", Password: string(pass4)},
-			UserInfo:    models.UserInfo{Name: "Milos", Surname: "Milosevic",Passport:    "1234567",},
+			UserInfo:    models.UserInfo{Name: "Milos", Surname: "Milosevic", Passport: "1234567"},
 			Address:     "USER4_ADDRESS",
 			Phone:       "USER4_ADDRESS",
 		},
@@ -816,463 +875,458 @@ func AddDemoModels(db *gorm.DB) {
 	db.Create(&friendship2)
 
 	// CREATING RESERVATIONS
-	//reservation := models.Reservation{
-	//	Passenger: models.Passenger{
-	//		UserID:   user.ID,
-	//		UserInfo: user.UserInfo,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price:         250,
-	//		Seat:          &airline2.Flights[1].Airplane.Seats[0],
-	//		Flight:        &airline2.Flights[1],
-	//		FlightRating:  2,
-	//		CompanyRating: 3,
-	//		Features: []*models.FeatureAirline{
-	//			&airline2.AirlineFeatures[0],
-	//			&airline2.AirlineFeatures[1],
-	//		},
-	//		IsQuickReserve: false,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 100,
-	//		Rooms: []models.Room{
-	//			hotel2.Rooms[0],
-	//			hotel2.Rooms[2],
-	//			hotel2.Rooms[3],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 3, RoomID: hotel2.Rooms[0].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 3, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2020, 4, 7, 0, 0, 0, 0, time.Local),
-	//		},
-	//		Features: []*models.Feature{
-	//			&hotel2.Features[0],
-	//			&hotel2.Features[2],
-	//			&hotel2.Features[1],
-	//		},
-	//		Hotel:          hotel2,
-	//		HotelRating:    4,
-	//		IsQuickReserve: false,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:           70,
-	//		Location:        rentACarCompany.Locations[0].Address.Address,
-	//		RentACarCompany: rentACarCompany,
-	//		Vehicle:         rentACarCompany.Vehicles[0],
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 2, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 4, 3, 0, 0, 0, 0, time.Local),
-	//		},
-	//		CompanyRating:  4,
-	//		VehicleRating:  2,
-	//		IsQuickReserve: false,
-	//	},
-	//}
-	//reservation2 := models.Reservation{
-	//	Passenger: models.Passenger{
-	//		UserID:   user2.ID,
-	//		UserInfo: user2.UserInfo,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price:         250,
-	//		Seat:          &airline.Flights[2].Airplane.Seats[1],
-	//		Flight:        &airline.Flights[2],
-	//		FlightRating:  3,
-	//		CompanyRating: 3,
-	//		Features: []*models.FeatureAirline{
-	//			&airline2.AirlineFeatures[0],
-	//			&airline2.AirlineFeatures[1],
-	//		},
-	//		IsQuickReserve: false,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 180,
-	//		Rooms: []models.Room{
-	//			hotel.Rooms[0],
-	//			hotel.Rooms[1],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 4, RoomID: hotel.Rooms[0].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 5, 3, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 9, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		Features: []*models.Feature{
-	//			&hotel.Features[0],
-	//			&hotel.Features[1],
-	//		},
-	//		Hotel:          hotel,
-	//		HotelRating:    3,
-	//		IsQuickReserve: false,
-	//	},
-	//}
-	//reservation3 := models.Reservation{
-	//	Passenger: models.Passenger{
-	//		UserID:   user3.ID,
-	//		UserInfo: user3.UserInfo,
-	//	},
-	//	MasterRef: reservation.ID,
-	//	ReservationFlight: models.FlightReservation{
-	//		Price:         250,
-	//		Seat:          &airline.Flights[2].Airplane.Seats[4],
-	//		Flight:        &airline.Flights[2],
-	//		FlightRating:  5,
-	//		CompanyRating: 3,
-	//		Features: []*models.FeatureAirline{
-	//			&airline.AirlineFeatures[0],
-	//			&airline.AirlineFeatures[1],
-	//		},
-	//		IsQuickReserve: false,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:           70,
-	//		Location:        rentACarCompany.Locations[0].Address.Address,
-	//		RentACarCompany: rentACarCompany,
-	//		Vehicle:         rentACarCompany.Vehicles[1],
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 2, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 4, 3, 0, 0, 0, 0, time.Local),
-	//		},
-	//		CompanyRating:  3,
-	//		VehicleRating:  4,
-	//		IsQuickReserve: false,
-	//	},
-	//}
-	//
-	//reservation4 := models.Reservation{
-	//	Passenger: models.Passenger{
-	//		UserID:   user4.ID,
-	//		UserInfo: user4.UserInfo,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price:         350,
-	//		Seat:          &airline.Flights[0].Airplane.Seats[4],
-	//		Flight:        &airline.Flights[0],
-	//		FlightRating:  2,
-	//		CompanyRating: 5,
-	//		Features: []*models.FeatureAirline{
-	//			&airline.AirlineFeatures[0],
-	//			&airline.AirlineFeatures[1],
-	//		},
-	//		IsQuickReserve: false,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:         70,
-	//		Location:      rentACarCompany2.Locations[0].Address.Address,
-	//		Vehicle:       rentACarCompany2.Vehicles[0],
-	//		CompanyRating: 3,
-	//		VehicleRating: 4,
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		IsQuickReserve: false,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 180,
-	//		Rooms: []models.Room{
-	//			hotel.Rooms[0],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 4, RoomID: hotel.Rooms[0].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 5, 3, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 5, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		HotelID:     hotel.ID,
-	//		HotelRating: 4,
-	//		Features: []*models.Feature{
-	//			&hotel.Features[0],
-	//			&hotel.Features[1],
-	//		},
-	//		IsQuickReserve: false,
-	//	},
-	//}
+	reservation := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user.ID,
+			UserInfo: user.UserInfo,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price:         250,
+			Seat:          &airline.Flights[8].Airplane.Seats[0],
+			Flight:        &airline.Flights[8],
+			FlightRating:  2,
+			CompanyRating: 3,
+			Features: []*models.FeatureAirline{
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationHotel: models.HotelReservation{
+			Price: 100,
+			Rooms: []models.Room{
+				hotel2.Rooms[0],
+				hotel2.Rooms[2],
+				hotel2.Rooms[3],
+			},
+			Ratings: []models.RoomRating{
+				{Rating: 3, RoomID: hotel2.Rooms[0].ID},
+			},
+			Occupation: models.Occupation{
+				Beginning: airline.Flights[8].Departure,
+				End:       airline.Flights[8].Departure.AddDate(0, 0, 3),
+			},
+			Features: []*models.Feature{
+				&hotel2.Features[0],
+				&hotel2.Features[2],
+				&hotel2.Features[1],
+			},
+			Hotel:          hotel2,
+			HotelRating:    4,
+			IsQuickReserve: false,
+		},
+		ReservationRentACar: models.RentACarReservation{
+			Price:           70,
+			Location:        rentACarCompany.Locations[0].Address.Address,
+			RentACarCompany: rentACarCompany,
+			Vehicle:         rentACarCompany.Vehicles[0],
+			Occupation: models.Occupation{
+				Beginning: airline.Flights[8].Departure,
+				End:       airline.Flights[8].Departure.AddDate(0, 0, 3),
+			},
+			CompanyRating:  4,
+			VehicleRating:  2,
+			IsQuickReserve: false,
+		},
+	}
 
-	//reservation5 := models.Reservation{
-	//	Holders: []*models.User{
-	//		&user3, &user,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price: 250,
-	//		Seats: []models.Seat{
-	//			airline2.Flights[0].Airplane.Seats[1],
-	//		},
-	//		FlightID: airline2.Flights[1].ID,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:    70,
-	//		Location: rentACarCompany2.Locations[0].Address.Address,
-	//		Vehicles: []*models.Vehicle{
-	//			&rentACarCompany2.Vehicles[0],
-	//		},
-	//		Ratings: []models.VehicleRating{
-	//			{Rating: 2, VehicleID: rentACarCompany2.Vehicles[0].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 6, 5, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 6, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		CompanyID: rentACarCompany2.ID,
-	//		Rating:    4,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 180,
-	//		Rooms: []models.Room{
-	//			hotel.Rooms[2],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 5, RoomID: hotel.Rooms[2].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 6, 3, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 9, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		HotelID:     hotel.ID,
-	//		HotelRating: 4,
-	//	},
-	//}
-	//
-	//reservation6 := models.Reservation{
-	//	Holders: []*models.User{
-	//		&user4, &user2,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price: 250,
-	//		Seats: []models.Seat{
-	//			airline2.Flights[0].Airplane.Seats[1],
-	//		},
-	//		FlightID: airline2.Flights[1].ID,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:    70,
-	//		Location: rentACarCompany2.Locations[0].Address.Address,
-	//		Vehicles: []*models.Vehicle{
-	//			&rentACarCompany2.Vehicles[1],
-	//		},
-	//		Ratings: []models.VehicleRating{
-	//			{Rating: 5, VehicleID: rentACarCompany2.Vehicles[1].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		CompanyID: rentACarCompany2.ID,
-	//		Rating:    5,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 280,
-	//		Rooms: []models.Room{
-	//			hotel.Rooms[1],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 2, RoomID: hotel.Rooms[1].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 7, 3, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 8, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		HotelID:     hotel.ID,
-	//		HotelRating: 4,
-	//	},
-	//}
-	//
-	//reservation7 := models.Reservation{
-	//	Holders: []*models.User{
-	//		&user,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price: 250,
-	//		Seats: []models.Seat{
-	//			airline2.Flights[0].Airplane.Seats[1],
-	//		},
-	//		FlightID: airline2.Flights[1].ID,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:    70,
-	//		Location: rentACarCompany2.Locations[0].Address.Address,
-	//		Vehicles: []*models.Vehicle{
-	//			&rentACarCompany2.Vehicles[1],
-	//		},
-	//		Ratings: []models.VehicleRating{
-	//			{Rating: 5, VehicleID: rentACarCompany2.Vehicles[1].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		CompanyID: rentACarCompany2.ID,
-	//		Rating:    5,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 380,
-	//		Rooms: []models.Room{
-	//			hotel.Rooms[0],
-	//			hotel.Rooms[4],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 4, RoomID: hotel.Rooms[0].ID},
-	//			{Rating: 1, RoomID: hotel.Rooms[4].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 9, 5, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 9, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		HotelID:     hotel.ID,
-	//		HotelRating: 4,
-	//	},
-	//}
-	//
-	//reservation8 := models.Reservation{
-	//	Holders: []*models.User{
-	//		&user2,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price: 250,
-	//		Seats: []models.Seat{
-	//			airline2.Flights[0].Airplane.Seats[1],
-	//		},
-	//		FlightID: airline2.Flights[1].ID,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:    70,
-	//		Location: rentACarCompany2.Locations[0].Address.Address,
-	//		Vehicles: []*models.Vehicle{
-	//			&rentACarCompany2.Vehicles[1],
-	//		},
-	//		Ratings: []models.VehicleRating{
-	//			{Rating: 4, VehicleID: rentACarCompany2.Vehicles[1].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		CompanyID: rentACarCompany2.ID,
-	//		Rating:    5,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 480,
-	//		Rooms: []models.Room{
-	//			hotel2.Rooms[2],
-	//			hotel2.Rooms[1],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 2, RoomID: hotel2.Rooms[2].ID},
-	//			{Rating: 5, RoomID: hotel2.Rooms[1].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 5, 3, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 9, 10, 0, 0, 0, 0, time.Local),
-	//		},
-	//		HotelID:     hotel2.ID,
-	//		HotelRating: 4,
-	//	},
-	//}
-	//
-	//reservation9 := models.Reservation{
-	//	Holders: []*models.User{
-	//		&user3,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price: 250,
-	//		Seats: []models.Seat{
-	//			airline2.Flights[0].Airplane.Seats[1],
-	//		},
-	//		FlightID: airline2.Flights[1].ID,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:    70,
-	//		Location: rentACarCompany2.Locations[0].Address.Address,
-	//		Vehicles: []*models.Vehicle{
-	//			&rentACarCompany2.Vehicles[2],
-	//		},
-	//		Ratings: []models.VehicleRating{
-	//			{Rating: 5, VehicleID: rentACarCompany2.Vehicles[2].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		CompanyID: rentACarCompany2.ID,
-	//		Rating:    5,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 580,
-	//		Rooms: []models.Room{
-	//			hotel2.Rooms[3],
-	//			hotel2.Rooms[4],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 3, RoomID: hotel2.Rooms[3].ID},
-	//			{Rating: 2, RoomID: hotel2.Rooms[4].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 10, 4, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 11, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		HotelID:     hotel2.ID,
-	//		HotelRating: 4,
-	//	},
-	//}
-	//
-	//reservation10 := models.Reservation{
-	//	Holders: []*models.User{
-	//		&user4,
-	//	},
-	//	ReservationFlight: models.FlightReservation{
-	//		Price: 250,
-	//		Seats: []models.Seat{
-	//			airline2.Flights[0].Airplane.Seats[1],
-	//		},
-	//		FlightID: airline2.Flights[1].ID,
-	//	},
-	//	ReservationRentACar: models.RentACarReservation{
-	//		Price:    70,
-	//		Location: rentACarCompany2.Locations[0].Address.Address,
-	//		Vehicles: []*models.Vehicle{
-	//			&rentACarCompany2.Vehicles[2],
-	//		},
-	//		Ratings: []models.VehicleRating{
-	//			{Rating: 1, VehicleID: rentACarCompany.Vehicles[2].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2019, 4, 5, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2019, 4, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		CompanyID: rentACarCompany2.ID,
-	//		Rating:    1,
-	//	},
-	//	ReservationHotel: models.HotelReservation{
-	//		Price: 680,
-	//		Rooms: []models.Room{
-	//			hotel2.Rooms[2],
-	//		},
-	//		Ratings: []models.RoomRating{
-	//			{Rating: 4, RoomID: hotel2.Rooms[2].ID},
-	//		},
-	//		Occupation: models.Occupation{
-	//			Beginning: time.Date(2021, 1, 3, 0, 0, 0, 0, time.Local),
-	//			End:       time.Date(2021, 5, 6, 0, 0, 0, 0, time.Local),
-	//		},
-	//		HotelID:     hotel2.ID,
-	//		HotelRating: 4,
-	//	},
-	//}
+	reservation2 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user2.ID,
+			UserInfo: user2.UserInfo,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price:         250,
+			Seat:          &airline.Flights[9].Airplane.Seats[1],
+			Flight:        &airline.Flights[9],
+			FlightRating:  3,
+			CompanyRating: 3,
+			Features: []*models.FeatureAirline{
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationHotel: models.HotelReservation{
+			Price: 180,
+			Rooms: []models.Room{
+				hotel.Rooms[0],
+				hotel.Rooms[1],
+			},
+			Ratings: []models.RoomRating{
+				{Rating: 4, RoomID: hotel.Rooms[0].ID},
+			},
+			Occupation: models.Occupation{
+				Beginning: airline.Flights[9].Departure,
+				End:       airline.Flights[9].Departure.AddDate(0, 0, 2),
+			},
+			Features: []*models.Feature{
+				&hotel.Features[0],
+				&hotel.Features[1],
+			},
+			Hotel:          hotel,
+			HotelRating:    3,
+			IsQuickReserve: false,
+		},
+	}
 
-	//db.Create(&reservation)
-	//db.Create(&reservation2)
-	//db.Create(&reservation3)
-	//db.Create(&reservation4)
-	//db.Create(&reservation5)
-	//db.Create(&reservation6)
-	//db.Create(&reservation7)
-	//db.Create(&reservation8)
-	//db.Create(&reservation9)
-	//db.Create(&reservation10)
+	reservation3 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user3.ID,
+			UserInfo: user3.UserInfo,
+		},
+		MasterRef: reservation.ID,
+		ReservationFlight: models.FlightReservation{
+			Price:         250,
+			Seat:          &airline.Flights[8].Airplane.Seats[4],
+			Flight:        &airline.Flights[8],
+			FlightRating:  5,
+			CompanyRating: 3,
+			Features: []*models.FeatureAirline{
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationRentACar: models.RentACarReservation{
+			Price:           70,
+			Location:        rentACarCompany.Locations[0].Address.Address,
+			RentACarCompany: rentACarCompany,
+			Vehicle:         rentACarCompany.Vehicles[1],
+			Occupation: models.Occupation{
+				Beginning: airline.Flights[8].Departure,
+				End:       airline.Flights[8].Departure.AddDate(0, 0, 2),
+			},
+			CompanyRating:  3,
+			VehicleRating:  4,
+			IsQuickReserve: false,
+		},
+	}
+
+	reservation4 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user4.ID,
+			UserInfo: user4.UserInfo,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price:         350,
+			Seat:          &airline.Flights[0].Airplane.Seats[4],
+			Flight:        &airline.Flights[0],
+			FlightRating:  2,
+			CompanyRating: 5,
+			Features: []*models.FeatureAirline{
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationRentACar: models.RentACarReservation{
+			Price:         70,
+			Location:      rentACarCompany2.Locations[0].Address.Address,
+			Vehicle:       rentACarCompany2.Vehicles[0],
+			CompanyRating: 3,
+			VehicleRating: 4,
+			Occupation: models.Occupation{
+				Beginning: airline.Flights[8].Departure,
+				End:       airline.Flights[8].Departure.AddDate(0, 0, 2),
+			},
+			IsQuickReserve: false,
+		},
+		ReservationHotel: models.HotelReservation{
+			Price: 180,
+			Rooms: []models.Room{
+				hotel.Rooms[0],
+			},
+			Ratings: []models.RoomRating{
+				{Rating: 4, RoomID: hotel.Rooms[0].ID},
+			},
+			Occupation: models.Occupation{
+				Beginning: time.Date(2019, 5, 3, 0, 0, 0, 0, time.Local),
+				End:       time.Date(2019, 5, 6, 0, 0, 0, 0, time.Local),
+			},
+			HotelID:     hotel.ID,
+			HotelRating: 4,
+			Features: []*models.Feature{
+				&hotel.Features[0],
+				&hotel.Features[1],
+			},
+			IsQuickReserve: false,
+		},
+	}
+
+	reservation5 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user.ID,
+			UserInfo: user.UserInfo,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price:         250,
+			Seat:          &airline2.Flights[7].Airplane.Seats[0],
+			Flight:        &airline2.Flights[7],
+			FlightRating:  2,
+			CompanyRating: 3,
+			Features: []*models.FeatureAirline{
+				&airline2.AirlineFeatures[0],
+				&airline2.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationHotel: models.HotelReservation{
+			Price: 100,
+			Rooms: []models.Room{
+				hotel2.Rooms[0],
+				hotel2.Rooms[2],
+				hotel2.Rooms[3],
+			},
+			Ratings: []models.RoomRating{
+				{Rating: 3, RoomID: hotel2.Rooms[0].ID},
+			},
+			Occupation: models.Occupation{
+				Beginning: airline2.Flights[7].Departure,
+				End:       airline2.Flights[7].Departure.AddDate(0, 0, 5),
+			},
+			Features: []*models.Feature{
+				&hotel2.Features[0],
+				&hotel2.Features[2],
+				&hotel2.Features[1],
+			},
+			Hotel:          hotel2,
+			HotelRating:    4,
+			IsQuickReserve: false,
+		},
+		ReservationRentACar: models.RentACarReservation{
+			Price:           70,
+			Location:        rentACarCompany.Locations[0].Address.Address,
+			RentACarCompany: rentACarCompany,
+			Vehicle:         rentACarCompany.Vehicles[0],
+			Occupation: models.Occupation{
+				Beginning: airline2.Flights[7].Departure,
+				End:       airline2.Flights[7].Departure.AddDate(0, 0, 5),
+			},
+			CompanyRating:  4,
+			VehicleRating:  2,
+			IsQuickReserve: false,
+		},
+	}
+
+	reservation6 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user2.ID,
+			UserInfo: user2.UserInfo,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price:         250,
+			Seat:          &airline2.Flights[6].Airplane.Seats[1],
+			Flight:        &airline2.Flights[6],
+			FlightRating:  3,
+			CompanyRating: 3,
+			Features: []*models.FeatureAirline{
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationHotel: models.HotelReservation{
+			Price: 180,
+			Rooms: []models.Room{
+				hotel.Rooms[0],
+				hotel.Rooms[1],
+			},
+			Ratings: []models.RoomRating{
+				{Rating: 4, RoomID: hotel.Rooms[0].ID},
+			},
+			Occupation: models.Occupation{
+				Beginning: airline2.Flights[6].Departure,
+				End:       airline2.Flights[6].Departure.AddDate(0, 0, 2),
+			},
+			Features: []*models.Feature{
+				&hotel.Features[0],
+				&hotel.Features[1],
+			},
+			Hotel:          hotel,
+			HotelRating:    3,
+			IsQuickReserve: false,
+		},
+	}
+
+	reservation7 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user2.ID,
+			UserInfo: user2.UserInfo,
+		},
+		MasterRef: reservation.ID,
+		ReservationFlight: models.FlightReservation{
+			Price:         250,
+			Seat:          &airline.Flights[8].Airplane.Seats[4],
+			Flight:        &airline.Flights[8],
+			FlightRating:  5,
+			CompanyRating: 3,
+			Features: []*models.FeatureAirline{
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationRentACar: models.RentACarReservation{
+			Price:           70,
+			Location:        rentACarCompany.Locations[0].Address.Address,
+			RentACarCompany: rentACarCompany,
+			Vehicle:         rentACarCompany.Vehicles[1],
+			Occupation: models.Occupation{
+				Beginning: airline.Flights[8].Departure,
+				End:       airline.Flights[8].Departure.AddDate(0, 0, 5),
+			},
+			CompanyRating:  3,
+			VehicleRating:  4,
+			IsQuickReserve: false,
+		},
+	}
+
+	reservation8 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user2.ID,
+			UserInfo: user2.UserInfo,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price:         250,
+			Seat:          &airline2.Flights[3].Airplane.Seats[0],
+			Flight:        &airline2.Flights[3],
+			FlightRating:  3,
+			CompanyRating: 3,
+			Features: []*models.FeatureAirline{
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationHotel: models.HotelReservation{
+			Price: 180,
+			Rooms: []models.Room{
+				hotel.Rooms[0],
+				hotel.Rooms[1],
+			},
+			Ratings: []models.RoomRating{
+				{Rating: 4, RoomID: hotel.Rooms[0].ID},
+			},
+			Occupation: models.Occupation{
+				Beginning: airline2.Flights[3].Departure,
+				End:       airline2.Flights[3].Departure.AddDate(0, 0, 2),
+			},
+			Features: []*models.Feature{
+				&hotel.Features[0],
+				&hotel.Features[1],
+			},
+			Hotel:          hotel,
+			HotelRating:    3,
+			IsQuickReserve: false,
+		},
+	}
+
+	reservation9 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user.ID,
+			UserInfo: user.UserInfo,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price:         250,
+			Seat:          &airline.Flights[2].Airplane.Seats[0],
+			Flight:        &airline.Flights[2],
+			FlightRating:  0,
+			CompanyRating: 0,
+			Features: []*models.FeatureAirline{
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationHotel: models.HotelReservation{
+			Price: 100,
+			Rooms: []models.Room{
+				hotel2.Rooms[0],
+				hotel2.Rooms[2],
+				hotel2.Rooms[3],
+			},
+			Ratings: []models.RoomRating{
+				{Rating: 0, RoomID: hotel2.Rooms[0].ID},
+			},
+			Occupation: models.Occupation{
+				Beginning: airline.Flights[2].Departure,
+				End:       airline.Flights[2].Departure.AddDate(0, 0, 3),
+			},
+			Features: []*models.Feature{
+				&hotel2.Features[0],
+				&hotel2.Features[2],
+				&hotel2.Features[1],
+			},
+			Hotel:          hotel2,
+			HotelRating:    0,
+			IsQuickReserve: false,
+		},
+		ReservationRentACar: models.RentACarReservation{
+			Price:           70,
+			Location:        rentACarCompany.Locations[0].Address.Address,
+			RentACarCompany: rentACarCompany,
+			Vehicle:         rentACarCompany.Vehicles[0],
+			Occupation: models.Occupation{
+				Beginning: airline.Flights[2].Departure,
+				End:       airline.Flights[2].Departure.AddDate(0, 0, 3),
+			},
+			CompanyRating:  0,
+			VehicleRating:  0,
+			IsQuickReserve: false,
+		},
+	}
+
+	reservation10 := models.Reservation{
+		Passenger: models.Passenger{
+			UserID:   user3.ID,
+			UserInfo: user3.UserInfo,
+		},
+		ReservationFlight: models.FlightReservation{
+			Price:         250,
+			Seat:          &airline.Flights[9].Airplane.Seats[1],
+			Flight:        &airline.Flights[9],
+			FlightRating:  0,
+			CompanyRating: 0,
+			Features: []*models.FeatureAirline{
+				&airline.AirlineFeatures[0],
+				&airline.AirlineFeatures[1],
+			},
+			IsQuickReserve: false,
+		},
+		ReservationHotel: models.HotelReservation{
+			Price: 180,
+			Rooms: []models.Room{
+				hotel.Rooms[0],
+				hotel.Rooms[1],
+			},
+			Ratings: []models.RoomRating{
+				{Rating: 0, RoomID: hotel.Rooms[0].ID},
+			},
+			Occupation: models.Occupation{
+				Beginning: airline.Flights[9].Departure,
+				End:       airline.Flights[9].Departure.AddDate(0, 0, 2),
+			},
+			Features: []*models.Feature{
+				&hotel.Features[0],
+				&hotel.Features[1],
+			},
+			Hotel:          hotel,
+			HotelRating:    0,
+			IsQuickReserve: false,
+		},
+	}
+
+	db.Create(&reservation)
+	db.Create(&reservation2)
+	db.Create(&reservation3)
+	db.Create(&reservation4)
+	db.Create(&reservation5)
+	db.Create(&reservation6)
+	db.Create(&reservation7)
+	db.Create(&reservation8)
+	db.Create(&reservation9)
+	db.Create(&reservation10)
 
 	reward := models.ReservationReward{
 		RequiredNumber: 5,
@@ -1298,7 +1352,6 @@ func AddDemoModels(db *gorm.DB) {
 	db.Create(&reward2)
 	db.Create(&reward3)
 	db.Create(&reward4)
-
 
 	fmt.Printf("DATABASE: Finished adding models, time taken: %f seconds\n", time.Since(timeStart).Seconds())
 }
