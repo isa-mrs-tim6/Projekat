@@ -20,7 +20,7 @@
                                 <v-layout column>
                                     <v-layout row>
                                         <v-flex xs3>
-                                            <img src="../../assets/hotel_placeholder.png">
+                                            <img v-bind:src='"http://localhost:8000/" + value.Hotel.Picture'>
                                         </v-flex>
                                         <v-flex xs6 style="margin-right: -25px"></v-flex>
                                         <v-flex xs3>

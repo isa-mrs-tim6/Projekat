@@ -11,7 +11,7 @@
                             <v-text-field label="Name" prepend-icon="directions_car" v-model="query.name"></v-text-field>
                         </v-flex>
                         <v-flex xs3>
-                            <v-text-field label="Address" prepend-icon="place" v-model="query.address" :readonly="checkReadonly()"></v-text-field>
+                            <v-text-field label="Office address" prepend-icon="place" v-model="query.address" :readonly="checkReadonly()"></v-text-field>
                         </v-flex>
                         <v-flex xs2>
                             <v-menu v-model="menuFrom" :close-on-content-click="false" lazy transition="scale-transition"
@@ -53,7 +53,7 @@
                                 <v-card-text>
                                     <v-layout row>
                                         <v-flex xs2>
-                                            <v-img src="http://pngriver.com/wp-content/uploads/2017/11/city-buildings-png-transparent-images-clipart-icons-pngriver-download-free-skyscraper-1-featured-600x450.png"></v-img>
+                                            <img width="100%" height="100%" v-bind:src='"http://localhost:8000/" + item.Picture'>
                                         </v-flex>
                                         <v-flex xs8>
                                             <v-layout row >

@@ -8,7 +8,10 @@
                             {{value.Airline.Name}}
                         </v-card-title>
                         <v-layout row>
-                            <v-flex xs10>
+                            <v-flex xs2 style="margin-left: 18px">
+                                <img width="100%" height="100%" v-bind:src='"http://localhost:8000/" + value.Airline.Picture'>
+                            </v-flex>
+                            <v-flex xs8>
                                 <v-card-title primary-title>
                                     <v-layout row>
                                         <v-flex xs5>
