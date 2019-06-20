@@ -266,6 +266,9 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 		return nil, err
 	}
 
+	var isExpiring bool
+	var expireTime time.Time
+
 	for i := 1; i < len(params.Users); i++ {
 		var friend models.User
 		if params.Users[i].Email != "" { // Registered user
@@ -274,6 +277,8 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 			params.Users[i].Name = friend.Name
 			params.Users[i].Surname = friend.Surname
 			params.Users[i].Passport = friend.Passport
+			isExpiring = true
+			expireTime = time.Now().AddDate(0, 0,3)
 		}
 
 		if err := tx.Raw("SELECT * FROM seats WHERE id = ? FOR UPDATE", params.Seats[i].ID).Scan(&seat).Error; err != nil {
@@ -301,6 +306,8 @@ func (db *Store) ReserveFlight(flightID uint64, params models.FlightReservationP
 				Features:       resFeatures,
 			},
 			MasterRef: masterReservation.ID,
+			IsExpiring: isExpiring,
+			ExpireTime: expireTime,
 		}
 		if err := tx.Create(&reservation).Error; err != nil {
 			tx.Rollback()
