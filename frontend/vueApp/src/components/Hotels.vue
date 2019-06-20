@@ -19,15 +19,19 @@
             <template v-slot:items="hotels">
                 <td>
                     <v-layout row>
-                        <img width="300px" height="300px" v-bind:src = '"http://localhost:8000/"+hotels.item.Picture'>
-                        <v-layout style="margin-left: 5px;" column>
-                            <div class="display-1">
-                                {{hotels.item.Name}}
-                            </div>
-                            <div class="headline">
-                                {{hotels.item.Description}}
-                            </div>
-                        </v-layout>
+                        <v-flex xs4>
+                            <img width="300px" height="300px" v-bind:src = '"http://localhost:8000/"+hotels.item.Picture'>
+                        </v-flex>
+                        <v-flex xs8>
+                            <v-layout style="margin-left: 5px;" column>
+                                <div class="display-1">
+                                    {{hotels.item.Name}}
+                                </div>
+                                <div class="headline">
+                                    {{hotels.item.Description}}
+                                </div>
+                            </v-layout>
+                        </v-flex>
                     </v-layout>
                 </td>
                 <td>
@@ -66,8 +70,8 @@
             return {
                 search: '',
                 headers: [
-                    { text: 'Name', value: 'Name' },
-                    { text: 'Address', value: 'Address' },
+                    { text: 'Name', value: 'Name', width:'80%'},
+                    { text: 'Address', value: 'Address', width:'20%'},
                 ],
             }
         },
