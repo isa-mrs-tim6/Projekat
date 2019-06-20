@@ -10,7 +10,7 @@ Fajlovi backend aplikacije nalaze se u backend/bin direktorijumu.
 
 Priloženi su Windows i Linux kompajlirani fajlovi.
 
-Za korišćenje aplikacije, potrebno je instalacije PostgreSQL baze.
+Za korišćenje aplikacije, potrebna je instalacija PostgreSQL baze.
 
 Komunikacija sa bazom se odvija na portu 5432, na instanci baze pod nazivom "postgres"
 
