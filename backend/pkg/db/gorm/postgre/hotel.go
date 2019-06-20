@@ -155,13 +155,7 @@ func (db *Store) DeleteRooms(id uint, rooms []models.Room) error {
 }
 
 func (db *Store) UpdateRoom(room models.Room) error {
-	var retVal models.Room
-	if err := db.Find(&retVal, room.ID).Error; err != nil {
-		return err
-	}
-	retVal = room
-
-	if err := db.Save(&retVal).Error; err != nil {
+	if err := db.Model(&room).Where("id = ? AND updated_at = ?", room.ID, room.UpdatedAt).Update(room).Error; err != nil {
 		return err
 	}
 	return nil

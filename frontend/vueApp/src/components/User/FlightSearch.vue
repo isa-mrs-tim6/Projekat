@@ -25,14 +25,14 @@
                             <template v-slot:activator="{ on }">
                                 <v-text-field label="Departure date" prepend-icon="event" readonly v-on="on" v-model="oneWay.date"></v-text-field>
                             </template>
-                            <v-date-picker v-model="oneWay.date" no-title scrollable @input="oneWay.menu = false"></v-date-picker>
+                            <v-date-picker v-model="oneWay.date" :min="minDate" no-title scrollable @input="oneWay.menu = false"></v-date-picker>
                         </v-menu>
                     </v-flex>
                     <v-flex xs3 ml-2>
                         <v-menu v-model="oneWay.classMenu" :close-on-content-click="false" lazy transition="scale-transition"
                                 offset-y max-width="200px" max-height="350px">
                             <template v-slot:activator="{on}" >
-                                <v-text-field label="Passangers" readonly v-on="on" v-model="classAndPassengersDisplay"></v-text-field>
+                                <v-text-field label="Passengers" readonly v-on="on" v-model="classAndPassengersDisplay"></v-text-field>
                             </template>
                             <v-card>
                                 <v-card-title><span class=".title">Cabin class</span>
@@ -100,7 +100,7 @@
                             <template v-slot:activator="{ on }">
                                 <v-text-field label="Departure date" prepend-icon="event" readonly v-on="on" v-model="round.departureDate"></v-text-field>
                             </template>
-                            <v-date-picker v-model="round.departureDate" no-title scrollable @input="round.departureMenu = false"></v-date-picker>
+                            <v-date-picker v-model="round.departureDate" :min="minDate" no-title scrollable @input="round.departureMenu = false"></v-date-picker>
                         </v-menu>
                     </v-flex>
                     <v-flex xs3 ml-2>
@@ -109,7 +109,7 @@
                             <template v-slot:activator="{ on }">
                                 <v-text-field label="Return date" prepend-icon="event" readonly v-on="on" v-model="round.returnDate"></v-text-field>
                             </template>
-                            <v-date-picker v-model="round.returnDate" no-title scrollable @input="round.returnMenu = false"></v-date-picker>
+                            <v-date-picker v-model="round.returnDate" :min="minDate" no-title scrollable @input="round.returnMenu = false"></v-date-picker>
                         </v-menu>
                     </v-flex>
                     <v-flex xs3 ml-2>
@@ -189,7 +189,7 @@
                             <template v-slot:activator="{ on }">
                                 <v-text-field label="Departure date" prepend-icon="event" readonly v-on="on" v-model="multi.departureDate" ></v-text-field>
                             </template>
-                            <v-date-picker v-model="multi.departureDate" no-title scrollable @input="multi.departureMenu = false"></v-date-picker>
+                            <v-date-picker v-model="multi.departureDate" :min="minDate" no-title scrollable @input="multi.departureMenu = false"></v-date-picker>
                         </v-menu>
                     </v-flex>
                     <v-flex xs2>
@@ -418,6 +418,16 @@
                 };
                 this.$emit('search', query);
             },
+            formatDate(date) {
+                let month = `${date.getMonth() + 1}`;
+                let day = `${date.getDate()}`;
+                const year = date.getFullYear();
+
+                if (month.length < 2) month = `0${month}`;
+                if (day.length < 2) day = `0${day}`;
+
+                return [year, month, day].join('-');
+            },
         },
         computed:{
             classAndPassengersDisplay: function(){
@@ -446,6 +456,10 @@
                 }
 
                 return retVal;
+            },
+            minDate() {
+                const today = new Date();
+                return this.formatDate(today);
             },
         },
     }
